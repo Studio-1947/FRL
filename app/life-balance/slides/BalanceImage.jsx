@@ -26,7 +26,7 @@ const BalanceImage = ({ image }) => {
     <div className="relative w-48 md:w-[20rem] md:h-[20rem] lg:w-[37.5rem] lg:h-[37.5rem] aspect-square overflow-hidden lg:px-0">
       {/* Responsive watermark cover — scales with viewport, stays fixed to BR */}
       <div
-        className="absolute z-10 pointer-events-none bg-[#19667A] rounded"
+        className="absolute z-10 pointer-events-none bg-black rounded"
         style={{
           // keep a small, responsive margin from the edges
           right: "clamp(0px, 1.5vw, 0px)",

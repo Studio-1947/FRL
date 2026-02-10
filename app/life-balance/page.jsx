@@ -31,7 +31,7 @@ const LifeBalancePage = () => {
   return (
     <div className="h-dvh relative flex justify-center overflow-hidden">
       {/* Background layer */}
-      <div className="absolute inset-0 z-0">
+      <div className="absolute inset-0 z-0 overflow-hidden">
         <DarkVeil
           hueShift={38}
           noiseIntensity={0.03}

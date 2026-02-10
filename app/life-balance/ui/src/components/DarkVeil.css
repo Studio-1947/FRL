@@ -4,8 +4,12 @@
     left: 0;
     width: 100% !important;
     height: 100% !important;
+    min-width: 100%;
+    min-height: 100%;
     z-index: 0 !important;
     /* Behind content */
     pointer-events: none !important;
     /* Clicks pass through to main-sec */
+    object-fit: cover;
+    overflow: hidden;
 }
