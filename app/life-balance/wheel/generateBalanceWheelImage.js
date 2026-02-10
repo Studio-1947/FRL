@@ -1,6 +1,6 @@
 /**
  * generateBalanceWheelImage.js
- * Builds a branded “card” (title + date + description + your wheel) in memory,
+ * Builds a branded "card" (title + date + description + your wheel) in memory,
  * rasterizes it with html2canvas, then downloads a high-res JPEG.
  *
  * Usage:
@@ -125,7 +125,7 @@ export const generateBalanceWheelImage = async (wheelElement, date) => {
 
     // Clone the wheel node (we copy the parent that contains the responsive sizing)
     const parentWithAttr = wheelElement.closest(
-      '[data-wheel-container="true"]'
+      '[data-wheel-container="true"]',
     );
     const clone = (parentWithAttr || wheelElement).cloneNode(true);
     clone.style.position = "absolute";
@@ -137,13 +137,21 @@ export const generateBalanceWheelImage = async (wheelElement, date) => {
     clone.style.height = "100%";
     wheelContainer.appendChild(clone);
 
-    // Render to canvas
+    // Render to canvas with error handling for CSS issues
     const canvas = await html2canvas(card, {
-      backgroundColor: "transparent",
+      backgroundColor: "#205A6A",
       useCORS: true,
       scale: 2,
       allowTaint: true,
-      foreignObjectRendering: true,
+      foreignObjectRendering: false, // Disable to avoid CSS parsing issues
+      logging: false, // Suppress console warnings
+      ignoreElements: (element) => {
+        // Skip elements that might cause CSS parsing issues
+        if (element.tagName === "STYLE" || element.tagName === "LINK") {
+          return false;
+        }
+        return false;
+      },
       onclone: (clonedDoc, element) => {
         // Ensure proper positioning in the cloned DOM
         element.style.zIndex = "auto";
@@ -151,6 +159,32 @@ export const generateBalanceWheelImage = async (wheelElement, date) => {
         element.style.top = "0";
         element.style.left = "0";
         element.style.position = "absolute";
+
+        // Remove any problematic CSS that uses lab() or other unsupported functions
+        const allElements = element.querySelectorAll("*");
+        allElements.forEach((el) => {
+          const computedStyle = window.getComputedStyle(el);
+          // Reset any potentially problematic styles
+          if (el.style) {
+            // Keep only safe, standard CSS properties
+            const safeStyles = {
+              color: computedStyle.color,
+              backgroundColor: computedStyle.backgroundColor,
+              fontSize: computedStyle.fontSize,
+              fontWeight: computedStyle.fontWeight,
+              padding: computedStyle.padding,
+              margin: computedStyle.margin,
+            };
+            // Clear and reapply only safe styles
+            Object.keys(safeStyles).forEach((prop) => {
+              const value = safeStyles[prop];
+              // Skip lab() or other unsupported color functions
+              if (value && !value.includes("lab(") && !value.includes("lch(")) {
+                el.style[prop] = value;
+              }
+            });
+          }
+        });
       },
     });
 
@@ -162,21 +196,32 @@ export const generateBalanceWheelImage = async (wheelElement, date) => {
     document.body.appendChild(link);
     link.click();
     document.body.removeChild(link);
+
+    console.log("Download successful!");
   } catch (err) {
     console.error("Error generating card image:", err);
 
-    // Fallback: capture only the wheel element
+    // Fallback: capture only the wheel element with safer options
     try {
-      const dataUrl = await toJpeg(wheelElement, { quality: 0.95 });
+      console.log("Attempting fallback download method...");
+      const dataUrl = await toJpeg(wheelElement, {
+        quality: 0.95,
+        skipFonts: true, // Skip font embedding to avoid CSS rules errors
+        cacheBust: true,
+        backgroundColor: "#1A4A5C",
+      });
       const link = document.createElement("a");
       link.download = "balance-wheel.jpeg";
       link.href = dataUrl;
       document.body.appendChild(link);
       link.click();
       document.body.removeChild(link);
+      console.log("Fallback download successful!");
     } catch (fallbackErr) {
       console.error("Fallback download also failed:", fallbackErr);
-      alert("Download failed. Please try again.");
+      alert(
+        "Download failed due to browser restrictions. Please try taking a screenshot instead.",
+      );
     }
   } finally {
     // Cleanup the temporary card
