@@ -73,7 +73,7 @@ const Results = ({ answers, formValues }) => {
     <div className="w-full h-full overflow-hidden flex flex-col lg:flex-row-reverse items-stretch gap-6 lg:gap-10">
       {/* Wheel section */}
       <div className="flex justify-center lg:justify-end items-center lg:w-1/2 flex-shrink-0 overflow-visible">
-        <div className="relative aspect-square w-[320px] h-[320px] md:w-[520px] md:h-[520px] lg:w-[720px] lg:h-[720px] xl:w-[820px] xl:h-[820px] lg:translate-x-6 xl:translate-x-10">
+        <div className="relative w-full max-w-[90vw] sm:max-w-[400px] md:max-w-[500px] lg:max-w-[600px] xl:max-w-[700px] aspect-square">
           <BalanceWheel formData={formData} graphRef={graphRef} />
         </div>
       </div>

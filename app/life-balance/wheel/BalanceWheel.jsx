@@ -277,7 +277,7 @@ const CustomBalanceWheel = ({ data }) => {
   if (!svgContent) {
     return (
       <div
-        className="w-full h-full flex items-center justify-center bg-[#1A4A5C] rounded-full"
+        className="w-full h-full flex items-center justify-center"
         role="status"
         aria-live="polite"
       >
@@ -378,11 +378,11 @@ const BalanceWheel = ({ formData, onDownload, graphRef }) => {
   if (!mounted || !formData) {
     return (
       <div
-        className="w-full h-full flex items-center justify-center p-4"
+        className="w-full h-full flex items-center justify-center"
         role="status"
         aria-live="polite"
       >
-        <div className="w-full max-w-[90vw] sm:max-w-[500px] md:max-w-[600px] lg:max-w-[700px] xl:max-w-[800px] aspect-square flex items-center justify-center bg-[#1A4A5C] rounded-full">
+        <div className="flex items-center justify-center bg-[#1A4A5C] rounded-full p-8">
           <p className="text-white">Loading balance wheel…</p>
         </div>
       </div>
@@ -391,12 +391,12 @@ const BalanceWheel = ({ formData, onDownload, graphRef }) => {
 
   return (
     <div
-      className="w-full h-full flex items-center justify-center overflow-auto p-4"
+      className="w-full h-full flex items-center justify-center p-2"
       data-wheel-container="true"
     >
       <div
         ref={chartRef}
-        className="relative w-full max-w-[90vw] sm:max-w-[500px] md:max-w-[600px] lg:max-w-[700px] xl:max-w-[800px] aspect-square"
+        className="relative w-full h-full"
         data-balance-wheel="true"
       >
         <CustomBalanceWheel data={data} />
