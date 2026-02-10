@@ -127,7 +127,7 @@ const CustomBalanceWheel = ({ data }) => {
       { name: "PHYSICAL ENVIRONMENT", angle: 270 },
       { name: "WORK / CAREER", angle: 315 },
     ],
-    []
+    [],
   );
 
   // Build map for quick lookup
@@ -141,7 +141,9 @@ const CustomBalanceWheel = ({ data }) => {
   useEffect(() => {
     (async () => {
       try {
-        const res = await fetch("/assets/balancewheel.svg", { cache: "force-cache" });
+        const res = await fetch("/assets/Life balance Graph.svg", {
+          cache: "force-cache",
+        });
         if (!res.ok) throw new Error(`SVG fetch failed: ${res.status}`);
         const svgText = await res.text();
 
@@ -198,10 +200,16 @@ const CustomBalanceWheel = ({ data }) => {
           // (b) Polygon path
           const d =
             points
-              .map((p, i) => `${i === 0 ? "M" : "L"} ${p.x.toFixed(2)} ${p.y.toFixed(2)}`)
+              .map(
+                (p, i) =>
+                  `${i === 0 ? "M" : "L"} ${p.x.toFixed(2)} ${p.y.toFixed(2)}`,
+              )
               .join(" ") + " Z";
 
-          const area = svgDoc.createElementNS("http://www.w3.org/2000/svg", "path");
+          const area = svgDoc.createElementNS(
+            "http://www.w3.org/2000/svg",
+            "path",
+          );
           area.setAttribute("d", d);
           area.setAttribute("fill", "#78DDE8");
           area.setAttribute("fill-opacity", "0.3");
@@ -211,7 +219,10 @@ const CustomBalanceWheel = ({ data }) => {
 
           // (c) Radial connectors
           points.forEach((p) => {
-            const line = svgDoc.createElementNS("http://www.w3.org/2000/svg", "line");
+            const line = svgDoc.createElementNS(
+              "http://www.w3.org/2000/svg",
+              "line",
+            );
             line.setAttribute("x1", centerX);
             line.setAttribute("y1", centerY);
             line.setAttribute("x2", p.x);
@@ -224,7 +235,10 @@ const CustomBalanceWheel = ({ data }) => {
 
           // (d) Point markers + value
           points.forEach((p) => {
-            const circle = svgDoc.createElementNS("http://www.w3.org/2000/svg", "circle");
+            const circle = svgDoc.createElementNS(
+              "http://www.w3.org/2000/svg",
+              "circle",
+            );
             circle.setAttribute("cx", p.x);
             circle.setAttribute("cy", p.y);
             circle.setAttribute("r", isMobile ? "8" : "12");
@@ -233,7 +247,10 @@ const CustomBalanceWheel = ({ data }) => {
             circle.setAttribute("stroke-width", "2");
             overlay.appendChild(circle);
 
-            const text = svgDoc.createElementNS("http://www.w3.org/2000/svg", "text");
+            const text = svgDoc.createElementNS(
+              "http://www.w3.org/2000/svg",
+              "text",
+            );
             text.setAttribute("x", p.x);
             text.setAttribute("y", p.y);
             text.setAttribute("text-anchor", "middle");
@@ -295,7 +312,10 @@ const BalanceWheel = ({ formData, onDownload, graphRef }) => {
   const chartRef = useRef(null);
 
   // Compute chart data once per formData change
-  const data = useMemo(() => transformFormDataToChartData(formData), [formData]);
+  const data = useMemo(
+    () => transformFormDataToChartData(formData),
+    [formData],
+  );
 
   // Mount when we have form data
   useEffect(() => {
@@ -314,12 +334,11 @@ const BalanceWheel = ({ formData, onDownload, graphRef }) => {
     if (!chartRef.current) return;
     const { default: html2canvas } = await import("html2canvas"); // lazy, client-only
 
-
     // Force a dark background to avoid transparent artifacts
     const originalStyle = chartRef.current.getAttribute("style") || "";
     chartRef.current.setAttribute(
       "style",
-      `${originalStyle}; background-color: #1A4A5C !important;`
+      `${originalStyle}; background-color: #1A4A5C !important;`,
     );
 
     html2canvas(chartRef.current, {
@@ -359,23 +378,25 @@ const BalanceWheel = ({ formData, onDownload, graphRef }) => {
   if (!mounted || !formData) {
     return (
       <div
-        className="w-full h-[500px] flex items-center justify-center bg-[#1A4A5C] rounded-full"
+        className="w-full h-full flex items-center justify-center p-4"
         role="status"
         aria-live="polite"
       >
-        <p className="text-white">Loading balance wheel…</p>
+        <div className="w-full max-w-[90vw] sm:max-w-[500px] md:max-w-[600px] lg:max-w-[700px] xl:max-w-[800px] aspect-square flex items-center justify-center bg-[#1A4A5C] rounded-full">
+          <p className="text-white">Loading balance wheel…</p>
+        </div>
       </div>
     );
   }
 
   return (
     <div
-      className="w-full h-full flex items-center justify-center overflow-auto"
+      className="w-full h-full flex items-center justify-center overflow-auto p-4"
       data-wheel-container="true"
     >
       <div
         ref={chartRef}
-        className="relative w-[400px] h-[400px] md:w-[600px] md:h-[600px] lg:w-[700px] lg:h-[700px]"
+        className="relative w-full max-w-[90vw] sm:max-w-[500px] md:max-w-[600px] lg:max-w-[700px] xl:max-w-[800px] aspect-square"
         data-balance-wheel="true"
       >
         <CustomBalanceWheel data={data} />
