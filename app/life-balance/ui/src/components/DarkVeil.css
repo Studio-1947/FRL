@@ -1,0 +1,11 @@
+.darkveil-canvas {
+    position: absolute !important;
+    top: 0;
+    left: 0;
+    width: 100% !important;
+    height: 100% !important;
+    z-index: 0 !important;
+    /* Behind content */
+    pointer-events: none !important;
+    /* Clicks pass through to main-sec */
+}

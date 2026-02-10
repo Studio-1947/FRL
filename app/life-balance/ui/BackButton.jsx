@@ -33,7 +33,7 @@ const BackButton = ({ slideIndex, setSlideIndex }) => {
         {slideIndex >= 3 && slideIndex <= 10 && (
           <div className="flex justify-center items-center">
             <div className="flex gap-3">
-              <div>
+              <div className="text-white">
                 Step {questionCount}/{totalCount}
               </div>
               <div className="flex gap-2 justify-center items-center">
@@ -49,8 +49,8 @@ const BackButton = ({ slideIndex, setSlideIndex }) => {
                         isCompleted
                           ? "bg-[#6BE3DF]" // Completed step
                           : isCurrent
-                          ? "bg-[#6BE3DF]" // Current step
-                          : "bg-[#0F313D]" // Incomplete
+                            ? "bg-[#6BE3DF]" // Current step
+                            : "bg-[#0F313D]" // Incomplete
                       }`}
                     ></div>
                   );

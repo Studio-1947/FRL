@@ -34,10 +34,10 @@ const QuestionSlides = ({
         >
           <div className="flex flex-col justify-between gap-4 lg:min-h-[10rem]">
             {/* question */}
-            <div className="text-2xl font-semibold lg:text-4xl lg:font-bold lg:text-left">
+            <div className="text-2xl font-semibold lg:text-4xl lg:font-bold lg:text-left text-white">
               {header}
             </div>
-            <div className="text-lg font-medium lg:text-xl lg:text-left">
+            <div className="text-lg font-medium lg:text-xl lg:text-left text-white">
               Rate your level of satisfaction in a scale of 1 - 10
             </div>
           </div>

@@ -22,7 +22,7 @@ const FormSlide = ({ header, setSlideIndex, fromDataCallBack }) => {
         className="flex flex-col justify-between gap-5 h-full lg:w-1/2 lg:justify-center lg:items-start lg:gap-7 capitalize"
         onSubmit={submitForm}
       >
-        <div className="font-semibold text-3xl  lg:text-5xl lg:font-bold">
+        <div className="font-semibold text-3xl  lg:text-5xl lg:font-bold text-white">
           {header}
         </div>
 

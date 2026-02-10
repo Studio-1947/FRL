@@ -7,6 +7,7 @@ import IntroSlides from "./slides/IntroSlides";
 import FormSlide from "./slides/FormSlide";
 import QuestionSlides from "./slides/QuestionSlides";
 import Results from "./wheel/Results";
+import DarkVeil from "./ui/src/components/DarkVeil";
 
 const LifeBalancePage = () => {
   const [slideIndex, setSlideIndex] = useState(0);
@@ -28,8 +29,22 @@ const LifeBalancePage = () => {
   console.log(`answers: ${answers}`);
 
   return (
-    <div className="h-dvh bg-[#19667A] flex justify-center">
-      <div className="px-5 py-5 lg:px-10 lg:py-10 max-w-[1400px] w-full flex flex-col">
+    <div className="h-dvh relative flex justify-center overflow-hidden">
+      {/* Background layer */}
+      <div className="absolute inset-0 z-0">
+        <DarkVeil
+          hueShift={38}
+          noiseIntensity={0.03}
+          scanlineIntensity={0.1}
+          speed={0.3}
+          scanlineFrequency={0.5}
+          warpAmount={1}
+          resolutionScale={0.8}
+        />
+      </div>
+
+      {/* Content layer */}
+      <div className="px-5 py-5 lg:px-10 lg:py-10 max-w-[1400px] w-full flex flex-col relative z-10">
         {/* back button */}
         <div className="">
           <BackButton setSlideIndex={setSlideIndex} slideIndex={slideIndex} />

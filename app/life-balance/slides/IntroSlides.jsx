@@ -16,10 +16,10 @@ const IntroSlides = ({ header, paragraph, setSlideIndex, image }) => {
 
       <div className="flex flex-col justify-between flex-1 lg:w-1/2 lg:justify-center lg:gap-7 min-h-0">
         <div className="capitalize">
-          <div className="font-semibold text-3xl pb-2 lg:text-5xl lg:font-bold text-center lg:text-left">
+          <div className="font-semibold text-3xl pb-2 lg:text-5xl lg:font-bold text-center lg:text-left text-white">
             {header}
           </div>
-          <p className="font-medium text-base lg:text-xl text-center lg:text-left">
+          <p className="font-medium text-base lg:text-xl text-center lg:text-left text-white">
             {paragraph}
           </p>
         </div>
