@@ -68,11 +68,11 @@ export default function Hero() {
         </div>
 
         {/* text section */}
-        <div>
+        <div className="text-foreground dark:text-white">
           <h1 className="text-3xl font-bold capitalize pb-2">
             Co-creating a harmonious thriving future
           </h1>
-          <p className="text-base">
+          <p className="text-base mb-2">
             The Forum for Responsible Living (FRL) is a safe space for members
             to explore how each of us can contribute towards healing ourselves,
             local communities and ecosystems.
@@ -86,11 +86,11 @@ export default function Hero() {
           </p>
         </div>
         <div className="flex gap-3">
-          <button className="inline-flex items-center gap-2 cursor-pointer px-6 py-[0.9375rem] rounded-[2rem] bg-[#EEFCFD] text-[#0F313D]  transition-all duration-300 hover:scale-103  font-medium text-xl">
+          <button className="inline-flex items-center gap-2 cursor-pointer px-6 py-[0.9375rem] rounded-[2rem] bg-[#EEFCFD] text-[#0F313D] transition-all duration-300 hover:scale-105 font-medium text-xl">
             <div className="">Login</div>
             <CircleUser size={22} />
           </button>
-          <button className="inline-flex items-center gap-2 cursor-pointer px-6 py-[0.9375rem] rounded-[2rem] text-[#EEFCFD]   transition-all duration-300 hover:scale-103 font-medium text-lg hover:bg-[#EEFCFD] hover:text-[#0F313D]">
+          <button className="inline-flex items-center gap-2 cursor-pointer px-6 py-[0.9375rem] rounded-[2rem] text-foreground dark:text-[#EEFCFD] transition-all duration-300 hover:scale-105 font-medium text-lg hover:bg-[#EEFCFD] hover:text-[#0F313D] border border-transparent dark:border-white/20">
             <div>Play Video</div>
             <Play size={22} />
           </button>
@@ -103,7 +103,7 @@ export default function Hero() {
           <div className="self-stretch h-[290px] relative bg-[#ffffff] opacity-[0.1] " />
         </div>
         {/* second heading */}
-        <div className="px-5">
+        <div className="px-5 text-foreground dark:text-white">
           <h2 className="text-3xl font-bold capitalize ">
             Experience Life balance Tool
           </h2>

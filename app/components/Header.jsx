@@ -6,7 +6,8 @@
 import React, { useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
-import { CircleUser } from "lucide-react";
+import { useTheme } from "next-themes";
+import { CircleUser, Moon, Sun } from "lucide-react";
 
 const navLinks = [
   {
@@ -33,6 +34,7 @@ const navLinks = [
 
 function Header() {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
+  const { setTheme, theme } = useTheme();
 
   return (
     <header className="py-4 px-2 flex justify-between items-center xl:py-2">
@@ -40,7 +42,7 @@ function Header() {
       <div className="cursor-pointer flex justify-center items-center">
         <Image
           src="/Bluelog.svg"
-          width={100} 
+          width={100}
           height={40}
           alt="nav_logo"
           className="transition-all duration-300 hover:scale-105 object-contain"
@@ -54,7 +56,7 @@ function Header() {
             <li key={i}>
               <Link
                 href={navLink.link}
-                className="group relative inline-block text-lg font-medium"
+                className="group relative inline-block text-lg font-medium text-foreground dark:text-white"
               >
                 <span className="relative z-10 inline-block transition-transform duration-300 group-hover:scale-105">
                   {navLink.title}
@@ -66,11 +68,22 @@ function Header() {
         </ul>
       </nav>
 
-      {/* Login */}
+      {/* Login and Theme Toggle */}
+      <div className="hidden lg:flex items-center gap-4">
+        <button
+          onClick={() => setTheme(theme === "dark" ? "light" : "dark")}
+          className="relative p-2 rounded-full hover:bg-[#EEFCFD] hover:text-[#0f313d] transition-all flex items-center justify-center h-10 w-10"
+          aria-label="Toggle theme"
+        >
+          <Sun className="absolute h-[1.5rem] w-[1.5rem] rotate-0 scale-100 transition-all dark:-rotate-90 dark:scale-0" />
+          <Moon className="absolute h-[1.5rem] w-[1.5rem] rotate-90 scale-0 transition-all dark:rotate-0 dark:scale-100" />
+          <span className="sr-only">Toggle theme</span>
+        </button>
 
-      <div className="hidden lg:inline-flex items-center gap-2 cursor-pointer px-7 py-[0.9375rem] rounded-[2rem] hover:bg-[#EEFCFD] hover:text-[#0f313d]  transition-all duration-300 hover:scale-105">
-        <CircleUser size={22} />
-        <div className="font-medium text-lg">Login</div>
+        <div className="inline-flex items-center gap-2 cursor-pointer px-7 py-[0.9375rem] rounded-[2rem] text-foreground dark:text-white hover:bg-[#EEFCFD] hover:text-[#0f313d] transition-all duration-300 hover:scale-105 border border-transparent dark:border-white/20">
+          <CircleUser size={22} />
+          <div className="font-medium text-lg">Login</div>
+        </div>
       </div>
 
       {/* below this section's ui is still being developed  */}
