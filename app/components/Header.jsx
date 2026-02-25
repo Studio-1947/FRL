@@ -81,10 +81,12 @@ function Header() {
           <span className="sr-only">Toggle theme</span>
         </button>
 
-        <Button variant="outline" className="px-7 py-[0.9375rem]">
-          <CircleUser size={22} />
-          <div className="font-medium text-lg">Login</div>
-        </Button>
+        <Link href="/login">
+          <Button variant="outline" className="px-7 py-[0.9375rem]">
+            <CircleUser size={22} />
+            <div className="font-medium text-lg">Login</div>
+          </Button>
+        </Link>
       </div>
 
       {/* below this section's ui is still being developed  */}
@@ -113,10 +115,12 @@ function Header() {
                 </Link>
               </li>
             ))}
-            <li className="flex gap-2 items-center mt-2 cursor-pointer">
-              <CircleUser size={20} />
-              <div className="font-medium text-lg">LOGIN</div>
-            </li>
+            <Link href="/login">
+              <li className="flex gap-2 items-center mt-2 cursor-pointer">
+                <CircleUser size={20} />
+                <div className="font-medium text-lg">LOGIN</div>
+              </li>
+            </Link>
           </ul>
         </div>
       )}

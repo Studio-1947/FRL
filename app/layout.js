@@ -17,6 +17,7 @@ export const metadata = {
 };
 
 import { ThemeProvider } from "@/components/theme-provider";
+import LayoutWrapper from "./components/LayoutWrapper";
 
 export default function RootLayout({ children }) {
   return (
@@ -30,7 +31,7 @@ export default function RootLayout({ children }) {
           enableSystem
           disableTransitionOnChange
         >
-          {children}
+          <LayoutWrapper>{children}</LayoutWrapper>
         </ThemeProvider>
       </body>
     </html>
