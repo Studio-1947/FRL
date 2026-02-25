@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import PointTracker from "../ui/PointTracker";
 import { ArrowRight } from "lucide-react";
 import Circle from "../ui/Circle";
+import { Button } from "@/app/components/ui/Button";
 
 const QuestionSlides = ({
   header,
@@ -34,10 +35,10 @@ const QuestionSlides = ({
         >
           <div className="flex flex-col justify-between gap-4 lg:min-h-[10rem]">
             {/* question */}
-            <div className="text-2xl font-semibold lg:text-4xl lg:font-bold lg:text-left text-white">
+            <div className="text-2xl font-semibold lg:text-4xl lg:font-bold lg:text-left text-foreground dark:text-white transition-colors duration-300">
               {header}
             </div>
-            <div className="text-lg font-medium lg:text-xl lg:text-left text-white">
+            <div className="text-lg font-medium lg:text-xl lg:text-left text-muted-foreground dark:text-white transition-colors duration-300">
               Rate your level of satisfaction in a scale of 1 - 10
             </div>
           </div>
@@ -47,24 +48,30 @@ const QuestionSlides = ({
           </div>
           {/* Desktop/large screens: inline button */}
           <div className="hidden lg:flex items-baseline justify-start lg:items-start">
-            <button className="flex justify-center items-center gap-[0.6rem] font-medium text-base text-[#2D201B] bg-[#F6F5F0] rounded-3xl px-[1.75rem] py-[0.75rem] lg:text-xl hover:scale-105 cursor-pointer transition-all">
+            <Button
+              variant="primary"
+              size="lg"
+              className="px-[1.75rem] py-[0.75rem] lg:text-xl"
+            >
               Next
               <ArrowRight className="w-[1.5rem] h-[1.3rem]" />
-            </button>
+            </Button>
           </div>
         </form>
       </div>
 
       {/* Mobile: sticky bottom Next button */}
-      <div className="lg:hidden fixed bottom-0 left-0 right-0 p-4 bg-[#19667A] flex justify-end">
-        <button
+      <div className="lg:hidden fixed bottom-0 left-0 right-0 p-4 bg-background dark:bg-[#19667A] transition-colors duration-300 flex justify-end">
+        <Button
           form="question-form"
           type="submit"
-          className=" flex justify-center items-center gap-[0.6rem] font-medium text-base text-[#2D201B] bg-[#F6F5F0] rounded-3xl px-[1.75rem] py-[0.9rem] hover:scale-[1.02] cursor-pointer transition-all"
+          variant="primary"
+          size="lg"
+          className="px-[1.75rem] py-[0.9rem]"
         >
           Next
           <ArrowRight className="w-[1.5rem] h-[1.3rem]" />
-        </button>
+        </Button>
       </div>
     </div>
   );

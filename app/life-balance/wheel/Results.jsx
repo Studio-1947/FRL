@@ -2,6 +2,7 @@
 import React, { useMemo, useRef, useState } from "react";
 import BalanceWheel from "./BalanceWheel";
 import { Download, Share2 } from "lucide-react";
+import { Button } from "@/app/components/ui/Button";
 
 // Maps the ordered answers array to the BalanceWheel formData contract
 const toFormData = (answers = []) => {
@@ -81,16 +82,16 @@ const Results = ({ answers, formValues }) => {
       {/* Text + actions */}
       <div className="flex flex-col gap-4 flex-1 justify-start lg:justify-center lg:items-start overflow-hidden">
         <div className="capitalize">
-          <div className="font-bold text-4xl md:text-5xl pb-2 text-white">
+          <div className="font-bold text-4xl md:text-5xl pb-2 text-foreground dark:text-white transition-colors duration-300">
             Your Life Balance Wheel
           </div>
-          <div className="text-white font-semibold tracking-wide text-2xl md:text-4xl">
+          <div className="text-foreground dark:text-white transition-colors duration-300 font-semibold tracking-wide text-2xl md:text-4xl">
             On {displayDate}
           </div>
         </div>
 
         {/* Supporting text */}
-        <p className="font-medium text-base md:text-lg text-white/90 max-w-[36rem]">
+        <p className="font-medium text-base md:text-lg text-muted-foreground dark:text-white/90 transition-colors duration-300 max-w-[36rem]">
           This is your current life balance wheel. Scores may shift hourly,
           daily, or weekly. Don’t seek ultimate truth — just notice how you feel
           right now.
@@ -98,38 +99,40 @@ const Results = ({ answers, formValues }) => {
 
         {/* Optional location line */}
         {Boolean(formValues?.location || formValues?.pinCode) && (
-          <p className="text-white/70 text-sm lg:text-base">
+          <p className="text-muted-foreground dark:text-white/70 transition-colors duration-300 text-sm lg:text-base">
             Country: {formValues?.location || "-"} | ZIP:{" "}
             {formValues?.pinCode || "-"}
           </p>
         )}
 
         <div className="flex gap-3 pt-3">
-          <button
+          <Button
+            variant="primary"
             onClick={handleDownload}
             disabled={downloading}
-            className="flex items-center gap-2 font-medium text-base text-[#2D201B] bg-[#F6F5F0] rounded-full px-5 py-3 lg:text-lg hover:scale-105 disabled:opacity-70 disabled:hover:scale-100 transition-all"
+            className="px-5 py-3 lg:text-lg"
             aria-label="Download"
           >
             <span>{downloading ? "Preparing..." : "Download"}</span>
             <Download className="w-4 h-4" />
-          </button>
-          <button
+          </Button>
+          <Button
+            variant="outline"
             onClick={handleShare}
-            className="flex items-center gap-2 font-medium text-base text-[#EEFCFD] border border-[#EEFCFD]/40 rounded-full px-5 py-3 lg:text-lg hover:scale-105 transition-all"
+            className="px-5 py-3 lg:text-lg"
             aria-label="Share"
           >
             <span>Share</span>
             <Share2 className="w-4 h-4" />
-          </button>
+          </Button>
         </div>
 
         {/* Footer credit */}
-        <p className="mt-6 text-[11px] leading-snug text-white/70 max-w-[36rem]">
+        <p className="mt-6 text-[11px] leading-snug text-muted-foreground dark:text-white/70 transition-colors duration-300 max-w-[36rem]">
           The Life Balance Wheel Tool has been developed by the Academy of
           Leadership Coaching & NLP (ALCN). To know more about this work please
           visit
-          <span className="px-1 underline decoration-white/50 underline-offset-2">
+          <span className="px-1 underline decoration-muted-foreground dark:decoration-white/50 transition-colors duration-300 underline-offset-2">
             https://nlp-leadership-coaching.com/
           </span>
         </p>

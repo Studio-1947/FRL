@@ -8,6 +8,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { useTheme } from "next-themes";
 import { CircleUser, Moon, Sun } from "lucide-react";
+import { Button } from "./ui/Button";
 
 const navLinks = [
   {
@@ -45,7 +46,7 @@ function Header() {
           width={100}
           height={40}
           alt="nav_logo"
-          className="transition-all duration-300 hover:scale-105 object-contain"
+          className="transition-all duration-300 hover:scale-105 object-contain invert dark:invert-0"
         />
       </div>
 
@@ -56,7 +57,7 @@ function Header() {
             <li key={i}>
               <Link
                 href={navLink.link}
-                className="group relative inline-block text-lg font-medium text-foreground dark:text-white"
+                className="group relative inline-block text-lg font-medium text-slate-900 dark:text-white"
               >
                 <span className="relative z-10 inline-block transition-transform duration-300 group-hover:scale-105">
                   {navLink.title}
@@ -72,7 +73,7 @@ function Header() {
       <div className="hidden lg:flex items-center gap-4">
         <button
           onClick={() => setTheme(theme === "dark" ? "light" : "dark")}
-          className="relative p-2 rounded-full hover:bg-[#EEFCFD] hover:text-[#0f313d] transition-all flex items-center justify-center h-10 w-10"
+          className="relative text-slate-900 dark:text-white p-2 rounded-full hover:bg-[#EEFCFD] hover:text-[#0f313d] transition-all flex items-center justify-center h-10 w-10"
           aria-label="Toggle theme"
         >
           <Sun className="absolute h-[1.5rem] w-[1.5rem] rotate-0 scale-100 transition-all dark:-rotate-90 dark:scale-0" />
@@ -80,10 +81,10 @@ function Header() {
           <span className="sr-only">Toggle theme</span>
         </button>
 
-        <div className="inline-flex items-center gap-2 cursor-pointer px-7 py-[0.9375rem] rounded-[2rem] text-foreground dark:text-white hover:bg-[#EEFCFD] hover:text-[#0f313d] transition-all duration-300 hover:scale-105 border border-transparent dark:border-white/20">
+        <Button variant="outline" className="px-7 py-[0.9375rem]">
           <CircleUser size={22} />
           <div className="font-medium text-lg">Login</div>
-        </div>
+        </Button>
       </div>
 
       {/* below this section's ui is still being developed  */}

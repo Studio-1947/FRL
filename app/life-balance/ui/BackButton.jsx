@@ -25,15 +25,15 @@ const BackButton = ({ slideIndex, setSlideIndex }) => {
     <>
       <div className="flex justify-between z-10">
         <button
-          className="w-[3.125rem] h-[3.125rem]  lg:h-[5rem] lg:w-[5rem] bg-[#EEFCFD] rounded-full flex justify-center items-center hover:bg-[#D9F5F7] transition-all duration-200 cursor-pointer hover:scale-105"
+          className="w-[3.125rem] h-[3.125rem]  lg:h-[5rem] lg:w-[5rem] bg-background border border-border dark:border-transparent dark:bg-[#EEFCFD] rounded-full flex justify-center items-center hover:bg-muted dark:hover:bg-[#D9F5F7] transition-all duration-300 cursor-pointer hover:scale-105 shadow-sm"
           onClick={gotToPreviousScreen}
         >
-          <ChevronLeft className="text-[#0F313D] h-8 w-8 " />
+          <ChevronLeft className="text-foreground dark:text-[#0F313D] h-8 w-8 transition-colors duration-300" />
         </button>
         {slideIndex >= 3 && slideIndex <= 10 && (
           <div className="flex justify-center items-center">
             <div className="flex gap-3">
-              <div className="text-white">
+              <div className="text-foreground dark:text-white transition-colors duration-300 font-medium">
                 Step {questionCount}/{totalCount}
               </div>
               <div className="flex gap-2 justify-center items-center">
@@ -45,12 +45,12 @@ const BackButton = ({ slideIndex, setSlideIndex }) => {
                   return (
                     <div
                       key={index}
-                      className={`flex-1 h-2.5 w-2.5 rounded-full transition-all duration-300 ${
+                      className={`flex-1 h-2.5 w-2.5 rounded-full transition-colors duration-300 ${
                         isCompleted
-                          ? "bg-[#6BE3DF]" // Completed step
+                          ? "bg-primary dark:bg-[#6BE3DF]" // Completed step
                           : isCurrent
-                            ? "bg-[#6BE3DF]" // Current step
-                            : "bg-[#0F313D]" // Incomplete
+                            ? "bg-primary dark:bg-[#6BE3DF]" // Current step
+                            : "bg-primary/20 dark:bg-[#0F313D]" // Incomplete
                       }`}
                     ></div>
                   );

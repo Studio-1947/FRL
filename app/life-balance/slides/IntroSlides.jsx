@@ -1,6 +1,7 @@
 import { ArrowRight } from "lucide-react";
 import React from "react";
 import BalanceImage from "./BalanceImage";
+import { Button } from "@/app/components/ui/Button";
 
 // count starts at 1
 // 1 is about
@@ -16,22 +17,24 @@ const IntroSlides = ({ header, paragraph, setSlideIndex, image }) => {
 
       <div className="flex flex-col justify-between flex-1 lg:w-1/2 lg:justify-center lg:gap-7 min-h-0">
         <div className="capitalize">
-          <div className="font-semibold text-3xl pb-2 lg:text-5xl lg:font-bold text-center lg:text-left text-white">
+          <div className="font-semibold text-3xl pb-2 lg:text-5xl lg:font-bold text-center lg:text-left text-foreground dark:text-white transition-colors duration-300">
             {header}
           </div>
-          <p className="font-medium text-base lg:text-xl text-center lg:text-left text-white">
+          <p className="font-medium text-base lg:text-xl text-center lg:text-left text-muted-foreground dark:text-white transition-colors duration-300">
             {paragraph}
           </p>
         </div>
 
         <div className="flex items-baseline justify-end lg:justify-start lg:items-start">
-          <button
-            className="flex justify-center items-center gap-[0.6rem] font-medium text-base text-[#2D201B] bg-[#F6F5F0] rounded-3xl px-[1.75rem] py-[0.75rem] lg:text-xl hover:scale-105 cursor-pointer transition-all"
+          <Button
+            variant="primary"
+            size="lg"
+            className="px-[1.75rem] py-[0.75rem] lg:text-xl"
             onClick={setSlideIndex}
           >
             Explore Now
             <ArrowRight className="w-[1.5rem] h-[1.3rem]" />
-          </button>
+          </Button>
         </div>
       </div>
     </div>

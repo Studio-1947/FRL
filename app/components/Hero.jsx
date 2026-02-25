@@ -1,6 +1,8 @@
 import { ArrowRight, CircleUser, Play } from "lucide-react";
 import Image from "next/image";
+import Link from "next/link";
 import React from "react";
+import { Button } from "./ui/Button";
 
 export default function Hero() {
   return (
@@ -86,14 +88,14 @@ export default function Hero() {
           </p>
         </div>
         <div className="flex gap-3">
-          <button className="inline-flex items-center gap-2 cursor-pointer px-6 py-[0.9375rem] rounded-[2rem] bg-[#EEFCFD] text-[#0F313D] transition-all duration-300 hover:scale-105 font-medium text-xl">
+          <Button variant="primary" size="lg">
             <div className="">Login</div>
             <CircleUser size={22} />
-          </button>
-          <button className="inline-flex items-center gap-2 cursor-pointer px-6 py-[0.9375rem] rounded-[2rem] text-foreground dark:text-[#EEFCFD] transition-all duration-300 hover:scale-105 font-medium text-lg hover:bg-[#EEFCFD] hover:text-[#0F313D] border border-transparent dark:border-white/20">
+          </Button>
+          <Button variant="outline" size="lg">
             <div>Play Video</div>
             <Play size={22} />
-          </button>
+          </Button>
         </div>
       </div>
       {/* second section */}
@@ -117,10 +119,12 @@ export default function Hero() {
           </p>
         </div>
         <div className="px-5 ">
-          <button className="inline-flex items-center gap-2 cursor-pointer px-6 py-[0.9375rem] rounded-[2rem] bg-[#EEFCFD] text-[#0F313D]  transition-all duration-300 hover:scale-103  font-medium text-lg shadow-2xl">
-            <div className="">Explore Now</div>
-            <ArrowRight size={22} />
-          </button>
+          <Link href="/life-balance">
+            <Button variant="primary" size="lg" className="w-full sm:w-auto">
+              <div className="">Explore Now</div>
+              <ArrowRight size={22} />
+            </Button>
+          </Link>
         </div>
       </div>
     </div>
