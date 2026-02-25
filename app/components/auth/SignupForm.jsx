@@ -33,7 +33,7 @@ export default function SignupForm() {
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    console.log("Signup Info:", formData);
+
     // Add logic here to hit actual signup endpoint
   };
 

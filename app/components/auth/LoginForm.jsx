@@ -17,7 +17,7 @@ export default function LoginForm() {
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    console.log("Login Info:", formData);
+
     // Add logic here to hit actual login endpoint
   };
 

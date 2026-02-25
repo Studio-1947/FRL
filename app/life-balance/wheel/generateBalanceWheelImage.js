@@ -18,8 +18,6 @@
  * @param {string} date A date string in "dd/mm/yyyy" (or any string you prefer for the subtitle)
  */
 export const generateBalanceWheelImage = async (wheelElement, date) => {
-  console.log("generateBalanceWheelImage called with:", { wheelElement, date });
-
   const [{ default: html2canvas }, { toJpeg }] = await Promise.all([
     import("html2canvas"),
     import("html-to-image"),
@@ -196,14 +194,11 @@ export const generateBalanceWheelImage = async (wheelElement, date) => {
     document.body.appendChild(link);
     link.click();
     document.body.removeChild(link);
-
-    console.log("Download successful!");
   } catch (err) {
     console.error("Error generating card image:", err);
 
     // Fallback: capture only the wheel element with safer options
     try {
-      console.log("Attempting fallback download method...");
       const dataUrl = await toJpeg(wheelElement, {
         quality: 0.95,
         skipFonts: true, // Skip font embedding to avoid CSS rules errors
@@ -216,7 +211,6 @@ export const generateBalanceWheelImage = async (wheelElement, date) => {
       document.body.appendChild(link);
       link.click();
       document.body.removeChild(link);
-      console.log("Fallback download successful!");
     } catch (fallbackErr) {
       console.error("Fallback download also failed:", fallbackErr);
       alert(

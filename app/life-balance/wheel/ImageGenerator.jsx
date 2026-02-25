@@ -8,8 +8,6 @@ import { toJpeg } from "html-to-image";
  * @param {string} date - The current date string to display on the image
  */
 export const generateBalanceWheelImage = async (wheelElement, date) => {
-  console.log("generateBalanceWheelImage called with:", { wheelElement, date });
-
   if (!wheelElement) {
     console.error("Wheel element reference is missing");
     alert("Unable to download: Wheel element not found. Please try again.");
@@ -17,15 +15,13 @@ export const generateBalanceWheelImage = async (wheelElement, date) => {
   }
 
   try {
-    console.log("Starting image generation process...");
-
     const elements = wheelElement.querySelectorAll('[class*="bg-"]');
     const originalClasses = new Map();
     elements.forEach((el) => {
       originalClasses.set(el, el.getAttribute("class"));
       const classList = el.getAttribute("class").split(" ");
       const filteredClasses = classList.filter(
-        (cls) => !cls.includes("oklch") && !cls.includes("bg-gradient")
+        (cls) => !cls.includes("oklch") && !cls.includes("bg-gradient"),
       );
       el.setAttribute("class", filteredClasses.join(" "));
     });
@@ -33,8 +29,6 @@ export const generateBalanceWheelImage = async (wheelElement, date) => {
     const screenWidth = window.innerWidth;
     const isMobile = screenWidth < 768;
     const wheelSize = isMobile ? screenWidth - 40 : 740;
-
-    console.log("Creating card container...");
 
     const cardContainer = document.createElement("div");
     cardContainer.id = "wheel-card-container";
@@ -114,8 +108,6 @@ export const generateBalanceWheelImage = async (wheelElement, date) => {
 
     document.body.appendChild(cardContainer);
 
-    console.log("Cloning wheel element...");
-
     if (wheelElement) {
       const wheelParent = wheelElement.closest('[data-wheel-container="true"]');
       const wheelClone = (wheelParent || wheelElement).cloneNode(true);
@@ -128,8 +120,6 @@ export const generateBalanceWheelImage = async (wheelElement, date) => {
       wheelClone.style.height = "100%";
       wheelContainer.appendChild(wheelClone);
     }
-
-    console.log("Generating canvas with html2canvas...");
 
     const canvas = await html2canvas(cardContainer, {
       backgroundColor: "transparent",
@@ -155,8 +145,6 @@ export const generateBalanceWheelImage = async (wheelElement, date) => {
       },
     });
 
-    console.log("Canvas generated successfully, creating download link...");
-
     const imageData = canvas.toDataURL("image/jpeg", 0.95);
     const link = document.createElement("a");
     link.download = "life-balance-wheel.jpg";
@@ -166,8 +154,6 @@ export const generateBalanceWheelImage = async (wheelElement, date) => {
     document.body.appendChild(link);
     link.click();
     document.body.removeChild(link);
-
-    console.log("Download triggered successfully!");
 
     // Restore original classes
     elements.forEach((el) => {
@@ -179,7 +165,6 @@ export const generateBalanceWheelImage = async (wheelElement, date) => {
     console.error("Error generating card image:", err);
 
     // Fallback to simpler download method
-    console.log("Attempting fallback download method...");
 
     try {
       if (wheelElement) {
@@ -190,14 +175,13 @@ export const generateBalanceWheelImage = async (wheelElement, date) => {
         document.body.appendChild(link);
         link.click();
         document.body.removeChild(link);
-        console.log("Fallback download successful!");
       } else {
         throw new Error("No wheel element available for fallback");
       }
     } catch (fallbackErr) {
       console.error("Fallback download also failed:", fallbackErr);
       alert(
-        "Download failed. Please try again or contact support if the issue persists."
+        "Download failed. Please try again or contact support if the issue persists.",
       );
     }
   } finally {
@@ -205,7 +189,6 @@ export const generateBalanceWheelImage = async (wheelElement, date) => {
     const existingCard = document.querySelector("#wheel-card-container");
     if (existingCard) {
       existingCard.remove();
-      console.log("Cleaned up temporary card container");
     }
   }
 };

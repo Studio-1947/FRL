@@ -25,9 +25,6 @@ const LifeBalancePage = () => {
     setAnswers((prev) => [...prev, ans]);
   };
 
-  console.log(`formValues: ${JSON.stringify(formValues)}`);
-  console.log(`answers: ${answers}`);
-
   return (
     <div className="h-dvh relative flex justify-center overflow-hidden">
       {/* Background layer */}
