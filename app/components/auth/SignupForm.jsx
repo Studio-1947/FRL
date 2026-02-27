@@ -31,10 +31,48 @@ export default function SignupForm() {
     setFormData((prev) => ({ ...prev, role }));
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
 
-    // Add logic here to hit actual signup endpoint
+    if (formData.password !== formData.confirmPassword) {
+      alert("Passwords do not match!");
+      return;
+    }
+
+    try {
+      const response = await fetch(
+        "http://localhost:8000/api/v1/auth/register",
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            email: formData.email,
+            password: formData.password,
+            name: `${formData.firstName} ${formData.lastName}`.trim(),
+          }),
+        },
+      );
+
+      if (!response.ok) {
+        const errorData = await response.json();
+        alert(`Signup failed: ${errorData.message}`);
+        return;
+      }
+
+      const data = await response.json();
+      // Store token (example using localStorage)
+      localStorage.setItem("access_token", data.access_token);
+      alert("Signup successful!");
+      console.log("Registered user:", data.user);
+
+      // Redirect or update UI state here
+      // window.location.href = "/dashboard";
+    } catch (err) {
+      console.error(err);
+      alert("An error occurred during signup. Is the backend running?");
+    }
   };
 
   const inputClasses =

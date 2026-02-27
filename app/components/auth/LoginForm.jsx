@@ -15,10 +15,39 @@ export default function LoginForm() {
     setFormData((prev) => ({ ...prev, [name]: value }));
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
 
-    // Add logic here to hit actual login endpoint
+    try {
+      const response = await fetch("http://localhost:8000/api/v1/auth/login", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          email: formData.email,
+          password: formData.password,
+        }),
+      });
+
+      if (!response.ok) {
+        const errorData = await response.json();
+        alert(`Login failed: ${errorData.message}`);
+        return;
+      }
+
+      const data = await response.json();
+      // Store token (example using localStorage)
+      localStorage.setItem("access_token", data.access_token);
+      alert("Login successful!");
+      console.log("Logged in user:", data.user);
+
+      // Redirect or update UI state here
+      // window.location.href = "/dashboard";
+    } catch (err) {
+      console.error(err);
+      alert("An error occurred during login. Is the backend running?");
+    }
   };
 
   const inputClasses =
