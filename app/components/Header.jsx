@@ -98,39 +98,55 @@ function Header() {
         className="lg:hidden flex flex-col gap-1 cursor-pointer"
         onClick={() => setIsMenuOpen(!isMenuOpen)}
       >
-        <div className="w-6 h-0.5 bg-white"></div>
-        <div className="w-6 h-0.5 bg-white"></div>
-        <div className="w-6 h-0.5 bg-white"></div>
+        <div
+          className={`w-6 h-0.5 bg-white transition-all duration-300 ease-in-out ${
+            isMenuOpen ? "rotate-45 translate-y-[6px]" : ""
+          }`}
+        ></div>
+        <div
+          className={`w-6 h-0.5 bg-white transition-all duration-300 ease-in-out ${
+            isMenuOpen ? "opacity-0" : ""
+          }`}
+        ></div>
+        <div
+          className={`w-6 h-0.5 bg-white transition-all duration-300 ease-in-out ${
+            isMenuOpen ? "-rotate-45 -translate-y-[6px]" : ""
+          }`}
+        ></div>
       </div>
 
       {/* Mobile Dropdown Menu */}
-      {isMenuOpen && (
-        <div className="absolute top-[80px] left-0 w-full bg-[#0F313D] z-10 px-5 pb-4 lg:hidden transition-all">
-          <ul className="flex flex-col gap-4">
-            {navLinks.map((navLink, i) => (
-              <li key={i}>
-                <Link
-                  href={navLink.link}
-                  className="block text-lg font-medium py-2 border-b border-white/20"
-                  onClick={() => setIsMenuOpen(false)}
-                >
-                  {navLink.title}
-                </Link>
-              </li>
-            ))}
-            <li className="flex gap-2 items-center mt-2 cursor-pointer">
+      <div
+        className={`absolute top-[80px] left-0 w-full bg-[#0F313D] z-10 px-5 lg:hidden transition-all duration-300 ease-in-out overflow-hidden ${
+          isMenuOpen
+            ? "max-h-[500px] pb-4 opacity-100"
+            : "max-h-0 opacity-0 pointer-events-none"
+        }`}
+      >
+        <ul className="flex flex-col gap-4">
+          {navLinks.map((navLink, i) => (
+            <li key={i}>
               <Link
-                href="/login"
-                className="flex gap-2 items-center w-full"
+                href={navLink.link}
+                className="block text-lg font-medium py-2 border-b border-white/20"
                 onClick={() => setIsMenuOpen(false)}
               >
-                <CircleUser size={20} />
-                <div className="font-medium text-lg">LOGIN</div>
+                {navLink.title}
               </Link>
             </li>
-          </ul>
-        </div>
-      )}
+          ))}
+          <li className="flex gap-2 items-center mt-2 cursor-pointer">
+            <Link
+              href="/login"
+              className="flex gap-2 items-center w-full"
+              onClick={() => setIsMenuOpen(false)}
+            >
+              <CircleUser size={20} />
+              <div className="font-medium text-lg">LOGIN</div>
+            </Link>
+          </li>
+        </ul>
+      </div>
     </header>
   );
 }

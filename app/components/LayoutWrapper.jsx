@@ -19,7 +19,7 @@ export default function LayoutWrapper({ children }) {
   return (
     <div className="flex flex-col min-h-screen">
       {!shouldHideNavigation && (
-        <div className="w-full max-w-[1440px] mx-auto overflow-hidden px-2 lg:px-7">
+        <div className="w-full max-w-[1440px] mx-auto px-2 lg:px-7">
           <Header />
         </div>
       )}

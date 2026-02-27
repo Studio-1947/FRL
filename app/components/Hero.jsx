@@ -10,8 +10,8 @@ export default function Hero() {
       {/* first section */}
       <div className="lg:w-1/2 flex flex-col gap-8 ">
         {/* card */}
-        <div className="flex gap-5 pb-4">
-          <div className="w-50  rounded-xl inline-flex flex-col justify-start items-start overflow-hidden transition-all duration-300 hover:scale-105 shadow-2xl">
+        <div className="flex flex-col sm:flex-row gap-5 pb-4 w-full">
+          <div className="w-full sm:w-[200px] shrink-0 rounded-xl inline-flex flex-col justify-start items-start overflow-hidden transition-all duration-300 hover:scale-105 shadow-2xl">
             <Image
               className="object-cover h-32 relative"
               src="/Hero/hero_card.webp"
@@ -39,7 +39,7 @@ export default function Hero() {
               </div>
             </div>
           </div>
-          <div className="w-50  rounded-xl inline-flex flex-col justify-start items-start overflow-hidden transition-all duration-300 hover:scale-105 shadow-2xl">
+          <div className="w-full sm:w-[200px] shrink-0 rounded-xl inline-flex flex-col justify-start items-start overflow-hidden transition-all duration-300 hover:scale-105 shadow-2xl">
             <Image
               className="object-cover h-32 relative"
               src="/Hero/hero_card2.webp"
