@@ -21,7 +21,7 @@ const navLinks = [
   },
   {
     title: "ABOUT US",
-    link: "/about-us",
+    link: "/about",
   },
   {
     title: "IMPACT",
@@ -38,9 +38,12 @@ function Header() {
   const { setTheme, theme } = useTheme();
 
   return (
-    <header className="py-4 px-2 flex justify-between items-center xl:py-2">
+    <header className="relative z-50 py-4 px-2 flex justify-between items-center xl:py-2">
       {/* Logo */}
-      <div className="cursor-pointer flex justify-center items-center">
+      <Link
+        href="/"
+        className="cursor-pointer flex justify-center items-center"
+      >
         <Image
           src="/Bluelog.svg"
           width={100}
@@ -48,7 +51,7 @@ function Header() {
           alt="nav_logo"
           className="transition-all duration-300 hover:scale-105 object-contain invert dark:invert-0"
         />
-      </div>
+      </Link>
 
       {/* Desktop Nav */}
       <nav className="hidden lg:flex">
@@ -115,12 +118,16 @@ function Header() {
                 </Link>
               </li>
             ))}
-            <Link href="/login">
-              <li className="flex gap-2 items-center mt-2 cursor-pointer">
+            <li className="flex gap-2 items-center mt-2 cursor-pointer">
+              <Link
+                href="/login"
+                className="flex gap-2 items-center w-full"
+                onClick={() => setIsMenuOpen(false)}
+              >
                 <CircleUser size={20} />
                 <div className="font-medium text-lg">LOGIN</div>
-              </li>
-            </Link>
+              </Link>
+            </li>
           </ul>
         </div>
       )}
