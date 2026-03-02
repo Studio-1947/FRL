@@ -15,6 +15,7 @@ async function bootstrap() {
     // Security
     app.use(
       helmet({
+        crossOriginEmbedderPolicy: false,
         contentSecurityPolicy: {
           directives: {
             defaultSrc: ["'self'"],
@@ -24,7 +25,13 @@ async function bootstrap() {
               "'unsafe-eval'",
               'https://cdnjs.cloudflare.com',
             ],
-            styleSrc: ["'self'", "'unsafe-inline'", 'https://cdnjs.cloudflare.com'],
+            styleSrc: [
+              "'self'",
+              "'unsafe-inline'",
+              'https://cdnjs.cloudflare.com',
+              'https://fonts.googleapis.com',
+            ],
+            fontSrc: ["'self'", 'https://fonts.gstatic.com'],
             imgSrc: ["'self'", 'data:', 'validator.swagger.io'],
           },
         },
@@ -69,11 +76,15 @@ async function bootstrap() {
       .build();
     const document = SwaggerModule.createDocument(app, config);
     SwaggerModule.setup('api/docs', app, document, {
-      customCssUrl: 'https://cdnjs.cloudflare.com/ajax/libs/swagger-ui/5.17.14/swagger-ui.min.css',
+      customSiteTitle: 'FRL API Documentation',
+      customCssUrl: 'https://cdnjs.cloudflare.com/ajax/libs/swagger-ui/5.18.2/swagger-ui.min.css',
       customJs: [
-        'https://cdnjs.cloudflare.com/ajax/libs/swagger-ui/5.17.14/swagger-ui-bundle.js',
-        'https://cdnjs.cloudflare.com/ajax/libs/swagger-ui/5.17.14/swagger-ui-standalone-preset.js',
+        'https://cdnjs.cloudflare.com/ajax/libs/swagger-ui/5.18.2/swagger-ui-bundle.js',
+        'https://cdnjs.cloudflare.com/ajax/libs/swagger-ui/5.18.2/swagger-ui-standalone-preset.js',
       ],
+      swaggerOptions: {
+        persistAuthorization: true,
+      },
     });
 
     await app.init();
