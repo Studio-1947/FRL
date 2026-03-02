@@ -3,6 +3,7 @@
 import React, { useState } from "react";
 import Link from "next/link";
 import { Button } from "../ui/Button";
+import { fetchApi } from "@/lib/api";
 
 export default function SignupForm() {
   const [formData, setFormData] = useState({
@@ -40,20 +41,14 @@ export default function SignupForm() {
     }
 
     try {
-      const response = await fetch(
-        "http://localhost:8000/api/v1/auth/register",
-        {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify({
-            email: formData.email,
-            password: formData.password,
-            name: `${formData.firstName} ${formData.lastName}`.trim(),
-          }),
-        },
-      );
+      const response = await fetchApi("/v1/auth/register", {
+        method: "POST",
+        body: JSON.stringify({
+          email: formData.email,
+          password: formData.password,
+          name: `${formData.firstName} ${formData.lastName}`.trim(),
+        }),
+      });
 
       if (!response.ok) {
         const errorData = await response.json();

@@ -3,6 +3,7 @@
 import React, { useState } from "react";
 import Link from "next/link";
 import { Button } from "../ui/Button";
+import { fetchApi } from "@/lib/api";
 
 export default function LoginForm() {
   const [formData, setFormData] = useState({
@@ -19,11 +20,8 @@ export default function LoginForm() {
     e.preventDefault();
 
     try {
-      const response = await fetch("http://localhost:8000/api/v1/auth/login", {
+      const response = await fetchApi("/v1/auth/login", {
         method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
         body: JSON.stringify({
           email: formData.email,
           password: formData.password,
