@@ -15,6 +15,13 @@ export class UsersController {
     return this.usersService.findAll();
   }
 
+  @Get('people')
+  @ApiOperation({ summary: 'Get all user public profiles (without passwords)' })
+  @ApiResponse({ status: 200, description: 'Returns safe profiles suitable for public directory' })
+  async getPeople() {
+    return this.usersService.findPeople();
+  }
+
   @Post()
   @ApiOperation({ summary: 'Create a new user' })
   @ApiResponse({ status: 201, description: 'The user has been successfully created.' })

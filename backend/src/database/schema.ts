@@ -10,6 +10,18 @@ export const users = pgTable('users', {
   bio: text('bio'),
   expertise: varchar('expertise', { length: 100 }),
   role: varchar('role', { length: 50 }).default('Individual'),
+
+  // Detailed Profile Fields
+  values: text('values'),
+  professionalProfile: text('professional_profile'),
+  geographicalSpread: text('geographical_spread'),
+  interventions: text('interventions'),
+  problem: text('problem'),
+  systemChange: text('system_change'),
+  systemImpact: text('system_impact'),
+  abundance: text('abundance'),
+  helpNeeded: text('help_needed'),
+
   createdAt: timestamp('created_at').defaultNow().notNull(),
   updatedAt: timestamp('updated_at').defaultNow().notNull(),
 });
