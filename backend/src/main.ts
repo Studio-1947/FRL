@@ -13,7 +13,23 @@ async function bootstrap() {
     const configService = app.get(ConfigService);
 
     // Security
-    app.use(helmet());
+    app.use(
+      helmet({
+        contentSecurityPolicy: {
+          directives: {
+            defaultSrc: ["'self'"],
+            scriptSrc: [
+              "'self'",
+              "'unsafe-inline'",
+              "'unsafe-eval'",
+              'https://cdnjs.cloudflare.com',
+            ],
+            styleSrc: ["'self'", "'unsafe-inline'", 'https://cdnjs.cloudflare.com'],
+            imgSrc: ["'self'", 'data:', 'validator.swagger.io'],
+          },
+        },
+      }),
+    );
 
     // CORS configuration
     const frontendUrl = configService.get<string>('FRONTEND_URL', 'http://localhost:3000');
