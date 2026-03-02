@@ -35,13 +35,13 @@ export default function LoginForm() {
       }
 
       const data = await response.json();
-      // Store token (example using localStorage)
-      localStorage.setItem("access_token", data.access_token);
+      // Store token using cookies for Middleware access
+      document.cookie = `access_token=${data.access_token}; path=/; max-age=86400; SameSite=Lax`;
       alert("Login successful!");
       console.log("Logged in user:", data.user);
 
-      // Redirect or update UI state here
-      // window.location.href = "/dashboard";
+      // Redirect to a protected route
+      window.location.href = "/life-balance";
     } catch (err) {
       console.error(err);
       alert("An error occurred during login. Is the backend running?");

@@ -47,6 +47,10 @@ export default function SignupForm() {
           email: formData.email,
           password: formData.password,
           name: `${formData.firstName} ${formData.lastName}`.trim(),
+          phone: formData.phone,
+          bio: formData.bio,
+          expertise: formData.expertise,
+          role: formData.role,
         }),
       });
 
@@ -57,13 +61,13 @@ export default function SignupForm() {
       }
 
       const data = await response.json();
-      // Store token (example using localStorage)
-      localStorage.setItem("access_token", data.access_token);
+      // Store token using cookies for Middleware access
+      document.cookie = `access_token=${data.access_token}; path=/; max-age=86400; SameSite=Lax`;
       alert("Signup successful!");
       console.log("Registered user:", data.user);
 
-      // Redirect or update UI state here
-      // window.location.href = "/dashboard";
+      // Redirect to a protected route
+      window.location.href = "/life-balance";
     } catch (err) {
       console.error(err);
       alert("An error occurred during signup. Is the backend running?");
