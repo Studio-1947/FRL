@@ -13,6 +13,7 @@ import { DatabaseModule } from './database/database.module';
 // import { UsersModule } from './users/users.module';
 import { UsersModule } from './users/users.module';
 import { AuthModule } from './auth/auth.module';
+import { AppController } from './app.controller';
 
 @Module({
   imports: [
@@ -54,5 +55,6 @@ import { AuthModule } from './auth/auth.module';
     //   useClass: TransformInterceptor,
     // }
   ],
+  controllers: [AppController],
 })
 export class AppModule {}
