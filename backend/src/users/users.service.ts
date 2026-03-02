@@ -18,10 +18,26 @@ export class UsersService {
     });
   }
 
-  async create(data: { email: string; password?: string; name?: string }) {
+  async create(data: {
+    email: string;
+    password?: string;
+    name?: string;
+    phone?: string;
+    bio?: string;
+    expertise?: string;
+    role?: string;
+  }) {
     const [user] = await this.db
       .insert(schema.users)
-      .values({ email: data.email, password: data.password || '', name: data.name })
+      .values({
+        email: data.email,
+        password: data.password || '',
+        name: data.name,
+        phone: data.phone,
+        bio: data.bio,
+        expertise: data.expertise,
+        role: data.role || 'Individual',
+      })
       .returning();
     return user;
   }

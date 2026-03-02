@@ -23,6 +23,10 @@ export class AuthService {
       email: registerDto.email,
       password: hashedPassword,
       name: registerDto.name,
+      phone: registerDto.phone,
+      bio: registerDto.bio,
+      expertise: registerDto.expertise,
+      role: registerDto.role,
     });
 
     const payload = { sub: user.id, email: user.email };
