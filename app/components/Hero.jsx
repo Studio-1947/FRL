@@ -88,10 +88,12 @@ export default function Hero() {
           </p>
         </div>
         <div className="flex gap-3">
-          <Button variant="primary" size="lg">
-            <div className="">Login</div>
-            <CircleUser size={22} />
-          </Button>
+          <Link href="/login">
+            <Button variant="primary" size="lg">
+              <div className="">Login</div>
+              <CircleUser size={22} />
+            </Button>
+          </Link>
           <Button variant="outline" size="lg">
             <div>Play Video</div>
             <Play size={22} />

@@ -32,13 +32,13 @@ export default function Footer() {
               About Us
             </Link>
             <Link
-              href="/careers"
+              href="/resources#careers"
               className="text-[13px] opacity-80 hover:opacity-100 transition-opacity"
             >
               Careers
             </Link>
             <Link
-              href="/contact"
+              href="/resources#contact"
               className="text-[13px] opacity-80 hover:opacity-100 transition-opacity"
             >
               Contact
@@ -57,25 +57,25 @@ export default function Footer() {
               Resources
             </h3>
             <Link
-              href="/tools"
+              href="/resources"
               className="text-[13px] opacity-80 hover:opacity-100 transition-opacity"
             >
               Tools
             </Link>
             <Link
-              href="/guidelines"
+              href="/resources"
               className="text-[13px] opacity-80 hover:opacity-100 transition-opacity"
             >
               Guidelines
             </Link>
             <Link
-              href="/research"
+              href="/resources"
               className="text-[13px] opacity-80 hover:opacity-100 transition-opacity"
             >
               Research
             </Link>
             <Link
-              href="/events"
+              href="/resources/events"
               className="text-[13px] opacity-80 hover:opacity-100 transition-opacity"
             >
               Events

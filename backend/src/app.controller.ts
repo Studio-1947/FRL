@@ -79,7 +79,7 @@ export class AppController {
     `;
   }
 
-  @Get()
+  @Get('status')
   getApiV1() {
     return {
       message: 'FRL Backend API is operational',

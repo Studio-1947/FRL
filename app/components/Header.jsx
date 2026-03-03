@@ -25,11 +25,11 @@ const navLinks = [
   },
   {
     title: "IMPACT",
-    link: "/feed",
+    link: "/about",
   },
   {
     title: "KNOWLEDGE SYSTEM",
-    link: "/feed",
+    link: "/resources",
   },
 ];
 
@@ -148,14 +148,26 @@ function Header() {
             </li>
           ))}
           <li className="flex gap-2 items-center mt-2 cursor-pointer">
-            <Link
-              href="/login"
-              className="flex gap-2 items-center w-full"
-              onClick={() => setIsMenuOpen(false)}
-            >
-              <CircleUser size={20} />
-              <div className="font-medium text-lg">LOGIN</div>
-            </Link>
+            {typeof document !== "undefined" &&
+            document.cookie.includes("access_token") ? (
+              <Link
+                href="/profile"
+                className="flex gap-2 items-center w-full"
+                onClick={() => setIsMenuOpen(false)}
+              >
+                <CircleUser size={20} />
+                <div className="font-medium text-lg">PROFILE</div>
+              </Link>
+            ) : (
+              <Link
+                href="/login"
+                className="flex gap-2 items-center w-full"
+                onClick={() => setIsMenuOpen(false)}
+              >
+                <CircleUser size={20} />
+                <div className="font-medium text-lg">LOGIN</div>
+              </Link>
+            )}
           </li>
         </ul>
       </div>

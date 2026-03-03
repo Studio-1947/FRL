@@ -252,6 +252,10 @@ async function seed() {
   ];
 
   try {
+    // Clear existing users to ensure clean seed data for the 15 names
+    await db.delete(schema.users);
+    console.log('Cleared existing users.');
+
     await db
       .insert(schema.users)
       .values(seedData)
