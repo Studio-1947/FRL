@@ -9,8 +9,10 @@ import { AppModule } from './app.module';
 let app: INestApplication;
 
 async function bootstrap() {
+  console.log('Bootstrapping application...');
   if (!app) {
     app = await NestFactory.create(AppModule);
+    console.log('Nest application created.');
     const configService = app.get(ConfigService);
 
     // Cookie parser
@@ -90,8 +92,10 @@ async function bootstrap() {
         persistAuthorization: true,
       },
     });
+    console.log('Swagger documentation setup completed.');
 
     await app.init();
+    console.log('Application initialization completed.');
   }
   return app;
 }

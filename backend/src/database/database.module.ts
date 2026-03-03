@@ -16,6 +16,8 @@ export const DRIZZLE = Symbol('DRIZZLE_CONNECTION');
         const connectionString = configService.get<string>('DATABASE_URL');
         const pool = new Pool({
           connectionString,
+          connectionTimeoutMillis: 5000,
+          idleTimeoutMillis: 10000,
         });
 
         return drizzle(pool, { schema });
