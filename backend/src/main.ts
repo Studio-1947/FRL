@@ -3,6 +3,7 @@ import { NestFactory } from '@nestjs/core';
 import { ConfigService } from '@nestjs/config';
 import { SwaggerModule, DocumentBuilder } from '@nestjs/swagger';
 import helmet from 'helmet';
+import * as cookieParser from 'cookie-parser';
 import { AppModule } from './app.module';
 
 let app: INestApplication;
@@ -11,6 +12,9 @@ async function bootstrap() {
   if (!app) {
     app = await NestFactory.create(AppModule);
     const configService = app.get(ConfigService);
+
+    // Cookie parser
+    app.use(cookieParser());
 
     // Security
     app.use(

@@ -41,7 +41,7 @@ export default function LoginForm() {
       console.log("Logged in user:", data.user);
 
       // Redirect to a protected route
-      window.location.href = "/life-balance";
+      window.location.href = "/profile";
     } catch (err) {
       console.error(err);
       alert("An error occurred during login. Is the backend running?");

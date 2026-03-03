@@ -44,8 +44,26 @@ async function seed() {
       'Encouragement to continue current niche research methods\nSystems transformations\nMore emphasis on resource conservation, cost-cutting, and a healthy living environment, notwithstanding their limitations, But will promote a shift towards a more sustainable planet.',
   };
 
+  const aditiKundu = {
+    email: 'aditi_kundu@rediffmail.com',
+    password: defaultPassword,
+    name: 'Aditi Kundu',
+    values: '#integrity #compassion #equality',
+    professionalProfile:
+      'I am trained as an architect; however, teaching is my forte. I am inclined towards social sciences in architecture such as History and Sociology. Besides that, I like design. From designing building to graphics and craft-based products, I find it all very interesting and challenging.',
+    geographicalSpread: 'New Delhi, Noida (UP)',
+    interventions:
+      'Educating the young minds comes with a lot of responsibility. It is imperative that the students are familiarised with the value system associated with architecture and allied subjects. The objective should be to inculcate a thinking environment rather than preparing a workforce ready for the race.',
+    problem: '',
+    systemChange: 'Better learning environment, better students, better tomorrow',
+    systemImpact: '',
+    abundance:
+      'Integrity\nKnots within to untie\nSelf transformation challenges for self\nBe more patient. Not to lose my cool. Develop the ability to think from others perspective',
+    helpNeeded:
+      'Self-development by increasing my knowledge base to come up with better arguments\nSystems transformations\nBetter learning environment, better students, better tomorrow',
+  };
+
   const otherNames = [
-    'Aditi Kundu',
     'Ajay Nayak',
     'Ashish Mehta',
     'Gulan Kripalani',
@@ -61,7 +79,7 @@ async function seed() {
     'Tanisha Tewari',
   ];
 
-  const seedData = [ajayAbey];
+  const seedData = [ajayAbey, aditiKundu];
 
   otherNames.forEach((name) => {
     seedData.push({

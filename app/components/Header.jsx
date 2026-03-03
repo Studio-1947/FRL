@@ -84,12 +84,24 @@ function Header() {
           <span className="sr-only">Toggle theme</span>
         </button>
 
-        <Link href="/login">
-          <Button variant="outline" className="px-7 py-[0.9375rem]">
-            <CircleUser size={22} />
-            <div className="font-medium text-lg">Login</div>
-          </Button>
-        </Link>
+        {typeof document !== "undefined" &&
+        document.cookie.includes("access_token") ? (
+          <div className="flex gap-4">
+            <Link href="/profile">
+              <Button variant="outline" className="px-5 py-[0.9375rem]">
+                <CircleUser size={22} className="mr-2" />
+                <div className="font-medium text-[15px]">Profile</div>
+              </Button>
+            </Link>
+          </div>
+        ) : (
+          <Link href="/login">
+            <Button variant="outline" className="px-7 py-[0.9375rem]">
+              <CircleUser size={22} />
+              <div className="font-medium text-[15px] ml-2">Login</div>
+            </Button>
+          </Link>
+        )}
       </div>
 
       {/* below this section's ui is still being developed  */}

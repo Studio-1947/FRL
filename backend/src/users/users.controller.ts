@@ -1,6 +1,8 @@
-import { Controller, Get, Post, Body } from '@nestjs/common';
+import { Controller, Get, Post, Body, Patch, UseGuards, Req } from '@nestjs/common';
 import { ApiTags, ApiOperation, ApiResponse, ApiBearerAuth } from '@nestjs/swagger';
+import { Request } from 'express';
 import { UsersService } from './users.service';
+import { JwtAuthGuard } from '../auth/jwt-auth.guard';
 
 @ApiTags('Users')
 @ApiBearerAuth()
@@ -20,6 +22,25 @@ export class UsersController {
   @ApiResponse({ status: 200, description: 'Returns safe profiles suitable for public directory' })
   async getPeople() {
     return this.usersService.findPeople();
+  }
+
+  @UseGuards(JwtAuthGuard)
+  @Get('profile')
+  @ApiOperation({ summary: 'Get logged in user profile' })
+  @ApiResponse({ status: 200, description: 'Returns the current users complete profile' })
+  async getProfile(@Req() req: Request & { user: any }) {
+    // req.user is populated by JwtStrategy validate method
+    return this.usersService.findById(req.user.sub);
+  }
+
+  @UseGuards(JwtAuthGuard)
+  @Patch('profile')
+  @ApiOperation({ summary: 'Update logged in user profile' })
+  @ApiResponse({ status: 200, description: 'The user profile has been successfully updated.' })
+  async updateProfile(@Req() req: Request & { user: any }, @Body() body: any) {
+    // Disallow updating password or ID through this open object payload
+    const { password, id, createdAt, updatedAt, ...safeData } = body;
+    return this.usersService.updateProfile(req.user.sub, safeData);
   }
 
   @Post()

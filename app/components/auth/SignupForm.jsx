@@ -67,7 +67,7 @@ export default function SignupForm() {
       console.log("Registered user:", data.user);
 
       // Redirect to a protected route
-      window.location.href = "/life-balance";
+      window.location.href = "/profile";
     } catch (err) {
       console.error(err);
       alert("An error occurred during signup. Is the backend running?");

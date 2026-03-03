@@ -41,6 +41,25 @@ export class UsersService {
       .from(schema.users);
   }
 
+  async findById(id: number) {
+    return this.db.query.users.findFirst({
+      where: eq(schema.users.id, id),
+    });
+  }
+
+  async updateProfile(id: number, data: any) {
+    const [updatedUser] = await this.db
+      .update(schema.users)
+      .set({
+        ...data,
+        updatedAt: new Date(),
+      })
+      .where(eq(schema.users.id, id))
+      .returning();
+
+    return updatedUser;
+  }
+
   async create(data: {
     email: string;
     password?: string;
