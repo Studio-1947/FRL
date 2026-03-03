@@ -79,24 +79,177 @@ async function seed() {
     'Tanisha Tewari',
   ];
 
-  const seedData = [ajayAbey, aditiKundu];
-
-  otherNames.forEach((name) => {
-    seedData.push({
-      ...ajayAbey,
-      name,
-      email: `${name.toLowerCase().replace(/\s+/g, '')}@example.com`,
-    });
-  });
-
-  // Generate 15 more dummy records to reach the 30 count requirement.
-  for (let i = 1; i <= 15; i++) {
-    seedData.push({
-      ...ajayAbey,
-      name: `Person Placeholder ${i}`,
-      email: `placeholder${i}@example.com`,
-    });
-  }
+  const seedData = [
+    ajayAbey,
+    aditiKundu,
+    {
+      name: 'Ajay Nayak',
+      email: 'ajay_nayak@example.com',
+      password: defaultPassword,
+      role: 'Individual',
+      expertise: 'Environment',
+      values: '#Sustainability #GreenLiving',
+      professionalProfile:
+        'Ajay is an environmental consultant specializing in sustainable urban development.',
+      geographicalSpread: 'Maharashtra, Gujarat',
+      abundance: 'Knowledge of eco-friendly materials',
+      helpNeeded: 'Networking with local government bodies',
+    },
+    {
+      name: 'Ashish Mehta',
+      email: 'ashish_mehta@example.com',
+      password: defaultPassword,
+      role: 'Volunteer',
+      expertise: 'Education',
+      values: '#Mentorship #Growth',
+      professionalProfile:
+        'Ashish has been mentoring students in underprivileged communities for over a decade.',
+      geographicalSpread: 'Delhi NCR',
+      abundance: 'Patience and teaching skills',
+      helpNeeded: 'Educational resources and digital tools',
+    },
+    {
+      name: 'Gulan Kripalani',
+      email: 'gulan_k@example.com',
+      password: defaultPassword,
+      role: 'Organization',
+      expertise: 'Healthcare',
+      values: '#Compassion #Access',
+      professionalProfile:
+        'Gulan leads an NGO focused on bringing primary healthcare to rural villages.',
+      geographicalSpread: 'Rajasthan',
+      abundance: 'Strong volunteer network',
+      helpNeeded: 'Medical supplies and funding',
+    },
+    {
+      name: 'Keyur Sharda',
+      email: 'keyur_sharda@example.com',
+      password: defaultPassword,
+      role: 'Donor',
+      expertise: 'Education',
+      values: '#Legacy #Giving',
+      professionalProfile:
+        'Keyur is a philanthropist dedicated to improving literacy rates across India.',
+      geographicalSpread: 'West Bengal, Odisha',
+      abundance: 'Financial resources and strategic vision',
+      helpNeeded: 'Trusted local implementation partners',
+    },
+    {
+      name: 'Lokesh Ohri',
+      email: 'lokesh_ohri@example.com',
+      password: defaultPassword,
+      role: 'Individual',
+      expertise: 'History & Heritage',
+      values: '#Culture #Preservation',
+      professionalProfile:
+        'An anthropologist and historian working on documenting minority cultures in the Himalayas.',
+      geographicalSpread: 'Uttarakhand',
+      abundance: 'Historical knowledge and archival access',
+      helpNeeded: 'Digital documentation experts',
+    },
+    {
+      name: 'Mandvi Kulshreshtha',
+      email: 'mandvi_k@example.com',
+      password: defaultPassword,
+      role: 'Individual',
+      expertise: 'Social Justice',
+      values: '#Equity #Reform',
+      professionalProfile:
+        "Mandvi is a human rights advocate with a focus on women's legal rights.",
+      geographicalSpread: 'Uttar Pradesh',
+      abundance: 'Legal expertise and advocacy skills',
+      helpNeeded: 'Paralegal support and community outreach',
+    },
+    {
+      name: 'Neera Kathuria',
+      email: 'neera_kathuria@example.com',
+      password: defaultPassword,
+      role: 'Volunteer',
+      expertise: 'Mental Health',
+      values: '#Wellness #Healing',
+      professionalProfile: 'A counselor providing psychological support to trauma survivors.',
+      geographicalSpread: 'Punjab, Haryana',
+      abundance: 'Emotional intelligence and counseling techniques',
+      helpNeeded: 'Safe spaces for group therapy',
+    },
+    {
+      name: 'Pinaki Roy',
+      email: 'pinaki_roy@example.com',
+      password: defaultPassword,
+      role: 'Individual',
+      expertise: 'Public Policy',
+      values: '#Data #Transparency',
+      professionalProfile:
+        'Pinaki works with data to influence urban planning and transportation policies.',
+      geographicalSpread: 'Karnataka, Telangana',
+      abundance: 'Analytical skills and data visualization',
+      helpNeeded: 'Access to government planning departments',
+    },
+    {
+      name: 'Rishi Aggarwal',
+      email: 'rishi_aggarwal@example.com',
+      password: defaultPassword,
+      role: 'Individual',
+      expertise: 'Waste Management',
+      values: '#CircularEconomy #ZeroWaste',
+      professionalProfile:
+        "Rishi is an urban activist working to fix Mumbai's waste management systems.",
+      geographicalSpread: 'Mumbai',
+      abundance: 'Systemic thinking and deep local knowledge',
+      helpNeeded: 'Technology for tracking waste flows',
+    },
+    {
+      name: 'Sanjib Kundu',
+      email: 'sanjib_kundu@example.com',
+      password: defaultPassword,
+      role: 'Volunteer',
+      expertise: 'Arts & Crafts',
+      values: '#Creativity #Heritage',
+      professionalProfile:
+        'Sanjib promotes traditional terracotta art from Bankura to global markets.',
+      geographicalSpread: 'West Bengal',
+      abundance: 'Artistic vision and craft connections',
+      helpNeeded: 'E-commerce and marketing support',
+    },
+    {
+      name: 'Satrajit Sanyal',
+      email: 'satrajit_sanyal@example.com',
+      password: defaultPassword,
+      role: 'Individual',
+      expertise: 'Journalism',
+      values: '#Truth #Accountability',
+      professionalProfile:
+        'An investigative reporter focusing on rural development and governance.',
+      geographicalSpread: 'East India',
+      abundance: 'Writing skills and investigative networks',
+      helpNeeded: 'Legal protection and secure communication tools',
+    },
+    {
+      name: 'Shruti Kulkarni',
+      email: 'shruti_k@example.com',
+      password: defaultPassword,
+      role: 'Individual',
+      expertise: 'Technology for Good',
+      values: '#Innovation #Efficiency',
+      professionalProfile:
+        'Shruti builds open-source tools for agricultural supply chain transparency.',
+      geographicalSpread: 'Karnataka',
+      abundance: 'Coding skills and product management',
+      helpNeeded: 'Field testers and agricultural experts',
+    },
+    {
+      name: 'Tanisha Tewari',
+      email: 'tanisha_t@example.com',
+      password: defaultPassword,
+      role: 'Volunteer',
+      expertise: 'Animal Welfare',
+      values: '#Kindness #Protection',
+      professionalProfile: 'Tanisha manages a rescue shelter for stray animals in suburban Delhi.',
+      geographicalSpread: 'Delhi NCR',
+      abundance: 'Veterinary connections and safe housing',
+      helpNeeded: 'Volunteers for foster care programs',
+    },
+  ];
 
   try {
     await db
