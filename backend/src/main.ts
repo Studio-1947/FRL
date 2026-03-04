@@ -52,10 +52,7 @@ async function bootstrap() {
       methods: ['GET', 'POST', 'PUT', 'DELETE', 'PATCH', 'OPTIONS'],
     });
 
-    // Global prefix & versioning
-    app.setGlobalPrefix('api', {
-      exclude: ['/'],
-    });
+    // Global versioning (removed global 'api' prefix to avoid URI mapping conflicts)
     app.enableVersioning({
       type: VersioningType.URI,
       defaultVersion: '1',
@@ -81,7 +78,7 @@ async function bootstrap() {
       .addBearerAuth()
       .build();
     const document = SwaggerModule.createDocument(app, config);
-    SwaggerModule.setup('api/docs', app, document, {
+    SwaggerModule.setup('docs', app, document, {
       customSiteTitle: 'FRL API Documentation',
       customCssUrl: 'https://cdnjs.cloudflare.com/ajax/libs/swagger-ui/5.18.2/swagger-ui.min.css',
       customJs: [
@@ -112,7 +109,7 @@ if (process.env.NODE_ENV !== 'production') {
     const configService = app.get(ConfigService);
     const port = configService.get<number>('PORT', 8000);
     await app.listen(port);
-    console.log(`Application is running on: http://localhost:${port}/api/v1`);
-    console.log(`Swagger Docs available at: http://localhost:${port}/api/docs`);
+    console.log(`Application is running on: http://localhost:${port}/v1`);
+    console.log(`Swagger Docs available at: http://localhost:${port}/docs`);
   });
 }

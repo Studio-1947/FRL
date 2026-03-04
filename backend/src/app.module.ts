@@ -2,6 +2,8 @@ import { Module } from '@nestjs/common';
 import { ConfigModule } from '@nestjs/config';
 import { APP_FILTER, APP_INTERCEPTOR } from '@nestjs/core';
 import { ThrottlerModule } from '@nestjs/throttler';
+import { HttpExceptionFilter } from './common/filters/http-exception.filter';
+import { TransformInterceptor } from './common/interceptors/transform.interceptor';
 
 import configuration from './config/configuration';
 import { validationSchema } from './config/validation.schema';
@@ -45,15 +47,15 @@ import { AppController } from './app.controller';
   ],
   providers: [
     // Global Exception Filter
-    // {
-    //   provide: APP_FILTER,
-    //   useClass: HttpExceptionFilter,
-    // },
+    {
+      provide: APP_FILTER,
+      useClass: HttpExceptionFilter,
+    },
     // Global transform interceptor
-    // {
-    //   provide: APP_INTERCEPTOR,
-    //   useClass: TransformInterceptor,
-    // }
+    {
+      provide: APP_INTERCEPTOR,
+      useClass: TransformInterceptor,
+    },
   ],
   controllers: [AppController],
 })

@@ -10,13 +10,19 @@ export interface Response<T> {
 
 @Injectable()
 export class TransformInterceptor<T> implements NestInterceptor<T, Response<T>> {
-  intercept(context: ExecutionContext, next: CallHandler): Observable<Response<T>> {
+  intercept(context: ExecutionContext, next: CallHandler): Observable<any> {
     return next.handle().pipe(
-      map((data) => ({
-        statusCode: context.switchToHttp().getResponse().statusCode,
-        message: 'Success',
-        data,
-      })),
+      map((data) => {
+        // If the response is a string (like HTML), don't wrap it
+        if (typeof data === 'string') {
+          return data;
+        }
+        return {
+          statusCode: context.switchToHttp().getResponse().statusCode,
+          message: 'Success',
+          data,
+        };
+      }),
     );
   }
 }
