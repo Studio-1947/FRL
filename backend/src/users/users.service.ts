@@ -45,12 +45,12 @@ export class UsersService {
       .limit(limit)
       .offset(offset);
 
-    const [data, totalCountResult] = await Promise.all([
+    const [data, [{ count }]] = await Promise.all([
       query,
-      this.db.execute(sql`SELECT count(*) FROM ${schema.users}`),
+      this.db.select({ count: sql<number>`count(*)` }).from(schema.users),
     ]);
 
-    const total = parseInt(totalCountResult[0].count as string);
+    const total = Number(count);
 
     return {
       data,

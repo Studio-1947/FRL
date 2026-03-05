@@ -1,4 +1,4 @@
-import { Controller, Get, Post, Body, Patch, UseGuards, Req, Param } from '@nestjs/common';
+import { Controller, Get, Post, Body, Patch, UseGuards, Req, Param, Query } from '@nestjs/common';
 import { ApiTags, ApiOperation, ApiResponse, ApiBearerAuth } from '@nestjs/swagger';
 import { Request } from 'express';
 import { UsersService } from './users.service';
@@ -20,10 +20,8 @@ export class UsersController {
   @Get('people')
   @ApiOperation({ summary: 'Get all user public profiles (without passwords) with pagination' })
   @ApiResponse({ status: 200, description: 'Returns safe profiles with pagination metadata' })
-  async getPeople(@Req() req: Request) {
-    const page = parseInt(req.query.page as string) || 1;
-    const limit = parseInt(req.query.limit as string) || 3;
-    return this.usersService.findPeople(page, limit);
+  async getPeople(@Query('page') page: string = '1', @Query('limit') limit: string = '3') {
+    return this.usersService.findPeople(parseInt(page), parseInt(limit));
   }
 
   @Get('people/:id')
