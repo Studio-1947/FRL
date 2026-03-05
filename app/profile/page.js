@@ -4,13 +4,17 @@ import React, { useEffect, useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import { fetchApi } from "../../lib/api";
-import { MapPin, Star, Settings, Loader2 } from "lucide-react";
+import { useAuth } from "../../app/context/AuthContext";
+import { MapPin, Star, Settings, Loader2, Camera } from "lucide-react";
 import { toast } from "sonner";
 
 export default function ProfilePage() {
   const [profile, setProfile] = useState(null);
   const [loading, setLoading] = useState(true);
+  const [uploading, setUploading] = useState(false);
   const [error, setError] = useState(null);
+  const fileInputRef = React.useRef(null);
+  const { refreshUser } = useAuth();
 
   useEffect(() => {
     async function fetchProfile() {
@@ -30,6 +34,53 @@ export default function ProfilePage() {
     }
     fetchProfile();
   }, []);
+
+  const handleImageClick = () => {
+    fileInputRef.current?.click();
+  };
+
+  const handleFileChange = async (e) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+
+    if (file.size > 2 * 1024 * 1024) {
+      toast.error("Image too large. Please select a file smaller than 2MB.");
+      return;
+    }
+
+    const reader = new FileReader();
+    reader.onloadend = async () => {
+      const base64String = reader.result;
+      await uploadProfilePicture(base64String);
+    };
+    reader.readAsDataURL(file);
+  };
+
+  const uploadProfilePicture = async (base64String) => {
+    setUploading(true);
+    try {
+      const response = await fetchApi("/v1/users/profile", {
+        method: "PATCH",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ avatarUrl: base64String }),
+      });
+
+      if (!response.ok) {
+        throw new Error("Failed to update profile picture");
+      }
+
+      const updatedUser = await response.json();
+      setProfile(updatedUser);
+      refreshUser(); // Refresh global user state for Header
+      toast.success("Profile picture updated!");
+    } catch (err) {
+      toast.error(`Error: ${err.message}`);
+    } finally {
+      setUploading(false);
+    }
+  };
 
   if (loading) {
     return (
@@ -69,7 +120,10 @@ export default function ProfilePage() {
     .split(/#|\s+/)
     .map((b) => b.trim())
     .filter((b) => b.length > 0);
-  const imageUrl = `https://api.dicebear.com/7.x/initials/svg?seed=${encodeURIComponent(profile.name)}`;
+
+  const imageUrl =
+    profile.avatarUrl ||
+    `https://api.dicebear.com/7.x/initials/svg?seed=${encodeURIComponent(profile.name)}`;
 
   return (
     <div className="min-h-screen bg-background py-16 px-4 md:px-8">
@@ -88,14 +142,38 @@ export default function ProfilePage() {
 
         <div className="bg-card text-card-foreground rounded-[2rem] overflow-hidden border border-border shadow-lg p-8 sm:p-12 mb-8">
           <div className="flex flex-col md:flex-row gap-8 items-start">
-            <div className="w-48 h-48 md:w-64 md:h-64 rounded-full overflow-hidden bg-muted flex-shrink-0 mx-auto md:mx-0 shadow-md relative">
+            <div
+              className="w-48 h-48 md:w-64 md:h-64 rounded-full overflow-hidden bg-muted flex-shrink-0 mx-auto md:mx-0 shadow-md relative group cursor-pointer"
+              onClick={handleImageClick}
+            >
               <Image
                 src={imageUrl}
                 alt={profile.name}
                 fill
-                className="object-cover"
+                className="object-cover transition-opacity group-hover:opacity-75"
               />
+              <div className="absolute inset-0 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity bg-black/20 text-white">
+                <div className="flex flex-col items-center">
+                  <Camera size={32} />
+                  <span className="text-xs font-bold mt-1 uppercase tracking-wider">
+                    Change Photo
+                  </span>
+                </div>
+              </div>
+              {uploading && (
+                <div className="absolute inset-0 flex items-center justify-center bg-black/40 text-white">
+                  <Loader2 className="w-10 h-10 animate-spin" />
+                </div>
+              )}
             </div>
+
+            <input
+              type="file"
+              ref={fileInputRef}
+              className="hidden"
+              accept="image/*"
+              onChange={handleFileChange}
+            />
 
             <div className="flex-1 w-full text-center md:text-left">
               <h2 className="text-3xl font-bold text-[#6d4c3d] dark:text-[#dfc3b4] mb-2">

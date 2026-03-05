@@ -10,6 +10,7 @@ export function AuthProvider({ children }) {
   const [isAuthenticated, setIsAuthenticated] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
   const [isLoggingOut, setIsLoggingOut] = useState(false);
+  const [user, setUser] = useState(null);
   const router = useRouter();
 
   const checkAuth = () => {
@@ -22,21 +23,28 @@ export function AuthProvider({ children }) {
   useEffect(() => {
     checkAuth();
     setIsLoading(false);
-
-    const handleUnauthorized = () => {
-      setIsAuthenticated(false);
-    };
-
-    if (typeof window !== "undefined") {
-      window.addEventListener("auth:unauthorized", handleUnauthorized);
-    }
-
-    return () => {
-      if (typeof window !== "undefined") {
-        window.removeEventListener("auth:unauthorized", handleUnauthorized);
-      }
-    };
   }, []);
+
+  useEffect(() => {
+    if (isAuthenticated) {
+      fetchUserProfile();
+    } else {
+      setUser(null);
+    }
+  }, [isAuthenticated]);
+
+  const fetchUserProfile = async () => {
+    try {
+      const { fetchApi } = await import("@/lib/api");
+      const response = await fetchApi("/v1/users/profile");
+      if (response.ok) {
+        const userData = await response.json();
+        setUser(userData);
+      }
+    } catch (error) {
+      console.error("Failed to fetch user profile:", error);
+    }
+  };
 
   const login = (token) => {
     document.cookie = `access_token=${token}; path=/; max-age=86400; SameSite=Lax`;
@@ -69,9 +77,11 @@ export function AuthProvider({ children }) {
         isAuthenticated,
         isLoading,
         isLoggingOut,
+        user,
         login,
         logout,
         checkAuth,
+        refreshUser: fetchUserProfile,
       }}
     >
       {children}

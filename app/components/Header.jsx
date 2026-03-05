@@ -37,7 +37,7 @@ const navLinks = [
 function Header() {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const { setTheme, theme } = useTheme();
-  const { isAuthenticated, logout, isLoggingOut } = useAuth();
+  const { isAuthenticated, logout, isLoggingOut, user } = useAuth();
 
   return (
     <header className="relative z-50 py-4 px-2 flex justify-between items-center xl:py-2">
@@ -89,8 +89,23 @@ function Header() {
         {isAuthenticated ? (
           <div className="flex gap-4">
             <Link href="/profile">
-              <Button variant="outline" className="px-5 py-[0.9375rem]">
-                <CircleUser size={22} className="mr-2" />
+              <Button
+                variant="outline"
+                className="px-5 py-[0.9375rem] overflow-hidden"
+              >
+                {user?.avatarUrl ? (
+                  <div className="w-6 h-6 rounded-full overflow-hidden mr-2">
+                    <Image
+                      src={user.avatarUrl}
+                      alt="Profile"
+                      width={24}
+                      height={24}
+                      className="object-cover"
+                    />
+                  </div>
+                ) : (
+                  <CircleUser size={22} className="mr-2" />
+                )}
                 <div className="font-medium text-[15px]">Profile</div>
               </Button>
             </Link>
@@ -165,7 +180,19 @@ function Header() {
                   className="flex gap-2 items-center w-full py-2 border-b border-white/20"
                   onClick={() => setIsMenuOpen(false)}
                 >
-                  <CircleUser size={20} />
+                  {user?.avatarUrl ? (
+                    <div className="w-5 h-5 rounded-full overflow-hidden">
+                      <Image
+                        src={user.avatarUrl}
+                        alt="Profile"
+                        width={20}
+                        height={20}
+                        className="object-cover"
+                      />
+                    </div>
+                  ) : (
+                    <CircleUser size={20} />
+                  )}
                   <div className="font-medium text-lg text-white">PROFILE</div>
                 </Link>
                 <button

@@ -3,7 +3,9 @@ import React, { useEffect, useState } from "react";
 import { fetchApi } from "../../lib/api";
 import { toast } from "sonner";
 import { Button } from "../components/ui/Button";
-import { Loader2 } from "lucide-react";
+import { Loader2, Camera, Upload } from "lucide-react";
+import Image from "next/image";
+import { useAuth } from "../context/AuthContext";
 
 export default function SettingsPage() {
   const [formData, setFormData] = useState({
@@ -21,10 +23,14 @@ export default function SettingsPage() {
     systemImpact: "",
     abundance: "",
     helpNeeded: "",
+    avatarUrl: "",
   });
+  const fileInputRef = React.useRef(null);
+  const [uploading, setUploading] = useState(false);
 
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
+  const { refreshUser } = useAuth();
 
   useEffect(() => {
     async function fetchProfile() {
@@ -66,6 +72,7 @@ export default function SettingsPage() {
 
       if (response.ok) {
         toast.success("Settings saved successfully!");
+        refreshUser(); // Refresh global user state for Header
       } else {
         throw new Error("Failed to save settings");
       }
@@ -108,6 +115,73 @@ export default function SettingsPage() {
         <p className="text-muted-foreground mb-10">
           Update your account information and public profile details.
         </p>
+
+        <div className="mb-10 flex flex-col items-center sm:flex-row sm:gap-8 bg-card p-6 rounded-[2rem] border border-border shadow-sm">
+          <div
+            className="w-32 h-32 rounded-full overflow-hidden bg-muted shadow-md relative group cursor-pointer border-4 border-background"
+            onClick={() => fileInputRef.current?.click()}
+          >
+            <Image
+              src={
+                formData.avatarUrl ||
+                `https://api.dicebear.com/7.x/initials/svg?seed=${encodeURIComponent(formData.name || "User")}`
+              }
+              alt="Profile"
+              fill
+              className="object-cover transition-opacity group-hover:opacity-75"
+            />
+            <div className="absolute inset-0 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity bg-black/20 text-white">
+              <Camera size={24} />
+            </div>
+            {uploading && (
+              <div className="absolute inset-0 flex items-center justify-center bg-black/40 text-white">
+                <Loader2 className="w-8 h-8 animate-spin" />
+              </div>
+            )}
+          </div>
+          <div className="mt-4 sm:mt-0 text-center sm:text-left">
+            <h3 className="text-xl font-bold text-foreground">
+              Profile Picture
+            </h3>
+            <p className="text-sm text-muted-foreground mb-4">
+              Click the image to upload a new photo. Max 2MB.
+            </p>
+            <Button
+              type="button"
+              variant="outline"
+              size="sm"
+              onClick={() => fileInputRef.current?.click()}
+              className="rounded-full px-6"
+            >
+              <Upload size={16} className="mr-2" />
+              Change Photo
+            </Button>
+            <input
+              type="file"
+              ref={fileInputRef}
+              className="hidden"
+              accept="image/*"
+              onChange={async (e) => {
+                const file = e.target.files?.[0];
+                if (!file) return;
+                if (file.size > 2 * 1024 * 1024) {
+                  toast.error(
+                    "Image too large. Please select a file smaller than 2MB.",
+                  );
+                  return;
+                }
+                const reader = new FileReader();
+                reader.onloadend = () => {
+                  setFormData((prev) => ({
+                    ...prev,
+                    avatarUrl: reader.result,
+                  }));
+                };
+                reader.readAsDataURL(file);
+              }}
+            />
+          </div>
+        </div>
 
         <form
           onSubmit={handleSubmit}

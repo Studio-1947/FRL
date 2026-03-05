@@ -36,6 +36,7 @@ export class UsersService {
         systemImpact: schema.users.systemImpact,
         abundance: schema.users.abundance,
         helpNeeded: schema.users.helpNeeded,
+        avatarUrl: schema.users.avatarUrl,
         createdAt: schema.users.createdAt,
       })
       .from(schema.users);
@@ -59,6 +60,7 @@ export class UsersService {
         systemImpact: schema.users.systemImpact,
         abundance: schema.users.abundance,
         helpNeeded: schema.users.helpNeeded,
+        avatarUrl: schema.users.avatarUrl,
         createdAt: schema.users.createdAt,
       })
       .from(schema.users)

@@ -22,6 +22,7 @@ export const users = pgTable('users', {
   abundance: text('abundance'),
   helpNeeded: text('help_needed'),
 
+  avatarUrl: text('avatar_url'),
   createdAt: timestamp('created_at').defaultNow().notNull(),
   updatedAt: timestamp('updated_at').defaultNow().notNull(),
 });

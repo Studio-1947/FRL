@@ -73,6 +73,7 @@ export default function PersonProfile({ params }) {
     .filter((b) => b.length > 0);
 
   const imageUrl =
+    person.avatarUrl ||
     person.image ||
     `https://api.dicebear.com/7.x/initials/svg?seed=${encodeURIComponent(person.name)}`;
 

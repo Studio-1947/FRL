@@ -97,6 +97,7 @@ export default function PeoplePage() {
 
             // Create a DiceBear avatar if no image is present
             const imageUrl =
+              person.avatarUrl ||
               person.image ||
               `https://api.dicebear.com/7.x/initials/svg?seed=${encodeURIComponent(person.name)}`;
 
