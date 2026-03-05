@@ -4,12 +4,14 @@ import React, { useState } from "react";
 import Link from "next/link";
 import { Button } from "../ui/Button";
 import { fetchApi } from "@/lib/api";
+import { toast } from "sonner";
 
 export default function LoginForm() {
   const [formData, setFormData] = useState({
     email: "",
     password: "",
   });
+  const [isLoading, setIsLoading] = useState(false);
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -18,6 +20,7 @@ export default function LoginForm() {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    setIsLoading(true);
 
     try {
       const response = await fetchApi("/v1/auth/login", {
@@ -30,21 +33,23 @@ export default function LoginForm() {
 
       if (!response.ok) {
         const errorData = await response.json();
-        alert(`Login failed: ${errorData.message}`);
+        toast.error(`Login failed: ${errorData.message}`);
         return;
       }
 
       const data = await response.json();
       // Store token using cookies for Middleware access
       document.cookie = `access_token=${data.access_token}; path=/; max-age=86400; SameSite=Lax`;
-      alert("Login successful!");
+      toast.success("Login successful!");
       console.log("Logged in user:", data.user);
 
       // Redirect to a protected route
       window.location.href = "/profile";
     } catch (err) {
       console.error(err);
-      alert("An error occurred during login. Is the backend running?");
+      toast.error("An error occurred during login. Is the backend running?");
+    } finally {
+      setIsLoading(false);
     }
   };
 
@@ -99,6 +104,7 @@ export default function LoginForm() {
           <Button
             variant="primary"
             size="lg"
+            loading={isLoading}
             className="w-full bg-[#1C5B6F] hover:bg-[#154655] dark:bg-[#EEFCFD] text-white dark:text-[#0F313D] py-4 rounded-xl text-lg shadow-lg hover:shadow-xl hover:-translate-y-0.5 transition-all duration-300"
           >
             Login

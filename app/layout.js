@@ -19,6 +19,8 @@ export const metadata = {
 import { ThemeProvider } from "@/components/theme-provider";
 import LayoutWrapper from "./components/LayoutWrapper";
 
+import { Toaster } from "sonner";
+
 export default function RootLayout({ children }) {
   return (
     <html lang="en" suppressHydrationWarning>
@@ -32,6 +34,7 @@ export default function RootLayout({ children }) {
           disableTransitionOnChange
         >
           <LayoutWrapper>{children}</LayoutWrapper>
+          <Toaster position="top-center" richColors />
         </ThemeProvider>
       </body>
     </html>

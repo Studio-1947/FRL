@@ -4,6 +4,7 @@ import React, { useState } from "react";
 import Link from "next/link";
 import { Button } from "../ui/Button";
 import { fetchApi } from "@/lib/api";
+import { toast } from "sonner";
 
 export default function SignupForm() {
   const [formData, setFormData] = useState({
@@ -19,6 +20,7 @@ export default function SignupForm() {
     agreeTerms: false,
     agreeMarketing: false,
   });
+  const [isLoading, setIsLoading] = useState(false);
 
   const handleChange = (e) => {
     const { name, value, type, checked } = e.target;
@@ -36,9 +38,11 @@ export default function SignupForm() {
     e.preventDefault();
 
     if (formData.password !== formData.confirmPassword) {
-      alert("Passwords do not match!");
+      toast.error("Passwords do not match!");
       return;
     }
+
+    setIsLoading(true);
 
     try {
       const response = await fetchApi("/v1/auth/register", {
@@ -56,21 +60,23 @@ export default function SignupForm() {
 
       if (!response.ok) {
         const errorData = await response.json();
-        alert(`Signup failed: ${errorData.message}`);
+        toast.error(`Signup failed: ${errorData.message}`);
         return;
       }
 
       const data = await response.json();
       // Store token using cookies for Middleware access
       document.cookie = `access_token=${data.access_token}; path=/; max-age=86400; SameSite=Lax`;
-      alert("Signup successful!");
+      toast.success("Signup successful!");
       console.log("Registered user:", data.user);
 
       // Redirect to a protected route
       window.location.href = "/profile";
     } catch (err) {
       console.error(err);
-      alert("An error occurred during signup. Is the backend running?");
+      toast.error("An error occurred during signup. Is the backend running?");
+    } finally {
+      setIsLoading(false);
     }
   };
 
@@ -272,6 +278,7 @@ export default function SignupForm() {
           <Button
             variant="primary"
             size="lg"
+            loading={isLoading}
             className="w-full bg-[#1C5B6F] hover:bg-[#154655] dark:bg-[#EEFCFD] text-white dark:text-[#0F313D] py-4 rounded-xl text-lg shadow-lg hover:shadow-xl hover:-translate-y-0.5 transition-all duration-300"
           >
             Sign Up
