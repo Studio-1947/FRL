@@ -7,8 +7,9 @@ import React, { useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import { useTheme } from "next-themes";
-import { CircleUser, Moon, Sun } from "lucide-react";
+import { CircleUser, Moon, Sun, LogOut } from "lucide-react";
 import { Button } from "./ui/Button";
+import { useAuth } from "@/app/context/AuthContext";
 
 const navLinks = [
   {
@@ -36,6 +37,7 @@ const navLinks = [
 function Header() {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const { setTheme, theme } = useTheme();
+  const { isAuthenticated, logout } = useAuth();
 
   return (
     <header className="relative z-50 py-4 px-2 flex justify-between items-center xl:py-2">
@@ -84,8 +86,7 @@ function Header() {
           <span className="sr-only">Toggle theme</span>
         </button>
 
-        {typeof document !== "undefined" &&
-        document.cookie.includes("access_token") ? (
+        {isAuthenticated ? (
           <div className="flex gap-4">
             <Link href="/profile">
               <Button variant="outline" className="px-5 py-[0.9375rem]">
@@ -93,6 +94,14 @@ function Header() {
                 <div className="font-medium text-[15px]">Profile</div>
               </Button>
             </Link>
+            <Button
+              variant="outline"
+              className="px-5 py-[0.9375rem] border-red-200 hover:bg-red-50 hover:text-red-600 dark:hover:bg-red-900/20 dark:hover:text-red-400"
+              onClick={logout}
+            >
+              <LogOut size={20} className="mr-2" />
+              <div className="font-medium text-[15px]">Logout</div>
+            </Button>
           </div>
         ) : (
           <Link href="/login">
@@ -147,25 +156,36 @@ function Header() {
               </Link>
             </li>
           ))}
-          <li className="flex gap-2 items-center mt-2 cursor-pointer">
-            {typeof document !== "undefined" &&
-            document.cookie.includes("access_token") ? (
-              <Link
-                href="/profile"
-                className="flex gap-2 items-center w-full"
-                onClick={() => setIsMenuOpen(false)}
-              >
-                <CircleUser size={20} />
-                <div className="font-medium text-lg">PROFILE</div>
-              </Link>
+          <li className="mt-2">
+            {isAuthenticated ? (
+              <div className="flex flex-col gap-4">
+                <Link
+                  href="/profile"
+                  className="flex gap-2 items-center w-full py-2 border-b border-white/20"
+                  onClick={() => setIsMenuOpen(false)}
+                >
+                  <CircleUser size={20} />
+                  <div className="font-medium text-lg text-white">PROFILE</div>
+                </Link>
+                <button
+                  className="flex gap-2 items-center w-full py-2 text-red-400 hover:text-red-300 transition-colors"
+                  onClick={() => {
+                    logout();
+                    setIsMenuOpen(false);
+                  }}
+                >
+                  <LogOut size={20} />
+                  <div className="font-medium text-lg">LOGOUT</div>
+                </button>
+              </div>
             ) : (
               <Link
                 href="/login"
-                className="flex gap-2 items-center w-full"
+                className="flex gap-2 items-center w-full py-2 border-b border-white/20"
                 onClick={() => setIsMenuOpen(false)}
               >
                 <CircleUser size={20} />
-                <div className="font-medium text-lg">LOGIN</div>
+                <div className="font-medium text-lg text-white">LOGIN</div>
               </Link>
             )}
           </li>

@@ -25,4 +25,13 @@ export class AuthController {
   async login(@Body() loginDto: LoginDto) {
     return this.authService.login(loginDto);
   }
+
+  @Post('logout')
+  @HttpCode(HttpStatus.OK)
+  @ApiOperation({ summary: 'Logout the current user' })
+  @ApiResponse({ status: 200, description: 'User successfully logged out' })
+  async logout() {
+    // If we transition to HttpOnly cookies, we would clear them here using @Res() response
+    return { message: 'Logged out successfully' };
+  }
 }

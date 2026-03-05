@@ -2,11 +2,15 @@
 
 import React, { useState } from "react";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 import { Button } from "../ui/Button";
 import { fetchApi } from "@/lib/api";
 import { toast } from "sonner";
+import { useAuth } from "@/app/context/AuthContext";
 
 export default function LoginForm() {
+  const { login } = useAuth();
+  const router = useRouter();
   const [formData, setFormData] = useState({
     email: "",
     password: "",
@@ -38,13 +42,13 @@ export default function LoginForm() {
       }
 
       const data = await response.json();
-      // Store token using cookies for Middleware access
-      document.cookie = `access_token=${data.access_token}; path=/; max-age=86400; SameSite=Lax`;
+      // Store token using AuthContext (which also updates cookies)
+      login(data.access_token);
       toast.success("Login successful!");
       console.log("Logged in user:", data.user);
 
-      // Redirect to a protected route
-      window.location.href = "/profile";
+      // Redirect to a protected route using Next.js router
+      router.push("/profile");
     } catch (err) {
       console.error(err);
       toast.error("An error occurred during login. Is the backend running?");

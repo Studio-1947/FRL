@@ -20,6 +20,7 @@ import { ThemeProvider } from "@/components/theme-provider";
 import LayoutWrapper from "./components/LayoutWrapper";
 
 import { Toaster } from "sonner";
+import { AuthProvider } from "./context/AuthContext";
 
 export default function RootLayout({ children }) {
   return (
@@ -33,8 +34,10 @@ export default function RootLayout({ children }) {
           enableSystem
           disableTransitionOnChange
         >
-          <LayoutWrapper>{children}</LayoutWrapper>
-          <Toaster position="top-center" richColors />
+          <AuthProvider>
+            <LayoutWrapper>{children}</LayoutWrapper>
+            <Toaster position="top-center" richColors />
+          </AuthProvider>
         </ThemeProvider>
       </body>
     </html>
