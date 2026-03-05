@@ -37,7 +37,7 @@ const navLinks = [
 function Header() {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const { setTheme, theme } = useTheme();
-  const { isAuthenticated, logout } = useAuth();
+  const { isAuthenticated, logout, isLoggingOut } = useAuth();
 
   return (
     <header className="relative z-50 py-4 px-2 flex justify-between items-center xl:py-2">
@@ -98,6 +98,7 @@ function Header() {
               variant="outline"
               className="px-5 py-[0.9375rem] border-red-200 hover:bg-red-50 hover:text-red-600 dark:hover:bg-red-900/20 dark:hover:text-red-400"
               onClick={logout}
+              loading={isLoggingOut}
             >
               <LogOut size={20} className="mr-2" />
               <div className="font-medium text-[15px]">Logout</div>
@@ -168,14 +169,17 @@ function Header() {
                   <div className="font-medium text-lg text-white">PROFILE</div>
                 </Link>
                 <button
-                  className="flex gap-2 items-center w-full py-2 text-red-400 hover:text-red-300 transition-colors"
+                  className="flex gap-2 items-center w-full py-2 text-red-400 hover:text-red-300 transition-colors disabled:opacity-50"
                   onClick={() => {
                     logout();
                     setIsMenuOpen(false);
                   }}
+                  disabled={isLoggingOut}
                 >
                   <LogOut size={20} />
-                  <div className="font-medium text-lg">LOGOUT</div>
+                  <div className="font-medium text-lg">
+                    {isLoggingOut ? "LOGGING OUT..." : "LOGOUT"}
+                  </div>
                 </button>
               </div>
             ) : (

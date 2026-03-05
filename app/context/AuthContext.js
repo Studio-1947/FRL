@@ -9,6 +9,7 @@ const AuthContext = createContext();
 export function AuthProvider({ children }) {
   const [isAuthenticated, setIsAuthenticated] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
+  const [isLoggingOut, setIsLoggingOut] = useState(false);
   const router = useRouter();
 
   const checkAuth = () => {
@@ -43,6 +44,7 @@ export function AuthProvider({ children }) {
   };
 
   const logout = async () => {
+    setIsLoggingOut(true);
     try {
       // Import fetchApi dynamically or move it to a hook to avoid circular refs if needed,
       // but here we can just use the global fetch or import it if safe.
@@ -51,18 +53,26 @@ export function AuthProvider({ children }) {
       await fetchApi("/v1/auth/logout", { method: "POST" });
     } catch (error) {
       console.error("Backend logout failed:", error);
+    } finally {
+      document.cookie =
+        "access_token=; path=/; expires=Thu, 01 Jan 1970 00:00:00 GMT";
+      setIsAuthenticated(false);
+      setIsLoggingOut(false);
+      toast.info("Logged out successfully");
+      router.push("/login");
     }
-
-    document.cookie =
-      "access_token=; path=/; expires=Thu, 01 Jan 1970 00:00:00 GMT";
-    setIsAuthenticated(false);
-    toast.info("Logged out successfully");
-    router.push("/login");
   };
 
   return (
     <AuthContext.Provider
-      value={{ isAuthenticated, isLoading, login, logout, checkAuth }}
+      value={{
+        isAuthenticated,
+        isLoading,
+        isLoggingOut,
+        login,
+        logout,
+        checkAuth,
+      }}
     >
       {children}
     </AuthContext.Provider>
