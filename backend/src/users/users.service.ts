@@ -1,6 +1,6 @@
 import { Injectable, Inject } from '@nestjs/common';
 import { NodePgDatabase } from 'drizzle-orm/node-postgres';
-import { eq } from 'drizzle-orm';
+import { eq, sql } from 'drizzle-orm';
 import { DRIZZLE } from '../database/database.module';
 import * as schema from '../database/schema';
 
@@ -18,8 +18,10 @@ export class UsersService {
     });
   }
 
-  async findPeople() {
-    return this.db
+  async findPeople(page: number = 1, limit: number = 3) {
+    const offset = (page - 1) * limit;
+
+    const query = this.db
       .select({
         id: schema.users.id,
         name: schema.users.name,
@@ -39,7 +41,26 @@ export class UsersService {
         avatarUrl: schema.users.avatarUrl,
         createdAt: schema.users.createdAt,
       })
-      .from(schema.users);
+      .from(schema.users)
+      .limit(limit)
+      .offset(offset);
+
+    const [data, totalCountResult] = await Promise.all([
+      query,
+      this.db.execute(sql`SELECT count(*) FROM ${schema.users}`),
+    ]);
+
+    const total = parseInt(totalCountResult[0].count as string);
+
+    return {
+      data,
+      meta: {
+        total,
+        page,
+        limit,
+        totalPages: Math.ceil(total / limit),
+      },
+    };
   }
 
   async findPersonById(id: number) {

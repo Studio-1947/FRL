@@ -18,10 +18,12 @@ export class UsersController {
   }
 
   @Get('people')
-  @ApiOperation({ summary: 'Get all user public profiles (without passwords)' })
-  @ApiResponse({ status: 200, description: 'Returns safe profiles suitable for public directory' })
-  async getPeople() {
-    return this.usersService.findPeople();
+  @ApiOperation({ summary: 'Get all user public profiles (without passwords) with pagination' })
+  @ApiResponse({ status: 200, description: 'Returns safe profiles with pagination metadata' })
+  async getPeople(@Req() req: Request) {
+    const page = parseInt(req.query.page as string) || 1;
+    const limit = parseInt(req.query.limit as string) || 3;
+    return this.usersService.findPeople(page, limit);
   }
 
   @Get('people/:id')

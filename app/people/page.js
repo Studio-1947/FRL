@@ -17,14 +17,23 @@ import { fetchApi } from "../../lib/api";
 export default function PeoplePage() {
   const [people, setPeople] = React.useState([]);
   const [loading, setLoading] = React.useState(true);
+  const [page, setPage] = React.useState(1);
+  const [totalPages, setTotalPages] = React.useState(1);
+  const [totalResults, setTotalResults] = React.useState(0);
 
   React.useEffect(() => {
     async function loadPeople() {
+      setLoading(true);
       try {
-        const response = await fetchApi("/v1/users/people");
+        const response = await fetchApi(
+          `/v1/users/people?page=${page}&limit=3`,
+        );
         if (response.ok) {
-          const data = await response.json();
-          setPeople(data);
+          const result = await response.json();
+          // Backend now returns { data, meta }
+          setPeople(result.data || []);
+          setTotalPages(result.meta?.totalPages || 1);
+          setTotalResults(result.meta?.total || 0);
         }
       } catch (error) {
         console.error("Failed to load people:", error);
@@ -34,7 +43,7 @@ export default function PeoplePage() {
       }
     }
     loadPeople();
-  }, []);
+  }, [page]);
 
   return (
     <div className="min-h-screen bg-background transition-colors duration-300 flex flex-col items-center py-10 px-4 md:px-8">
@@ -209,6 +218,53 @@ export default function PeoplePage() {
           })
         )}
       </div>
+      {/* Pagination Section */}
+      {!loading && people.length > 0 && (
+        <div className="w-full max-w-[1200px] flex flex-col items-center gap-6 mt-4 pb-16">
+          <div className="text-sm font-medium text-muted-foreground">
+            Showing{" "}
+            <span className="text-foreground">{(page - 1) * 3 + 1}</span> to{" "}
+            <span className="text-foreground">
+              {Math.min(page * 3, totalResults)}
+            </span>{" "}
+            of <span className="text-foreground">{totalResults}</span> people
+          </div>
+
+          <div className="flex items-center gap-2">
+            <button
+              onClick={() => setPage((p) => Math.max(1, p - 1))}
+              disabled={page === 1}
+              className="px-4 py-2 rounded-xl bg-card border border-border text-foreground font-medium transition-all hover:bg-muted disabled:opacity-50 disabled:cursor-not-allowed shadow-sm active:scale-95"
+            >
+              Previous
+            </button>
+
+            <div className="flex items-center gap-1 mx-2">
+              {Array.from({ length: totalPages }, (_, i) => i + 1).map((p) => (
+                <button
+                  key={p}
+                  onClick={() => setPage(p)}
+                  className={`w-10 h-10 rounded-xl font-bold transition-all ${
+                    page === p
+                      ? "bg-[#1C5B6F] text-white shadow-md scale-110"
+                      : "bg-card border border-border text-muted-foreground hover:bg-muted"
+                  }`}
+                >
+                  {p}
+                </button>
+              ))}
+            </div>
+
+            <button
+              onClick={() => setPage((p) => Math.min(totalPages, p + 1))}
+              disabled={page === totalPages}
+              className="px-4 py-2 rounded-xl bg-card border border-border text-foreground font-medium transition-all hover:bg-muted disabled:opacity-50 disabled:cursor-not-allowed shadow-sm active:scale-95"
+            >
+              Next
+            </button>
+          </div>
+        </div>
+      )}
     </div>
   );
 }
