@@ -3,7 +3,7 @@ import { NestFactory } from '@nestjs/core';
 import { ConfigService } from '@nestjs/config';
 import { SwaggerModule, DocumentBuilder } from '@nestjs/swagger';
 import helmet from 'helmet';
-import * as cookieParser from 'cookie-parser';
+import cookieParser from 'cookie-parser';
 import { AppModule } from './app.module';
 
 let app: INestApplication;
@@ -98,9 +98,28 @@ async function bootstrap() {
 }
 
 export default async function handler(req: any, res: any) {
-  const application = await bootstrap();
-  const instance = application.getHttpAdapter().getInstance();
-  return instance(req, res);
+  try {
+    console.log(`Incoming request: ${req.method} ${req.url}`);
+    const application = await bootstrap();
+    const instance = application.getHttpAdapter().getInstance();
+    return instance(req, res);
+  } catch (err) {
+    console.error('CRITICAL ERROR DURING HANDLER EXECUTION:');
+    console.error(err);
+
+    // Ensure we don't leak sensitive info in production but provide enough to debug
+    const errorMessage =
+      process.env.NODE_ENV === 'production' ? 'Internal Server Error' : (err as Error).message;
+
+    if (!res.headersSent) {
+      res.status(500).json({
+        statusCode: 500,
+        message: 'A critical error occurred while processing the request.',
+        error: errorMessage,
+        timestamp: new Date().toISOString(),
+      });
+    }
+  }
 }
 
 // For local development

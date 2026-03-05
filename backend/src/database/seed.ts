@@ -1,8 +1,8 @@
 import { Pool } from 'pg';
 import { drizzle } from 'drizzle-orm/node-postgres';
 import * as schema from './schema';
-import * as bcrypt from 'bcrypt';
-import * as dotenv from 'dotenv';
+import bcrypt from 'bcrypt';
+import dotenv from 'dotenv';
 import { resolve } from 'path';
 
 // Load .env
