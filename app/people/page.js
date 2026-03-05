@@ -3,7 +3,15 @@
 import React from "react";
 import Image from "next/image";
 import Link from "next/link";
-import { ChevronDown, Search, MapPin, Star, ArrowRight } from "lucide-react";
+import {
+  ChevronDown,
+  Search,
+  MapPin,
+  Star,
+  ArrowRight,
+  Loader2,
+} from "lucide-react";
+import { toast } from "sonner";
 
 import { fetchApi } from "../../lib/api";
 export default function PeoplePage() {
@@ -20,6 +28,7 @@ export default function PeoplePage() {
         }
       } catch (error) {
         console.error("Failed to load people:", error);
+        toast.error("Failed to load people profiles.");
       } finally {
         setLoading(false);
       }
@@ -61,8 +70,17 @@ export default function PeoplePage() {
       {/* People Grid */}
       <div className="w-full max-w-[1200px] grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8 pb-12">
         {loading ? (
-          <div className="col-span-full flex justify-center py-12">
-            <div className="animate-spin w-8 h-8 border-4 border-[#8b654b] border-t-transparent rounded-full"></div>
+          <div className="col-span-full flex flex-col items-center justify-center py-20 gap-4">
+            <div className="relative flex items-center justify-center">
+              <div className="absolute w-16 h-16 border-4 border-[#1C5B6F]/20 rounded-full"></div>
+              <Loader2
+                className="w-16 h-16 text-[#1C5B6F] animate-spin"
+                strokeWidth={1.5}
+              />
+            </div>
+            <p className="text-sm font-medium text-muted-foreground animate-pulse">
+              Finding people...
+            </p>
           </div>
         ) : people.length === 0 ? (
           <div className="col-span-full text-center text-muted-foreground py-12">

@@ -1,7 +1,9 @@
 "use client";
 
-import React, { useEffect, useState } from "react";
 import { fetchApi } from "../../lib/api";
+import { toast } from "sonner";
+import { Button } from "../components/ui/Button";
+import { Loader2 } from "lucide-react";
 
 export default function SettingsPage() {
   const [formData, setFormData] = useState({
@@ -23,17 +25,12 @@ export default function SettingsPage() {
 
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
-  const [message, setMessage] = useState("");
 
   useEffect(() => {
     async function fetchProfile() {
       try {
         const response = await fetchApi("/v1/users/profile");
         if (!response.ok) {
-          if (response.status === 401) {
-            window.location.href = "/login";
-            return;
-          }
           throw new Error("Failed to load profile");
         }
         const data = await response.json();
@@ -43,7 +40,7 @@ export default function SettingsPage() {
         }
         setFormData(safeData);
       } catch (err) {
-        setMessage({ type: "error", text: "Failed to load settings." });
+        toast.error("Failed to load settings.");
       } finally {
         setLoading(false);
       }
@@ -60,7 +57,6 @@ export default function SettingsPage() {
   const handleSubmit = async (e) => {
     e.preventDefault();
     setSaving(true);
-    setMessage(null);
 
     try {
       const response = await fetchApi("/v1/users/profile", {
@@ -69,16 +65,13 @@ export default function SettingsPage() {
       });
 
       if (response.ok) {
-        setMessage({ type: "success", text: "Settings saved successfully!" });
+        toast.success("Settings saved successfully!");
       } else {
         throw new Error("Failed to save settings");
       }
     } catch (error) {
       console.error(error);
-      setMessage({
-        type: "error",
-        text: "Failed to update profile. Please try again.",
-      });
+      toast.error("Failed to update profile. Please try again.");
     } finally {
       setSaving(false);
     }
@@ -91,8 +84,17 @@ export default function SettingsPage() {
 
   if (loading) {
     return (
-      <div className="min-h-screen flex items-center justify-center bg-background">
-        <div className="animate-spin w-12 h-12 border-4 border-[#8b654b] border-t-transparent rounded-full"></div>
+      <div className="min-h-screen flex flex-col items-center justify-center bg-background text-foreground gap-4">
+        <div className="relative flex items-center justify-center">
+          <div className="absolute w-16 h-16 border-4 border-[#1C5B6F]/20 rounded-full"></div>
+          <Loader2
+            className="w-16 h-16 text-[#1C5B6F] animate-spin"
+            strokeWidth={1.5}
+          />
+        </div>
+        <p className="text-sm font-medium text-muted-foreground animate-pulse">
+          Loading settings...
+        </p>
       </div>
     );
   }
@@ -106,14 +108,6 @@ export default function SettingsPage() {
         <p className="text-muted-foreground mb-10">
           Update your account information and public profile details.
         </p>
-
-        {message && (
-          <div
-            className={`p-4 mb-8 rounded-xl font-medium ${message.type === "success" ? "bg-green-100 text-green-800 dark:bg-green-900/30 dark:text-green-400" : "bg-red-100 text-red-800 dark:bg-red-900/30 dark:text-red-400"}`}
-          >
-            {message.text}
-          </div>
-        )}
 
         <form
           onSubmit={handleSubmit}
@@ -267,13 +261,13 @@ export default function SettingsPage() {
           </div>
 
           <div className="flex justify-end mt-4 pt-6 border-t border-border">
-            <button
+            <Button
               type="submit"
-              disabled={saving}
-              className="bg-[#1C5B6F] hover:bg-[#154655] text-white px-8 py-3 rounded-xl font-bold shadow-md transition-all disabled:opacity-50"
+              loading={saving}
+              className="px-8 bg-[#1C5B6F] hover:bg-[#154655] dark:bg-[#EEFCFD] text-white dark:text-[#0F313D] rounded-xl font-bold shadow-md transition-all h-12"
             >
-              {saving ? "Saving..." : "Save Settings"}
-            </button>
+              Save Settings
+            </Button>
           </div>
         </form>
       </div>

@@ -41,6 +41,31 @@ export class UsersService {
       .from(schema.users);
   }
 
+  async findPersonById(id: number) {
+    const [user] = await this.db
+      .select({
+        id: schema.users.id,
+        name: schema.users.name,
+        email: schema.users.email,
+        bio: schema.users.bio,
+        expertise: schema.users.expertise,
+        role: schema.users.role,
+        values: schema.users.values,
+        professionalProfile: schema.users.professionalProfile,
+        geographicalSpread: schema.users.geographicalSpread,
+        interventions: schema.users.interventions,
+        problem: schema.users.problem,
+        systemChange: schema.users.systemChange,
+        systemImpact: schema.users.systemImpact,
+        abundance: schema.users.abundance,
+        helpNeeded: schema.users.helpNeeded,
+        createdAt: schema.users.createdAt,
+      })
+      .from(schema.users)
+      .where(eq(schema.users.id, id));
+    return user;
+  }
+
   async findById(id: number) {
     return this.db.query.users.findFirst({
       where: eq(schema.users.id, id),

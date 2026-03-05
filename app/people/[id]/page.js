@@ -1,73 +1,80 @@
-import React from "react";
+"use client";
+import React, { useEffect, useState, use } from "react";
 import Image from "next/image";
 import Link from "next/link";
-import { ArrowLeft, MapPin, Star } from "lucide-react";
+import { ArrowLeft, MapPin, Star, Loader2 } from "lucide-react";
+import { fetchApi } from "../../../lib/api";
+import { toast } from "sonner";
 
-// Mock data to find the person based on the dynamic ID route
-// In a real app, this might come from a DB or CMS
-const peopleData = [
-  {
-    id: 1,
-    name: "Satrajit Sanyal",
-    location: "Agra, In",
-    image:
-      "https://images.unsplash.com/photo-1506794778202-cad84cf45f1d?w=800&auto=format&fit=crop&q=60&ixlib=rb-4.0.3",
-    badges: ["Humility", "Wisdom", "Honesty"],
-    description:
-      "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Ut et massa mi. Aliquam in hendrerit urna. Pellentesque sit amet sapien fringilla, mattis ligula consectetur, ultrices mauris. Maecenas vitae mattis tellus.",
-    longDescription:
-      "Detailed biography and information about Satrajit Sanyal goes here. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Ut et massa mi. Aliquam in hendrerit urna. Pellentesque sit amet sapien fringilla, mattis ligula consectetur, ultrices mauris. Maecenas vitae mattis tellus.",
-  },
-  {
-    id: 2,
-    name: "Ajay Nayak",
-    location: "Agra, In",
-    image:
-      "https://images.unsplash.com/photo-1542909168-82c3e7fdca5c?w=800&auto=format&fit=crop&q=60&ixlib=rb-4.0.3",
-    badges: ["Love", "Respect", "Compassion"],
-    description:
-      "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Ut et massa mi. Aliquam in hendrerit urna. Pellentesque sit amet sapien fringilla, mattis ligula consectetur, ultrices mauris. Maecenas vitae mattis tellus.",
-    longDescription:
-      "Detailed biography and information about Ajay Nayak goes here. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Ut et massa mi. Aliquam in hendrerit urna. Pellentesque sit amet sapien fringilla, mattis ligula consectetur, ultrices mauris. Maecenas vitae mattis tellus.",
-  },
-  {
-    id: 3,
-    name: "Pinaki Roy",
-    location: "Agra, In",
-    image:
-      "https://images.unsplash.com/photo-1566492031773-4f4e44671857?w=800&auto=format&fit=crop&q=60&ixlib=rb-4.0.3",
-    badges: ["Equality", "Dignity", "Harmony", "Compassion"],
-    description:
-      "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Ut et massa mi. Aliquam in hendrerit urna. Pellentesque sit amet sapien fringilla, mattis ligula consectetur, ultrices mauris. Maecenas vitae mattis tellus.",
-    longDescription:
-      "Detailed biography and information about Pinaki Roy goes here. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Ut et massa mi. Aliquam in hendrerit urna. Pellentesque sit amet sapien fringilla, mattis ligula consectetur, ultrices mauris. Maecenas vitae mattis tellus.",
-  },
-];
+export default function PersonProfile({ params }) {
+  const { id } = use(params);
+  const [person, setPerson] = useState(null);
+  const [loading, setLoading] = useState(true);
 
-export async function generateStaticParams() {
-  return peopleData.map((person) => ({
-    id: person.id.toString(),
-  }));
-}
+  useEffect(() => {
+    async function fetchPerson() {
+      try {
+        const response = await fetchApi(`/v1/users/people/${id}`);
+        if (!response.ok) {
+          throw new Error("Person not found");
+        }
+        const data = await response.json();
+        setPerson(data);
+      } catch (err) {
+        toast.error(`Error: ${err.message}`);
+      } finally {
+        setLoading(false);
+      }
+    }
+    fetchPerson();
+  }, [id]);
 
-export default async function PersonProfile({ params }) {
-  const { id } = await params;
-
-  // Find the correct person by ID
-  const person = peopleData.find((p) => p.id.toString() === id);
+  if (loading) {
+    return (
+      <div className="min-h-screen flex flex-col items-center justify-center bg-background text-foreground gap-4">
+        <div className="relative flex items-center justify-center">
+          <div className="absolute w-16 h-16 border-4 border-[#1C5B6F]/20 rounded-full"></div>
+          <Loader2
+            className="w-16 h-16 text-[#1C5B6F] animate-spin"
+            strokeWidth={1.5}
+          />
+        </div>
+        <p className="text-sm font-medium text-muted-foreground animate-pulse">
+          Getting profile details...
+        </p>
+      </div>
+    );
+  }
 
   if (!person) {
     return (
       <div className="min-h-screen flex items-center justify-center bg-background text-foreground">
         <div className="text-center">
-          <h1 className="text-3xl font-bold mb-4">Person Not Found</h1>
-          <Link href="/people" className="text-blue-500 hover:underline">
-            Return to People Directory
+          <h1 className="text-3xl font-bold mb-4 text-[#6d4c3d] dark:text-[#dfc3b4]">
+            Person Not Found
+          </h1>
+          <p className="text-muted-foreground mb-8">
+            The profile you are looking for might have been removed or moved.
+          </p>
+          <Link href="/people">
+            <button className="bg-[#1C5B6F] text-white px-8 py-3 rounded-full font-bold hover:bg-[#154655] transition-colors shadow-md">
+              Return to People Directory
+            </button>
           </Link>
         </div>
       </div>
     );
   }
+
+  const badgeString = person.values || person.expertise || "";
+  const badges = badgeString
+    .split(/#|\s+/)
+    .map((b) => b.trim())
+    .filter((b) => b.length > 0);
+
+  const imageUrl =
+    person.image ||
+    `https://api.dicebear.com/7.x/initials/svg?seed=${encodeURIComponent(person.name)}`;
 
   return (
     <div className="min-h-screen bg-background transition-colors duration-300 py-12 px-4 md:px-8">
@@ -82,24 +89,15 @@ export default async function PersonProfile({ params }) {
 
         <div className="bg-card text-card-foreground rounded-[2rem] overflow-hidden border border-border shadow-[0_4px_30px_rgba(0,0,0,0.06)] dark:shadow-none flex flex-col md:flex-row transition-all duration-300">
           {/* Image container */}
-          <div className="w-full md:w-1/3 aspect-square md:aspect-auto md:min-h-[400px] relative bg-muted shrink-0 flex items-center justify-center">
-            {person.image ? (
-              <Image
-                src={person.image}
-                alt={`Profile image of ${person.name}`}
-                fill
-                className="object-cover"
-                sizes="(max-width: 768px) 100vw, 33vw"
-                priority
-              />
-            ) : (
-              <div className="w-full h-full flex flex-col justify-center items-center text-muted-foreground gap-3">
-                <span className="text-6xl sm:text-7xl">🧑‍🏫</span>
-                <span className="text-base font-medium">
-                  No Image Available
-                </span>
-              </div>
-            )}
+          <div className="w-full md:w-1/3 aspect-square md:aspect-auto md:min-h-[400px] relative bg-muted shrink-0 flex items-center justify-center overflow-hidden">
+            <Image
+              src={imageUrl}
+              alt={`Profile image of ${person.name}`}
+              fill
+              className="object-cover"
+              sizes="(max-width: 768px) 100vw, 33vw"
+              priority
+            />
           </div>
 
           {/* Content container */}
@@ -114,14 +112,14 @@ export default async function PersonProfile({ params }) {
                 aria-hidden="true"
               />
               <span className="font-medium text-[15px] sm:text-lg">
-                {person.location || "Location unknown"}
+                {person.geographicalSpread || "Location unknown"}
               </span>
             </div>
 
             {/* Badges */}
             <div className="flex flex-wrap gap-2.5 sm:gap-3 mb-8">
-              {person.badges && person.badges.length > 0 ? (
-                person.badges.map((badge, idx) => (
+              {badges.length > 0 ? (
+                badges.map((badge, idx) => (
                   <div
                     key={idx}
                     className="flex items-center gap-1.5 bg-[#f6f4f0] dark:bg-slate-800 px-3 py-1.5 sm:px-4 sm:py-2 rounded-full border border-transparent dark:border-slate-700 break-words"
@@ -144,23 +142,35 @@ export default async function PersonProfile({ params }) {
             </div>
 
             <div className="prose prose-base sm:prose-lg dark:prose-invert max-w-none">
-              <h3 className="text-xl sm:text-2xl font-bold mb-4 text-foreground">
+              <h3 className="text-xl sm:text-2xl font-bold mb-4 text-[#0F313D] dark:text-white">
                 About
               </h3>
-              {person.longDescription ? (
-                <p className="text-muted-foreground leading-[1.7] mb-6">
-                  {person.longDescription}
-                </p>
-              ) : (
-                <p className="text-muted-foreground leading-[1.7] mb-6 italic">
-                  A detailed biography is not currently available for this
-                  person.
-                </p>
+              <p className="text-muted-foreground leading-[1.7] mb-6">
+                {person.professionalProfile ||
+                  person.bio ||
+                  "No details provided for this person."}
+              </p>
+
+              {person.interventions && (
+                <>
+                  <h4 className="font-bold text-[#0F313D] dark:text-white mt-8 mb-2">
+                    Interventions
+                  </h4>
+                  <p className="text-muted-foreground leading-[1.7] mb-6">
+                    {person.interventions}
+                  </p>
+                </>
               )}
-              {person.description && (
-                <p className="text-muted-foreground leading-[1.7]">
-                  {person.description}
-                </p>
+
+              {person.systemChange && (
+                <>
+                  <h4 className="font-bold text-[#0F313D] dark:text-white mt-8 mb-2">
+                    System Change
+                  </h4>
+                  <p className="text-muted-foreground leading-[1.7] mb-6">
+                    {person.systemChange}
+                  </p>
+                </>
               )}
             </div>
           </div>

@@ -1,4 +1,4 @@
-import { Controller, Get, Post, Body, Patch, UseGuards, Req } from '@nestjs/common';
+import { Controller, Get, Post, Body, Patch, UseGuards, Req, Param } from '@nestjs/common';
 import { ApiTags, ApiOperation, ApiResponse, ApiBearerAuth } from '@nestjs/swagger';
 import { Request } from 'express';
 import { UsersService } from './users.service';
@@ -22,6 +22,13 @@ export class UsersController {
   @ApiResponse({ status: 200, description: 'Returns safe profiles suitable for public directory' })
   async getPeople() {
     return this.usersService.findPeople();
+  }
+
+  @Get('people/:id')
+  @ApiOperation({ summary: 'Get a specific user public profile' })
+  @ApiResponse({ status: 200, description: 'Returns safe profile for a specific user' })
+  async getPersonById(@Param('id') id: string) {
+    return this.usersService.findPersonById(parseInt(id));
   }
 
   @UseGuards(JwtAuthGuard)

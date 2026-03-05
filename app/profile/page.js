@@ -4,7 +4,8 @@ import React, { useEffect, useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import { fetchApi } from "../../lib/api";
-import { MapPin, Star, Settings } from "lucide-react";
+import { MapPin, Star, Settings, Loader2 } from "lucide-react";
+import { toast } from "sonner";
 
 export default function ProfilePage() {
   const [profile, setProfile] = useState(null);
@@ -16,16 +17,13 @@ export default function ProfilePage() {
       try {
         const response = await fetchApi("/v1/users/profile");
         if (!response.ok) {
-          if (response.status === 401) {
-            window.location.href = "/login";
-            return;
-          }
           throw new Error("Failed to load profile");
         }
         const data = await response.json();
         setProfile(data);
       } catch (err) {
         setError(err.message);
+        toast.error(`Error: ${err.message}`);
       } finally {
         setLoading(false);
       }
@@ -35,8 +33,17 @@ export default function ProfilePage() {
 
   if (loading) {
     return (
-      <div className="min-h-screen flex items-center justify-center bg-background">
-        <div className="animate-spin w-12 h-12 border-4 border-[#8b654b] border-t-transparent rounded-full"></div>
+      <div className="min-h-screen flex flex-col items-center justify-center bg-background text-foreground gap-4">
+        <div className="relative flex items-center justify-center">
+          <div className="absolute w-16 h-16 border-4 border-[#1C5B6F]/20 rounded-full"></div>
+          <Loader2
+            className="w-16 h-16 text-[#1C5B6F] animate-spin"
+            strokeWidth={1.5}
+          />
+        </div>
+        <p className="text-sm font-medium text-muted-foreground animate-pulse">
+          Loading your profile...
+        </p>
       </div>
     );
   }
