@@ -13,7 +13,7 @@ export default function PeoplePage() {
   React.useEffect(() => {
     async function loadPeople() {
       try {
-        const response = await fetchApi("/users/people");
+        const response = await fetchApi("/v1/users/people");
         if (response.ok) {
           const data = await response.json();
           setPeople(data);

@@ -28,7 +28,7 @@ export default function SettingsPage() {
   useEffect(() => {
     async function fetchProfile() {
       try {
-        const response = await fetchApi("/users/profile");
+        const response = await fetchApi("/v1/users/profile");
         if (!response.ok) {
           if (response.status === 401) {
             window.location.href = "/login";
@@ -63,7 +63,7 @@ export default function SettingsPage() {
     setMessage(null);
 
     try {
-      const response = await fetchApi("/users/profile", {
+      const response = await fetchApi("/v1/users/profile", {
         method: "PATCH",
         body: JSON.stringify(formData),
       });

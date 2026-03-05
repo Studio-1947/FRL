@@ -14,7 +14,7 @@ export default function ProfilePage() {
   useEffect(() => {
     async function fetchProfile() {
       try {
-        const response = await fetchApi("/users/profile");
+        const response = await fetchApi("/v1/users/profile");
         if (!response.ok) {
           if (response.status === 401) {
             window.location.href = "/login";

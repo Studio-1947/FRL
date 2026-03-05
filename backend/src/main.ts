@@ -47,7 +47,13 @@ async function bootstrap() {
     // CORS configuration
     const frontendUrl = configService.get<string>('FRONTEND_URL', 'http://localhost:3000');
     app.enableCors({
-      origin: [frontendUrl],
+      origin: [
+        frontendUrl,
+        'https://www.myfrl.in',
+        'https://myfrl.in',
+        'https://frl-two.vercel.app',
+        /\.myfrl\.in$/, // Allow subdomains
+      ],
       credentials: true,
       methods: ['GET', 'POST', 'PUT', 'DELETE', 'PATCH', 'OPTIONS'],
     });
