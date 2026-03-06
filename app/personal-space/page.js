@@ -14,11 +14,15 @@ export default function PersonalSpacePage() {
     setIsLoading(true);
     try {
       const response = await fetchApi("/v1/notes");
-      if (response && response.ok !== false) {
-        setNotes(Array.isArray(response) ? response : []);
+      if (response && response.ok) {
+        const data = await response.json();
+        setNotes(Array.isArray(data) ? data : []);
+      } else {
+        const errorData = await response?.json();
+        console.error("Failed to load notes:", errorData);
       }
     } catch (err) {
-      console.error("Failed to load notes", err);
+      console.error("Error in loadNotes:", err);
     } finally {
       setIsLoading(false);
     }

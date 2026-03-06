@@ -126,10 +126,15 @@ export default function CreateNoteModal({ onClose, onSuccess }) {
           return;
         }
 
-        await fetchApi("/v1/notes", {
+        const response = await fetchApi("/v1/notes", {
           method: "POST",
           body: JSON.stringify({ title, content, isVoiceNote: false }),
         });
+
+        if (!response.ok) {
+          const errorData = await response.json();
+          throw new Error(errorData?.message || "Failed to save text note");
+        }
       } else {
         if (!audioBlob) {
           setError("Please record an audio note first.");
@@ -144,16 +149,22 @@ export default function CreateNoteModal({ onClose, onSuccess }) {
         formData.append("isVoiceNote", "true");
 
         // The fetchApi dynamic omission of Content-Type handles this perfectly.
-        await fetchApi("/v1/notes/voice", {
+        const response = await fetchApi("/v1/notes/voice", {
           method: "POST",
           body: formData,
         });
+
+        if (!response.ok) {
+          const errorData = await response.json();
+          throw new Error(errorData?.message || "Failed to upload voice note");
+        }
       }
 
       onSuccess();
     } catch (err) {
       setError(
-        "Failed to save note. Please check your connection and try again.",
+        err.message ||
+          "Failed to save note. Please check your connection and try again.",
       );
     } finally {
       setIsSubmitting(false);
