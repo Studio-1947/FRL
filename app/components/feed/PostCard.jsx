@@ -9,9 +9,23 @@ import {
   MoreHorizontal,
   User,
 } from "lucide-react";
-import { formatDistanceToNow } from "date-fns";
 import { fetchApi } from "@/lib/api";
 import { toast } from "sonner";
+
+const formatTimeAgo = (date) => {
+  const seconds = Math.floor((new Date() - new Date(date)) / 1000);
+  let interval = seconds / 31536000;
+  if (interval > 1) return Math.floor(interval) + " years ago";
+  interval = seconds / 2592000;
+  if (interval > 1) return Math.floor(interval) + " months ago";
+  interval = seconds / 864000;
+  if (interval > 1) return Math.floor(interval) + " days ago";
+  interval = seconds / 3600;
+  if (interval > 1) return Math.floor(interval) + " hours ago";
+  interval = seconds / 60;
+  if (interval > 1) return Math.floor(interval) + " minutes ago";
+  return Math.floor(seconds) + " seconds ago";
+};
 
 export default function PostCard({ post }) {
   const [isLiked, setIsLiked] = useState(post.isLiked);
@@ -64,9 +78,7 @@ export default function PostCard({ post }) {
             </h4>
             <div className="flex items-center gap-2">
               <span className="text-xs text-muted-foreground">
-                {formatDistanceToNow(new Date(post.createdAt), {
-                  addSuffix: true,
-                })}
+                {formatTimeAgo(post.createdAt)}
               </span>
               {post.userExpertise && (
                 <>

@@ -5,7 +5,7 @@ import { fetchApi } from "@/lib/api";
 import CreatePost from "../components/feed/CreatePost";
 import PostCard from "../components/feed/PostCard";
 import { Loader2, Sparkles } from "lucide-react";
-import Header from "../components/layout/Header"; // Assuming existence or placeholder
+import Header from "../components/Header";
 
 export default function FeedPage() {
   const [posts, setPosts] = useState([]);
