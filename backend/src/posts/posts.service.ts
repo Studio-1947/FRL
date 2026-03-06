@@ -1,13 +1,14 @@
 import { Injectable, Inject, NotFoundException, ForbiddenException } from '@nestjs/common';
 import { NodePgDatabase } from 'drizzle-orm/node-postgres';
 import { eq, desc, and, sql, or, inArray } from 'drizzle-orm';
+import { DRIZZLE } from '../database/database.module';
 import * as schema from '../database/schema';
 import { CreatePostDto } from './dto/create-post.dto';
 
 @Injectable()
 export class PostsService {
   constructor(
-    @Inject('DRIZZLE_IO')
+    @Inject(DRIZZLE)
     private db: NodePgDatabase<typeof schema>,
   ) {}
 
