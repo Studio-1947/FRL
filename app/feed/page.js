@@ -69,14 +69,14 @@ export default function FeedPage() {
 
   return (
     <div className="min-h-screen bg-[#F8F9FA] dark:bg-[#081B23]">
-      <div className="max-w-[1200px] mx-auto pt-10 px-4 md:px-8 flex flex-col items-center">
+      <div className="max-w-[1200px] mx-auto pt-6 md:pt-10 px-3 sm:px-4 md:px-8 flex flex-col items-center">
         {/* Feed Header */}
         <div className="w-full max-w-[600px] mb-8 flex flex-col gap-2">
           <h1 className="text-4xl font-black text-[#0F313D] dark:text-white flex items-center gap-3">
             Feed <Sparkles className="text-[#1C5B6F] fill-current" />
           </h1>
           <p className="text-muted-foreground font-medium">
-            Capture moments and share what's on your mind.
+            Capture moments and share what&apos;s on your mind.
           </p>
         </div>
 
@@ -115,7 +115,7 @@ export default function FeedPage() {
 
           {!hasMore && posts.length > 0 && (
             <div className="text-center py-12 text-muted-foreground font-medium">
-              You've seen all the latest updates! ✨
+              You&apos;ve seen all the latest updates! ✨
             </div>
           )}
 

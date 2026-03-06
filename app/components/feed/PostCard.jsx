@@ -60,9 +60,9 @@ export default function PostCard({ post }) {
     `https://api.dicebear.com/7.x/initials/svg?seed=${encodeURIComponent(post.userName || "U")}`;
 
   return (
-    <div className="bg-card border border-border rounded-3xl overflow-hidden mb-6 shadow-sm transition-all duration-300 hover:shadow-md group">
+    <div className="bg-card border border-border rounded-2xl sm:rounded-3xl overflow-hidden mb-4 sm:mb-6 shadow-sm transition-all duration-300 hover:shadow-md group">
       {/* Header */}
-      <div className="p-4 flex items-center justify-between">
+      <div className="p-3 sm:p-4 flex items-center justify-between">
         <div className="flex items-center gap-3">
           <div className="relative w-10 h-10 rounded-full overflow-hidden bg-muted border border-border">
             <Image
@@ -97,8 +97,8 @@ export default function PostCard({ post }) {
       </div>
 
       {/* Content */}
-      <div className="px-4 pb-3">
-        <p className="text-foreground leading-relaxed whitespace-pre-wrap">
+      <div className="px-3 sm:px-4 pb-2 sm:pb-3">
+        <p className="text-sm sm:text-base text-foreground leading-relaxed whitespace-pre-wrap">
           {post.content}
         </p>
       </div>
@@ -117,26 +117,28 @@ export default function PostCard({ post }) {
       )}
 
       {/* Actions */}
-      <div className="p-3 flex items-center gap-4 border-t border-border mt-2">
+      <div className="p-2 sm:p-3 flex items-center gap-2 sm:gap-4 border-t border-border mt-2">
         <button
           onClick={toggleLike}
-          className={`flex items-center gap-2 p-2 rounded-full transition-all active:scale-90 ${
+          className={`flex items-center gap-1.5 sm:gap-2 p-1.5 sm:p-2 rounded-full transition-all active:scale-90 ${
             isLiked
               ? "text-rose-500 bg-rose-50 dark:bg-rose-500/10"
               : "text-muted-foreground hover:bg-muted"
           }`}
         >
-          <Heart className={`w-6 h-6 ${isLiked ? "fill-current" : ""}`} />
-          <span className="text-sm font-semibold">{likesCount}</span>
+          <Heart
+            className={`w-5 h-5 sm:w-6 sm:h-6 ${isLiked ? "fill-current" : ""}`}
+          />
+          <span className="text-xs sm:text-sm font-semibold">{likesCount}</span>
         </button>
 
-        <button className="flex items-center gap-2 p-2 rounded-full transition-all hover:bg-muted text-muted-foreground">
-          <MessageCircle className="w-6 h-6" />
-          <span className="text-sm font-semibold">0</span>
+        <button className="flex items-center gap-1.5 sm:gap-2 p-1.5 sm:p-2 rounded-full transition-all hover:bg-muted text-muted-foreground">
+          <MessageCircle className="w-5 h-5 sm:w-6 sm:h-6" />
+          <span className="text-xs sm:text-sm font-semibold">0</span>
         </button>
 
         <button className="p-2 ml-auto rounded-full transition-all hover:bg-muted text-muted-foreground">
-          <Share2 className="w-6 h-6" />
+          <Share2 className="w-5 h-5 sm:w-6 sm:h-6" />
         </button>
       </div>
     </div>

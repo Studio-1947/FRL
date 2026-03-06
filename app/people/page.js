@@ -48,29 +48,32 @@ export default function PeoplePage() {
   return (
     <div className="min-h-screen bg-background transition-colors duration-300 flex flex-col items-center py-10 px-4 md:px-8">
       {/* Search Bar Section */}
-      <div className="w-full max-w-[1200px] mb-12">
-        <div className="flex w-full items-center bg-card rounded-2xl shadow-sm border border-border overflow-hidden h-[60px] transition-colors duration-300 focus-within:ring-2 focus-within:ring-ring focus-within:border-transparent">
+      <div className="w-full max-w-[1200px] mb-8 md:mb-12">
+        <div className="flex w-full items-center bg-card rounded-xl sm:rounded-2xl shadow-sm border border-border overflow-hidden h-[50px] sm:h-[60px] transition-colors duration-300 focus-within:ring-2 focus-within:ring-ring focus-within:border-transparent">
           <label htmlFor="people-search" className="sr-only">
             Search People
           </label>
-          <button className="flex items-center gap-2 bg-[#122e3b] dark:bg-slate-800 text-white px-5 sm:px-8 h-full hover:bg-[#0d212a] dark:hover:bg-slate-700 transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-[#122e3b]">
-            <span className="font-medium text-[15px] sm:text-[16px]">
+          <button className="flex items-center gap-1.5 sm:gap-2 bg-[#122e3b] dark:bg-slate-800 text-white px-4 sm:px-8 h-full hover:bg-[#0d212a] dark:hover:bg-slate-700 transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-[#122e3b]">
+            <span className="font-medium text-[14px] sm:text-[16px]">
               People
             </span>
-            <ChevronDown className="w-4 h-4 text-gray-300" aria-hidden="true" />
+            <ChevronDown
+              className="w-3 h-3 sm:w-4 sm:h-4 text-gray-300"
+              aria-hidden="true"
+            />
           </button>
-          <div className="flex-1 flex items-center px-4 sm:px-6 h-full relative">
+          <div className="flex-1 flex items-center px-3 sm:px-6 h-full relative">
             <input
               id="people-search"
               type="text"
-              placeholder="Search for someone..."
-              className="w-full h-full bg-transparent outline-none text-foreground placeholder-muted-foreground text-[15px] sm:text-[16px]"
+              placeholder="Search..."
+              className="w-full h-full bg-transparent outline-none text-foreground placeholder-muted-foreground text-[14px] sm:text-[16px]"
             />
             <button
-              className="text-muted-foreground hover:text-foreground transition-colors ml-2 sm:ml-4 focus:outline-none focus-visible:ring-2 focus-visible:ring-ring rounded"
+              className="text-muted-foreground hover:text-foreground transition-colors ml-1 sm:ml-4 focus:outline-none focus-visible:ring-2 focus-visible:ring-ring rounded"
               aria-label="Submit search"
             >
-              <Search className="w-5 h-5 pointer-events-none" />
+              <Search className="w-4 h-4 sm:w-5 sm:h-5 pointer-events-none" />
             </button>
           </div>
         </div>

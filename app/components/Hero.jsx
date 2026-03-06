@@ -56,7 +56,7 @@ export default function Hero() {
               <div className="self-stretch flex flex-col justify-start items-start">
                 <div className="self-stretch p-[5px] flex flex-col justify-start items-start gap-2.5 overflow-hidden">
                   <div className="self-stretch justify-start text-[#70543E] text-lg  capitalize tracking-wide font-semibold">
-                    What's new in FRL
+                    What&apos;s new in FRL
                   </div>
                 </div>
                 <div className="self-stretch p-[5px] flex flex-col justify-start items-start gap-2.5 overflow-hidden">

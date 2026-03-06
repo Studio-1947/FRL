@@ -140,31 +140,31 @@ function Header() {
       {/* below this section's ui is still being developed  */}
       {/* Hamburger for mobile */}
       <div
-        className="lg:hidden flex flex-col gap-1 cursor-pointer"
+        className="lg:hidden flex flex-col gap-1.5 cursor-pointer p-2 rounded-lg hover:bg-slate-100 dark:hover:bg-white/10 transition-colors"
         onClick={() => setIsMenuOpen(!isMenuOpen)}
       >
         <div
-          className={`w-6 h-0.5 bg-white transition-all duration-300 ease-in-out ${
-            isMenuOpen ? "rotate-45 translate-y-[6px]" : ""
+          className={`w-6 h-0.5 bg-slate-900 dark:bg-white transition-all duration-300 ease-in-out ${
+            isMenuOpen ? "rotate-45 translate-y-[8px]" : ""
           }`}
         ></div>
         <div
-          className={`w-6 h-0.5 bg-white transition-all duration-300 ease-in-out ${
+          className={`w-6 h-0.5 bg-slate-900 dark:bg-white transition-all duration-300 ease-in-out ${
             isMenuOpen ? "opacity-0" : ""
           }`}
         ></div>
         <div
-          className={`w-6 h-0.5 bg-white transition-all duration-300 ease-in-out ${
-            isMenuOpen ? "-rotate-45 -translate-y-[6px]" : ""
+          className={`w-6 h-0.5 bg-slate-900 dark:bg-white transition-all duration-300 ease-in-out ${
+            isMenuOpen ? "-rotate-45 -translate-y-[8px]" : ""
           }`}
         ></div>
       </div>
 
       {/* Mobile Dropdown Menu */}
       <div
-        className={`absolute top-[80px] left-0 w-full bg-[#0F313D] z-10 px-5 lg:hidden transition-all duration-300 ease-in-out overflow-hidden ${
+        className={`absolute top-[72px] left-0 w-full bg-white/80 dark:bg-[#0F313D]/90 backdrop-blur-xl z-50 px-6 lg:hidden transition-all duration-500 ease-in-out overflow-hidden border-b border-slate-200 dark:border-white/10 shadow-xl ${
           isMenuOpen
-            ? "max-h-[500px] pb-4 opacity-100"
+            ? "max-h-[80vh] pb-8 opacity-100"
             : "max-h-0 opacity-0 pointer-events-none"
         }`}
       >
@@ -173,7 +173,7 @@ function Header() {
             <li key={i}>
               <Link
                 href={navLink.link}
-                className="block text-lg font-medium py-2 border-b border-white/20"
+                className="block text-lg font-bold py-4 border-b border-slate-100 dark:border-white/10 text-slate-900 dark:text-white hover:text-[#205a6a] dark:hover:text-[#6BE3DF] transition-colors"
                 onClick={() => setIsMenuOpen(false)}
               >
                 {navLink.title}
@@ -185,34 +185,34 @@ function Header() {
               <div className="flex flex-col gap-4">
                 <Link
                   href="/profile"
-                  className="flex gap-2 items-center w-full py-2 border-b border-white/20"
+                  className="flex gap-4 items-center w-full py-4 border-b border-slate-100 dark:border-white/10 text-slate-900 dark:text-white"
                   onClick={() => setIsMenuOpen(false)}
                 >
-                  {user?.avatarUrl ? (
-                    <div className="w-5 h-5 rounded-full overflow-hidden">
+                  <div className="w-8 h-8 rounded-full overflow-hidden bg-slate-100 dark:bg-white/10 flex items-center justify-center border border-slate-200 dark:border-white/20">
+                    {user?.avatarUrl ? (
                       <Image
                         src={user.avatarUrl}
                         alt="Profile"
-                        width={20}
-                        height={20}
+                        width={32}
+                        height={32}
                         className="object-cover"
                       />
-                    </div>
-                  ) : (
-                    <CircleUser size={20} />
-                  )}
-                  <div className="font-medium text-lg text-white">PROFILE</div>
+                    ) : (
+                      <CircleUser size={24} />
+                    )}
+                  </div>
+                  <div className="font-bold text-lg">MY PROFILE</div>
                 </Link>
                 <button
-                  className="flex gap-2 items-center w-full py-2 text-red-400 hover:text-red-300 transition-colors disabled:opacity-50"
+                  className="flex gap-4 items-center w-full py-5 text-red-500 font-bold hover:bg-red-50 dark:hover:bg-red-900/10 transition-colors rounded-xl px-2"
                   onClick={() => {
                     logout();
                     setIsMenuOpen(false);
                   }}
                   disabled={isLoggingOut}
                 >
-                  <LogOut size={20} />
-                  <div className="font-medium text-lg">
+                  <LogOut size={24} />
+                  <div className="text-lg">
                     {isLoggingOut ? "LOGGING OUT..." : "LOGOUT"}
                   </div>
                 </button>
@@ -220,11 +220,13 @@ function Header() {
             ) : (
               <Link
                 href="/login"
-                className="flex gap-2 items-center w-full py-2 border-b border-white/20"
+                className="flex gap-4 items-center w-full py-6 border-b border-slate-100 dark:border-white/10 text-slate-900 dark:text-white"
                 onClick={() => setIsMenuOpen(false)}
               >
-                <CircleUser size={20} />
-                <div className="font-medium text-lg text-white">LOGIN</div>
+                <div className="w-10 h-10 rounded-full bg-[#1C5B6F] text-white flex items-center justify-center shadow-lg">
+                  <CircleUser size={24} />
+                </div>
+                <div className="font-bold text-lg">LOGIN TO FRL</div>
               </Link>
             )}
           </li>
