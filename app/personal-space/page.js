@@ -13,7 +13,7 @@ export default function PersonalSpacePage() {
   const loadNotes = async () => {
     setIsLoading(true);
     try {
-      const response = await fetchApi("/notes");
+      const response = await fetchApi("/v1/notes");
       if (response && response.ok !== false) {
         setNotes(Array.isArray(response) ? response : []);
       }

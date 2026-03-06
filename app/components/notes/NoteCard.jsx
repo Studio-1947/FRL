@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import { fetchApi } from "../../../lib/api";
+import { fetchApi, API_BASE_URL } from "../../../lib/api";
 import { Trash2, Mic, FileText } from "lucide-react";
 
 export default function NoteCard({ note, onComplete }) {
@@ -11,7 +11,7 @@ export default function NoteCard({ note, onComplete }) {
     if (!window.confirm("Delete note?")) return;
     setIsDeleting(true);
     try {
-      await fetchApi(`/notes/${note.id}`, { method: "DELETE" });
+      await fetchApi(`/v1/notes/${note.id}`, { method: "DELETE" });
       onComplete();
     } catch (e) {
       console.error(e);
@@ -19,11 +19,8 @@ export default function NoteCard({ note, onComplete }) {
     }
   };
 
-  // We need to resolve the backend API base url for static audio file assets
-  // Using NEXT_PUBLIC_API_URL or local path depending on env
-  const backendBaseUrl = process.env.NEXT_PUBLIC_API_URL
-    ? process.env.NEXT_PUBLIC_API_URL.replace("/v1", "")
-    : "http://localhost:8000";
+  // Resolve backend API base url for relative audio assets
+  const backendBaseUrl = API_BASE_URL;
 
   return (
     <div className="relative group bg-white dark:bg-[#1a1a1a] p-6 rounded-2xl shadow-sm border border-gray-100 dark:border-gray-800 hover:shadow-md transition-all duration-300">

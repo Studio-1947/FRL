@@ -33,7 +33,7 @@ export default function CreateNoteModal({ onClose, onSuccess }) {
         recognitionRef.current = new SpeechRecognition();
         recognitionRef.current.continuous = true;
         recognitionRef.current.interimResults = true;
-        // recognitionRef.current.lang = 'en-US';
+        recognitionRef.current.lang = "en-US";
 
         recognitionRef.current.onresult = (event) => {
           let interimTranscript = "";
@@ -126,7 +126,7 @@ export default function CreateNoteModal({ onClose, onSuccess }) {
           return;
         }
 
-        await fetchApi("/notes", {
+        await fetchApi("/v1/notes", {
           method: "POST",
           body: JSON.stringify({ title, content, isVoiceNote: false }),
         });
@@ -144,7 +144,7 @@ export default function CreateNoteModal({ onClose, onSuccess }) {
         formData.append("isVoiceNote", "true");
 
         // The fetchApi dynamic omission of Content-Type handles this perfectly.
-        await fetchApi("/notes/voice", {
+        await fetchApi("/v1/notes/voice", {
           method: "POST",
           body: formData,
         });
