@@ -32,6 +32,10 @@ const navLinks = [
     title: "KNOWLEDGE SYSTEM",
     link: "/resources",
   },
+  {
+    title: "PERSONAL SPACE",
+    link: "/personal-space",
+  },
 ];
 
 function Header() {

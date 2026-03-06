@@ -11,6 +11,9 @@ import { validationSchema } from './config/validation.schema';
 // We will create these modules shortly
 // import { PrismaModule } from './prisma/prisma.module';
 import { DatabaseModule } from './database/database.module';
+import { ServeStaticModule } from '@nestjs/serve-static';
+import { join } from 'path';
+import { NotesModule } from './notes/notes.module';
 // import { AuthModule } from './auth/auth.module';
 // import { UsersModule } from './users/users.module';
 import { UsersModule } from './users/users.module';
@@ -40,6 +43,14 @@ import { AppController } from './app.controller';
     UsersModule,
 
     AuthModule,
+
+    NotesModule,
+
+    ServeStaticModule.forRoot({
+      rootPath: join(__dirname, '..', '..', 'uploads'), // dist/ is two levels deep if we consider src, but wait, dist/main.js is 1 level. Next JS is different.
+      // Actually dist/app.module.js -> dir is dist. So '..' -> root. Therefore: join(__dirname, '..', 'uploads')
+      serveRoot: '/uploads',
+    }),
 
     // Feature Modules
     // AuthModule,

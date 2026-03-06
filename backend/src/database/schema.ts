@@ -1,4 +1,4 @@
-import { pgTable, serial, varchar, timestamp, text } from 'drizzle-orm/pg-core';
+import { pgTable, serial, varchar, timestamp, text, boolean, integer } from 'drizzle-orm/pg-core';
 
 // Example User Table
 export const users = pgTable('users', {
@@ -23,6 +23,20 @@ export const users = pgTable('users', {
   helpNeeded: text('help_needed'),
 
   avatarUrl: text('avatar_url'),
+  createdAt: timestamp('created_at').defaultNow().notNull(),
+  updatedAt: timestamp('updated_at').defaultNow().notNull(),
+});
+
+export const notes = pgTable('notes', {
+  id: serial('id').primaryKey(),
+  userId: integer('user_id')
+    .references(() => users.id)
+    .notNull(),
+  title: varchar('title', { length: 255 }),
+  content: text('content'),
+  isVoiceNote: boolean('is_voice_note').default(false).notNull(),
+  audioUrl: text('audio_url'),
+  transcription: text('transcription'),
   createdAt: timestamp('created_at').defaultNow().notNull(),
   updatedAt: timestamp('updated_at').defaultNow().notNull(),
 });
