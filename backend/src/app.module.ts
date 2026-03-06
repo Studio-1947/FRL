@@ -19,6 +19,7 @@ import { NotesModule } from './notes/notes.module';
 import { UsersModule } from './users/users.module';
 import { AuthModule } from './auth/auth.module';
 import { AppController } from './app.controller';
+import { PostsModule } from './posts/posts.module';
 
 @Module({
   imports: [
@@ -45,6 +46,8 @@ import { AppController } from './app.controller';
     AuthModule,
 
     NotesModule,
+
+    PostsModule,
 
     ServeStaticModule.forRoot({
       rootPath: join(__dirname, '..', '..', 'uploads'), // dist/ is two levels deep if we consider src, but wait, dist/main.js is 1 level. Next JS is different.

@@ -40,3 +40,26 @@ export const notes = pgTable('notes', {
   createdAt: timestamp('created_at').defaultNow().notNull(),
   updatedAt: timestamp('updated_at').defaultNow().notNull(),
 });
+
+export const posts = pgTable('posts', {
+  id: serial('id').primaryKey(),
+  userId: integer('user_id')
+    .references(() => users.id)
+    .notNull(),
+  content: text('content').notNull(),
+  imageUrl: text('image_url'),
+  category: varchar('category', { length: 100 }), // Added for preference filtering
+  createdAt: timestamp('created_at').defaultNow().notNull(),
+  updatedAt: timestamp('updated_at').defaultNow().notNull(),
+});
+
+export const likes = pgTable('likes', {
+  id: serial('id').primaryKey(),
+  userId: integer('user_id')
+    .references(() => users.id)
+    .notNull(),
+  postId: integer('post_id')
+    .references(() => posts.id)
+    .notNull(),
+  createdAt: timestamp('created_at').defaultNow().notNull(),
+});

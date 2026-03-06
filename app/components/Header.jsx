@@ -21,6 +21,10 @@ const navLinks = [
     link: "/people",
   },
   {
+    title: "FEED",
+    link: "/feed",
+  },
+  {
     title: "ABOUT US",
     link: "/about",
   },
