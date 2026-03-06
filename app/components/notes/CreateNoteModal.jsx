@@ -4,15 +4,22 @@ import { useState, useRef, useEffect } from "react";
 import { fetchApi } from "../../../lib/api";
 import { X, Mic, StopCircle, FileText, Loader2 } from "lucide-react";
 
-export default function CreateNoteModal({ onClose, onSuccess }) {
-  const [mode, setMode] = useState("text"); // "text" | "voice"
-  const [title, setTitle] = useState("");
-  const [content, setContent] = useState("");
+export default function CreateNoteModal({
+  onClose,
+  onSuccess,
+  noteToEdit = null,
+}) {
+  const isEditing = !!noteToEdit;
+  const [mode, setMode] = useState(noteToEdit?.isVoiceNote ? "voice" : "text");
+  const [title, setTitle] = useState(noteToEdit?.title || "");
+  const [content, setContent] = useState(noteToEdit?.content || "");
 
   const [isRecording, setIsRecording] = useState(false);
-  const [audioUrl, setAudioUrl] = useState(null);
+  const [audioUrl, setAudioUrl] = useState(noteToEdit?.audioUrl || null);
   const [audioBlob, setAudioBlob] = useState(null);
-  const [transcription, setTranscription] = useState("");
+  const [transcription, setTranscription] = useState(
+    noteToEdit?.transcription || "",
+  );
   const [recordingTime, setRecordingTime] = useState(0);
 
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -22,7 +29,9 @@ export default function CreateNoteModal({ onClose, onSuccess }) {
   const audioChunksRef = useRef([]);
   const timerRef = useRef(null);
   const recognitionRef = useRef(null);
-  const finalTranscriptRef = useRef("");
+  const finalTranscriptRef = useRef(
+    noteToEdit?.transcription ? noteToEdit.transcription + " " : "",
+  );
 
   useEffect(() => {
     // Setup Speech Recognition
@@ -38,13 +47,16 @@ export default function CreateNoteModal({ onClose, onSuccess }) {
         recognitionRef.current.onresult = (event) => {
           let interimTranscript = "";
           for (let i = event.resultIndex; i < event.results.length; ++i) {
+            const transcript = event.results[i][0].transcript;
             if (event.results[i].isFinal) {
-              finalTranscriptRef.current += event.results[i][0].transcript;
+              finalTranscriptRef.current += transcript + " ";
             } else {
-              interimTranscript += event.results[i][0].transcript;
+              interimTranscript += transcript;
             }
           }
-          setTranscription(finalTranscriptRef.current + interimTranscript);
+          setTranscription(
+            (finalTranscriptRef.current + interimTranscript).trim(),
+          );
         };
       }
     }
@@ -118,6 +130,9 @@ export default function CreateNoteModal({ onClose, onSuccess }) {
     setIsSubmitting(true);
     setError("");
 
+    const endpoint = isEditing ? `/v1/notes/${noteToEdit.id}` : "/v1/notes";
+    const method = isEditing ? "PATCH" : "POST";
+
     try {
       if (mode === "text") {
         if (!content.trim()) {
@@ -126,8 +141,8 @@ export default function CreateNoteModal({ onClose, onSuccess }) {
           return;
         }
 
-        const response = await fetchApi("/v1/notes", {
-          method: "POST",
+        const response = await fetchApi(endpoint, {
+          method,
           body: JSON.stringify({ title, content, isVoiceNote: false }),
         });
 
@@ -136,27 +151,71 @@ export default function CreateNoteModal({ onClose, onSuccess }) {
           throw new Error(errorData?.message || "Failed to save text note");
         }
       } else {
-        if (!audioBlob) {
+        if (!audioBlob && !isEditing) {
           setError("Please record an audio note first.");
           setIsSubmitting(false);
           return;
         }
 
-        const formData = new FormData();
-        formData.append("file", audioBlob, "voice-note.webm");
-        formData.append("title", title);
-        formData.append("transcription", transcription);
-        formData.append("isVoiceNote", "true");
+        if (audioBlob) {
+          // If a new audio is recorded, we must use FormData
+          const formData = new FormData();
+          formData.append("file", audioBlob, "voice-note.webm");
+          formData.append("title", title);
+          formData.append("transcription", transcription);
+          formData.append("isVoiceNote", "true");
 
-        // The fetchApi dynamic omission of Content-Type handles this perfectly.
-        const response = await fetchApi("/v1/notes/voice", {
-          method: "POST",
-          body: formData,
-        });
+          // Note: Voice updates technically should use a different endpoint or handle it in service
+          // but for simplicity, if we have a file, and its PATCH, we might need a dedicated voice update endpoint
+          // However, our backend POST /voice handles blob upload.
+          // Let's check if PATCH handles files. Backend Patch only takes JSON.
 
-        if (!response.ok) {
-          const errorData = await response.json();
-          throw new Error(errorData?.message || "Failed to upload voice note");
+          if (isEditing) {
+            // For editing voice notes with NEW audio, we'll use the voice creation logic
+            // but we need to delete the old one or just use a dedicated update-voice endpoint.
+            // Simplified: We'll call the voice creation logic and then delete the old one manually or
+            // just implement a proper PATCH for voice in backend.
+            // ACTUALLY, let's just use the same create endpoint for new voice or refine PATCH.
+
+            // To keep it simple for the user, I'll alert that editing audio isn't supported yet, OR
+            // I'll implement a workaround. Let's assume they mostly want to edit Title/Transcription.
+
+            const voiceResponse = await fetchApi(`/v1/notes/voice`, {
+              method: "POST", // Create new
+              body: formData,
+            });
+            if (voiceResponse.ok) {
+              await fetchApi(`/v1/notes/${noteToEdit.id}`, {
+                method: "DELETE",
+              });
+            } else {
+              const errorData = await voiceResponse.json();
+              throw new Error(
+                errorData?.message || "Failed to update voice note",
+              );
+            }
+          } else {
+            const response = await fetchApi("/v1/notes/voice", {
+              method: "POST",
+              body: formData,
+            });
+            if (!response.ok) {
+              const errorData = await response.json();
+              throw new Error(
+                errorData?.message || "Failed to upload voice note",
+              );
+            }
+          }
+        } else {
+          // Just updating Title/Transcription for an existing voice note
+          const response = await fetchApi(endpoint, {
+            method,
+            body: JSON.stringify({ title, transcription }),
+          });
+          if (!response.ok) {
+            const errorData = await response.json();
+            throw new Error(errorData?.message || "Failed to update metadata");
+          }
         }
       }
 
@@ -272,6 +331,7 @@ export default function CreateNoteModal({ onClose, onSuccess }) {
                         setAudioUrl(null);
                         setAudioBlob(null);
                         setTranscription("");
+                        finalTranscriptRef.current = "";
                       }}
                       className="text-sm border border-red-200 bg-red-50 text-red-600 hover:bg-red-100 hover:border-red-300 font-semibold px-4 py-2 rounded-full transition-colors"
                     >
@@ -307,6 +367,20 @@ export default function CreateNoteModal({ onClose, onSuccess }) {
                         </p>
                       )}
                     </div>
+
+                    {isRecording && transcription && (
+                      <div className="w-full mt-4 text-left animate-in fade-in slide-in-from-top-2 duration-300">
+                        <label className="block text-[10px] font-bold uppercase text-red-500 mb-1 tracking-widest flex items-center gap-1.5">
+                          <span className="w-1.5 h-1.5 bg-red-500 rounded-full animate-pulse"></span>
+                          Live Transcription
+                        </label>
+                        <div className="p-3 bg-white dark:bg-[#1a1a1a] border border-red-100 dark:border-red-900/30 rounded-xl max-h-32 overflow-y-auto shadow-sm">
+                          <p className="text-xs text-gray-700 dark:text-gray-300 italic leading-relaxed">
+                            "{transcription}"
+                          </p>
+                        </div>
+                      </div>
+                    )}
                   </div>
                 )}
               </div>

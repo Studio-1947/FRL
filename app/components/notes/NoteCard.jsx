@@ -2,9 +2,9 @@
 
 import { useState } from "react";
 import { fetchApi, API_BASE_URL } from "../../../lib/api";
-import { Trash2, Mic, FileText } from "lucide-react";
+import { Trash2, Mic, FileText, Edit2 } from "lucide-react";
 
-export default function NoteCard({ note, onComplete }) {
+export default function NoteCard({ note, onComplete, onEdit }) {
   const [isDeleting, setIsDeleting] = useState(false);
 
   const handleDelete = async () => {
@@ -37,13 +37,21 @@ export default function NoteCard({ note, onComplete }) {
             {new Date(note.createdAt).toLocaleDateString()}
           </span>
         </div>
-        <button
-          onClick={handleDelete}
-          disabled={isDeleting}
-          className="text-gray-300 hover:text-red-500 opacity-0 group-hover:opacity-100 transition-opacity bg-white dark:bg-[#1a1a1a]"
-        >
-          <Trash2 size={18} />
-        </button>
+        <div className="flex gap-2">
+          <button
+            onClick={() => onEdit(note)}
+            className="text-gray-300 hover:text-blue-500 opacity-0 group-hover:opacity-100 transition-opacity bg-white dark:bg-[#1a1a1a]"
+          >
+            <Edit2 size={18} />
+          </button>
+          <button
+            onClick={handleDelete}
+            disabled={isDeleting}
+            className="text-gray-300 hover:text-red-500 opacity-0 group-hover:opacity-100 transition-opacity bg-white dark:bg-[#1a1a1a]"
+          >
+            <Trash2 size={18} />
+          </button>
+        </div>
       </div>
 
       {note.title && (

@@ -8,6 +8,7 @@ import { fetchApi } from "../../lib/api";
 export default function PersonalSpacePage() {
   const [notes, setNotes] = useState([]);
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [noteToEdit, setNoteToEdit] = useState(null);
   const [isLoading, setIsLoading] = useState(true);
 
   const loadNotes = async () => {
@@ -28,6 +29,16 @@ export default function PersonalSpacePage() {
     }
   };
 
+  const handleEdit = (note) => {
+    setNoteToEdit(note);
+    setIsModalOpen(true);
+  };
+
+  const handleCloseModal = () => {
+    setIsModalOpen(false);
+    setNoteToEdit(null);
+  };
+
   useEffect(() => {
     loadNotes();
   }, []);
@@ -45,7 +56,10 @@ export default function PersonalSpacePage() {
             </p>
           </div>
           <button
-            onClick={() => setIsModalOpen(true)}
+            onClick={() => {
+              setNoteToEdit(null);
+              setIsModalOpen(true);
+            }}
             className="flex items-center gap-2 px-4 py-2 bg-black text-white dark:bg-white dark:text-black rounded-full font-medium shadow-sm hover:scale-105 transition-transform"
           >
             <span>+</span> New Note
@@ -57,14 +71,19 @@ export default function PersonalSpacePage() {
             <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary"></div>
           </div>
         ) : (
-          <NotesList notes={notes} onNotesUpdate={loadNotes} />
+          <NotesList
+            notes={notes}
+            onNotesUpdate={loadNotes}
+            onEdit={handleEdit}
+          />
         )}
 
         {isModalOpen && (
           <CreateNoteModal
-            onClose={() => setIsModalOpen(false)}
+            noteToEdit={noteToEdit}
+            onClose={handleCloseModal}
             onSuccess={() => {
-              setIsModalOpen(false);
+              handleCloseModal();
               loadNotes();
             }}
           />

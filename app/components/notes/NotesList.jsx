@@ -1,6 +1,6 @@
 import NoteCard from "./NoteCard";
 
-export default function NotesList({ notes, onNotesUpdate }) {
+export default function NotesList({ notes, onNotesUpdate, onEdit }) {
   if (notes.length === 0) {
     return (
       <div className="bg-white dark:bg-[#1a1a1a] p-12 text-center rounded-2xl shadow-sm border border-gray-100 dark:border-gray-800 mt-6">
@@ -17,7 +17,12 @@ export default function NotesList({ notes, onNotesUpdate }) {
   return (
     <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-2 gap-6 mt-6">
       {notes.map((note) => (
-        <NoteCard key={note.id} note={note} onComplete={onNotesUpdate} />
+        <NoteCard
+          key={note.id}
+          note={note}
+          onComplete={onNotesUpdate}
+          onEdit={onEdit}
+        />
       ))}
     </div>
   );
