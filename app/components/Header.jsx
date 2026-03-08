@@ -48,31 +48,31 @@ function Header() {
   const { isAuthenticated, logout, isLoggingOut, user } = useAuth();
 
   return (
-    <header className="relative z-50 py-4 px-2 flex justify-between items-center xl:py-2">
+    <header className="relative z-50 py-3 sm:py-4 px-4 sm:px-8 flex justify-between items-center bg-white/10 dark:bg-[#081B23]/30 backdrop-blur-md border-b border-white/5 shadow-sm">
       {/* Logo */}
       <Link
         href="/"
-        className="cursor-pointer flex justify-center items-center"
+        className="cursor-pointer flex justify-center items-center shrink-0"
       >
         <Image
           src="/Bluelog.svg"
-          width={100}
-          height={40}
+          width={110}
+          height={44}
           alt="nav_logo"
           className="transition-all duration-300 hover:scale-105 object-contain invert dark:invert-0"
         />
       </Link>
 
       {/* Desktop Nav */}
-      <nav className="hidden lg:flex">
-        <ul className="flex gap-12">
+      <nav className="hidden lg:flex flex-1 justify-center px-8">
+        <ul className="flex items-center gap-6 xl:gap-10">
           {navLinks.map((navLink, i) => (
             <li key={i}>
               <Link
                 href={navLink.link}
-                className="group relative inline-block text-lg font-medium text-slate-900 dark:text-white"
+                className="group relative inline-block text-[13px] font-bold tracking-wider text-slate-900 dark:text-gray-200 hover:text-[#205a6a] dark:hover:text-white transition-colors duration-200 whitespace-nowrap"
               >
-                <span className="relative z-10 inline-block transition-transform duration-300 group-hover:scale-105">
+                <span className="relative z-10 transition-transform duration-300 group-hover:scale-101">
                   {navLink.title}
                 </span>
                 <span className="absolute left-0 -bottom-1 h-[2px] w-full scale-x-0 transition-transform duration-300 group-hover:scale-x-100 bg-[#205a6a] " />
@@ -83,55 +83,60 @@ function Header() {
       </nav>
 
       {/* Login and Theme Toggle */}
-      <div className="hidden lg:flex items-center gap-4">
+      <div className="hidden lg:flex items-center gap-3 xl:gap-5 shrink-0">
         <button
           onClick={() => setTheme(theme === "dark" ? "light" : "dark")}
-          className="relative text-slate-900 dark:text-white p-2 rounded-full hover:bg-[#EEFCFD] hover:text-[#0f313d] transition-all flex items-center justify-center h-10 w-10"
+          className="relative text-slate-900 dark:text-gray-300 p-2 rounded-full hover:bg-[#EEFCFD] hover:text-[#0f313d] dark:hover:bg-white/10 dark:hover:text-white transition-all flex items-center justify-center h-10 w-10 border border-transparent hover:border-slate-200 dark:hover:border-white/10"
           aria-label="Toggle theme"
         >
-          <Sun className="absolute h-[1.5rem] w-[1.5rem] rotate-0 scale-100 transition-all dark:-rotate-90 dark:scale-0" />
-          <Moon className="absolute h-[1.5rem] w-[1.5rem] rotate-90 scale-0 transition-all dark:rotate-0 dark:scale-100" />
+          <Sun className="absolute h-[1.3rem] w-[1.3rem] rotate-0 scale-100 transition-all dark:-rotate-90 dark:scale-0" />
+          <Moon className="absolute h-[1.3rem] w-[1.3rem] rotate-90 scale-0 transition-all dark:rotate-0 dark:scale-100" />
           <span className="sr-only">Toggle theme</span>
         </button>
 
         {isAuthenticated ? (
-          <div className="flex gap-4">
+          <div className="flex gap-3 xl:gap-4">
             <Link href="/profile">
               <Button
                 variant="outline"
-                className="px-5 py-[0.9375rem] overflow-hidden"
+                className="px-4 py-2 h-10 rounded-xl border-slate-200 dark:border-white/10 bg-transparent hover:bg-slate-50 dark:hover:bg-white/5 transition-all"
               >
                 {user?.avatarUrl ? (
-                  <div className="w-6 h-6 rounded-full overflow-hidden mr-2">
+                  <div className="w-5 h-5 rounded-full overflow-hidden mr-2 border border-slate-200 dark:border-white/20">
                     <Image
                       src={user.avatarUrl}
                       alt="Profile"
-                      width={24}
-                      height={24}
+                      width={20}
+                      height={20}
                       className="object-cover"
                     />
                   </div>
                 ) : (
-                  <CircleUser size={22} className="mr-2" />
+                  <CircleUser size={18} className="mr-2" />
                 )}
-                <div className="font-medium text-[15px]">Profile</div>
+                <div className="font-bold text-[13px] tracking-tight">
+                  Profile
+                </div>
               </Button>
             </Link>
             <Button
               variant="outline"
-              className="px-5 py-[0.9375rem] border-red-200 hover:bg-red-50 hover:text-red-600 dark:hover:bg-red-900/20 dark:hover:text-red-400"
+              className="px-4 py-2 h-10 rounded-xl border-red-100 dark:border-red-900/30 text-red-500 bg-transparent hover:bg-red-50 dark:hover:bg-red-900/20 hover:text-red-700 dark:hover:text-red-400 transition-all"
               onClick={logout}
               loading={isLoggingOut}
             >
-              <LogOut size={20} className="mr-2" />
-              <div className="font-medium text-[15px]">Logout</div>
+              <LogOut size={16} className="mr-2" />
+              <div className="font-bold text-[13px] tracking-tight">Logout</div>
             </Button>
           </div>
         ) : (
           <Link href="/login">
-            <Button variant="outline" className="px-7 py-[0.9375rem]">
-              <CircleUser size={22} />
-              <div className="font-medium text-[15px] ml-2">Login</div>
+            <Button
+              variant="outline"
+              className="px-6 py-2 h-10 rounded-xl font-bold text-[13px] tracking-tight border-slate-200 dark:border-white/10 hover:bg-slate-100 dark:hover:bg-white/10"
+            >
+              <CircleUser size={18} className="mr-2" />
+              <div>Login</div>
             </Button>
           </Link>
         )}

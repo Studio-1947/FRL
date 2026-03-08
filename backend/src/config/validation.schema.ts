@@ -7,4 +7,5 @@ export const validationSchema = Joi.object({
   JWT_SECRET: Joi.string().required(),
   JWT_EXPIRES_IN: Joi.string().default('7d'),
   FRONTEND_URL: Joi.string().uri().default('http://localhost:3000'),
+  BLOB_READ_WRITE_TOKEN: Joi.string().required(),
 });

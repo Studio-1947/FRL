@@ -49,23 +49,46 @@ export class PostsController {
     },
   })
   @UseInterceptors(FileInterceptor('file'))
-  async create(@Req() req: Request & { user: any }, @UploadedFile() file: any, @Body() body: any) {
+  async create(
+    @Req() req: Request & { user: any },
+    @UploadedFile() file: any,
+    @Body() createPostDto: CreatePostDto,
+  ) {
     let imageUrl = null;
+
     if (file) {
+      console.log('File upload detected:', {
+        originalname: file.originalname,
+        mimetype: file.mimetype,
+        size: file.size,
+        bufferExists: !!file.buffer,
+      });
+
+      const token = process.env.BLOB_READ_WRITE_TOKEN;
+      if (!token) {
+        console.error('CRITICAL: BLOB_READ_WRITE_TOKEN is not defined');
+        throw new BadRequestException('Image upload service is currently unavailable');
+      }
+
       const uniqueSuffix = Date.now() + '-' + Math.round(Math.random() * 1e9);
       const ext = extname(file.originalname) || '.jpg';
       const filename = `post-${uniqueSuffix}${ext}`;
 
-      const blob = await put(`posts/${filename}`, file.buffer, {
-        access: 'public',
-        token: process.env.BLOB_READ_WRITE_TOKEN,
-      });
-      imageUrl = blob.url;
+      try {
+        const blob = await put(`posts/${filename}`, file.buffer, {
+          access: 'public',
+          token: token,
+        });
+        imageUrl = blob.url;
+        console.log('Blob upload successful:', imageUrl);
+      } catch (blobError) {
+        console.error('Vercel Blob upload failed:', blobError);
+        throw new BadRequestException('Failed to upload image. Please try again.');
+      }
     }
 
     return this.postsService.create(Number(req.user.sub), {
-      content: body.content,
-      category: body.category,
+      ...createPostDto,
       imageUrl,
     });
   }
