@@ -9,7 +9,8 @@ export function middleware(request) {
     nextUrl.pathname.startsWith("/login") ||
     nextUrl.pathname.startsWith("/signup") ||
     nextUrl.pathname.startsWith("/forgot-password") ||
-    nextUrl.pathname.startsWith("/reset-password");
+    nextUrl.pathname.startsWith("/reset-password") ||
+    nextUrl.pathname.startsWith("/change-password");
 
   if (isAuthPage) {
     if (token) {
@@ -39,5 +40,6 @@ export const config = {
     "/signup",
     "/forgot-password",
     "/reset-password",
+    "/change-password",
   ],
 };

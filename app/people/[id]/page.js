@@ -154,11 +154,11 @@ export default function PersonProfile({ params }) {
                   Professional Narrative
                 </h2>
                 <p className="text-xl md:text-2xl text-foreground font-light leading-relaxed max-w-3xl italic">
-                  "
+                  &quot;
                   {person.professionalProfile ||
                     person.bio ||
                     "Crafting sustainable paradigms through collaborative action and systemic change."}
-                  "
+                  &quot;
                 </p>
               </section>
 

@@ -16,24 +16,26 @@ import Image from "next/image";
 import { useAuth } from "../context/AuthContext";
 import { GlassCard } from "../components/ui/GlassCard";
 
+const INITIAL_FORM_STATE = {
+  name: "",
+  phone: "",
+  bio: "",
+  expertise: "",
+  role: "Individual",
+  values: "",
+  professionalProfile: "",
+  geographicalSpread: "",
+  interventions: "",
+  problem: "",
+  systemChange: "",
+  systemImpact: "",
+  abundance: "",
+  helpNeeded: "",
+  avatarUrl: "",
+};
+
 export default function SettingsPage() {
-  const [formData, setFormData] = useState({
-    name: "",
-    phone: "",
-    bio: "",
-    expertise: "",
-    role: "Individual",
-    values: "",
-    professionalProfile: "",
-    geographicalSpread: "",
-    interventions: "",
-    problem: "",
-    systemChange: "",
-    systemImpact: "",
-    abundance: "",
-    helpNeeded: "",
-    avatarUrl: "",
-  });
+  const [formData, setFormData] = useState(INITIAL_FORM_STATE);
   const fileInputRef = React.useRef(null);
   const [uploading, setUploading] = useState(false);
   const [loading, setLoading] = useState(true);
@@ -47,7 +49,7 @@ export default function SettingsPage() {
         if (!response.ok) throw new Error("Failed to load profile");
         const data = await response.json();
         const safeData = {};
-        for (const key in formData) {
+        for (const key in INITIAL_FORM_STATE) {
           safeData[key] = data[key] !== null ? data[key] : "";
         }
         setFormData(safeData);

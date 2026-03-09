@@ -98,10 +98,10 @@ export default function LoginForm() {
 
         <div className="flex justify-end mt-[-15px]">
           <Link
-            href="/forgot-password"
+            href="/change-password"
             className="text-xs font-semibold uppercase tracking-tight text-primary cursor-pointer hover:underline transition-all"
           >
-            Forgot Password?
+            Change Password?
           </Link>
         </div>
 

@@ -9,7 +9,14 @@ export default function LayoutWrapper({ children }) {
   const pathname = usePathname();
 
   // Define paths where Header and Footer should be hidden
-  const hideNavigationPaths = ["/login", "/signup", "/life-balance"];
+  const hideNavigationPaths = [
+    "/login",
+    "/signup",
+    "/life-balance",
+    "/forgot-password",
+    "/reset-password",
+    "/change-password",
+  ];
 
   // Note: /life-balance has its own sub-routes handling slides, hide global nav there too
   const shouldHideNavigation = hideNavigationPaths.some((path) =>
