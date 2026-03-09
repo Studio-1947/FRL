@@ -25,9 +25,9 @@ const Button = React.forwardRef(
       secondary:
         "bg-secondary text-secondary-foreground shadow-sm hover:bg-secondary/80",
       outline:
-        "border border-primary/20 bg-transparent text-primary hover:bg-primary/5 transition-all text-xs font-bold uppercase tracking-widest",
+        "border border-primary/20 bg-transparent text-primary hover:bg-primary/5 transition-all text-xs font-semibold uppercase tracking-widest",
       ghost:
-        "hover:bg-primary/5 hover:text-primary transition-colors text-xs font-bold uppercase tracking-widest",
+        "hover:bg-primary/5 hover:text-primary transition-colors text-xs font-semibold uppercase tracking-widest",
       glass: "glass glass-hover text-foreground border-primary/5",
     };
 

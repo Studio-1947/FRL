@@ -47,8 +47,8 @@ export default function Hero() {
               <span className="text-xl font-bold">01</span>
             </div>
             <div>
-              <h3 className="text-xl font-bold mb-1">Notice Board</h3>
-              <p className="text-sm text-muted-foreground">
+              <h3 className="text-xl font-semibold mb-1">Notice Board</h3>
+              <p className="text-sm text-muted-foreground font-light">
                 Stay updated with the latest from the FRL community.
               </p>
             </div>
@@ -58,8 +58,8 @@ export default function Hero() {
               <span className="text-xl font-bold">02</span>
             </div>
             <div>
-              <h3 className="text-xl font-bold mb-1">Featured Members</h3>
-              <p className="text-sm text-muted-foreground">
+              <h3 className="text-xl font-semibold mb-1">Featured Members</h3>
+              <p className="text-sm text-muted-foreground font-light">
                 Discover stories of change-makers across India.
               </p>
             </div>
@@ -81,10 +81,10 @@ export default function Hero() {
           </div>
           <div className="p-6 md:p-10 flex flex-col gap-6 bg-background/40 backdrop-blur-md">
             <div className="flex flex-col gap-3">
-              <h2 className="text-2xl md:text-3xl font-bold tracking-tight">
+              <h2 className="text-2xl md:text-3xl font-semibold tracking-tight">
                 Experience Life Balance
               </h2>
-              <p className="text-base text-muted-foreground leading-relaxed">
+              <p className="text-base text-muted-foreground leading-relaxed font-light">
                 Visualize all the important areas of your life at once. Become
                 aware of how fulfilled you feel and begin your journey of
                 personal and planetary well-being.

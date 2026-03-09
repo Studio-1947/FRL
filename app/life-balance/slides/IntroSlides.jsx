@@ -17,10 +17,10 @@ const IntroSlides = ({ header, paragraph, setSlideIndex, image }) => {
 
       <div className="flex flex-col justify-center flex-1 lg:w-1/2 gap-10 min-h-0">
         <div className="flex flex-col gap-6">
-          <h1 className="text-4xl md:text-5xl lg:text-7xl font-extrabold tracking-tight text-center lg:text-left text-foreground uppercase">
+          <h1 className="text-4xl md:text-5xl lg:text-7xl font-semibold tracking-tight text-center lg:text-left text-foreground uppercase">
             {header}
           </h1>
-          <p className="text-lg md:text-xl lg:text-2xl text-center lg:text-left text-muted-foreground font-medium leading-relaxed max-w-xl mx-auto lg:mx-0">
+          <p className="text-lg md:text-xl lg:text-2xl text-center lg:text-left text-muted-foreground font-light leading-relaxed max-w-xl mx-auto lg:mx-0">
             {paragraph}
           </p>
         </div>

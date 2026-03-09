@@ -11,7 +11,7 @@ export default function Footer() {
         {/* Left Side - Logo */}
         <div className="flex items-center gap-4">
           <RefreshCw className="w-10 h-10 stroke-[2] opacity-90" />
-          <div className="flex flex-col font-bold text-[13px] tracking-[0.15em] leading-[1.15]">
+          <div className="flex flex-col font-semibold text-[13px] tracking-[0.15em] leading-[1.15]">
             <span>FORUM FOR</span>
             <span>RESPONSIBLE</span>
             <span>LIVING</span>
@@ -22,7 +22,7 @@ export default function Footer() {
         <div className="grid grid-cols-2 md:grid-cols-3 gap-10 md:gap-16 lg:gap-32 w-full lg:w-auto">
           {/* Column 1 */}
           <div className="flex flex-col gap-4">
-            <h3 className="font-bold text-sm tracking-wider uppercase mb-2">
+            <h3 className="font-semibold text-sm tracking-wider uppercase mb-2">
               Company
             </h3>
             <Link
@@ -53,7 +53,7 @@ export default function Footer() {
 
           {/* Column 2 */}
           <div className="flex flex-col gap-4">
-            <h3 className="font-bold text-sm tracking-wider uppercase mb-2">
+            <h3 className="font-semibold text-sm tracking-wider uppercase mb-2">
               Resources
             </h3>
             <Link
@@ -84,7 +84,7 @@ export default function Footer() {
 
           {/* Column 3 */}
           <div className="flex flex-col gap-4 mt-4 md:mt-0">
-            <h3 className="font-bold text-sm tracking-wider uppercase mb-2">
+            <h3 className="font-semibold text-sm tracking-wider uppercase mb-2">
               Legal
             </h3>
             <Link

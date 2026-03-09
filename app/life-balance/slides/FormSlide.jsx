@@ -30,14 +30,14 @@ const FormSlide = ({ header, setSlideIndex, fromDataCallBack }) => {
         className="flex flex-col justify-center gap-10 h-full lg:w-1/2 lg:items-start"
         onSubmit={submitForm}
       >
-        <h2 className="text-4xl md:text-5xl lg:text-6xl font-extrabold tracking-tight text-foreground uppercase">
+        <h2 className="text-4xl md:text-5xl lg:text-6xl font-semibold tracking-tight text-foreground uppercase">
           {header}
         </h2>
 
         <div className="flex flex-col gap-6 w-full max-w-md">
           <div className="relative group">
             <select
-              className="appearance-none w-full bg-background border-2 border-border text-foreground px-6 py-5 pr-12 rounded-2xl text-lg font-bold transition-all focus:border-primary focus:ring-4 focus:ring-primary/10 outline-none hover:border-primary/50 cursor-pointer"
+              className="appearance-none w-full bg-background border-2 border-border text-foreground px-6 py-5 pr-12 rounded-2xl text-lg font-semibold transition-all focus:border-primary focus:ring-4 focus:ring-primary/10 outline-none hover:border-primary/50 cursor-pointer"
               value={location}
               onChange={(e) => setLocation(e.target.value)}
               required
@@ -56,7 +56,7 @@ const FormSlide = ({ header, setSlideIndex, fromDataCallBack }) => {
 
           <div className="relative">
             <input
-              className="w-full bg-background border-2 border-border text-foreground px-6 py-5 rounded-2xl text-lg font-bold transition-all focus:border-primary focus:ring-4 focus:ring-primary/10 outline-none hover:border-primary/50"
+              className="w-full bg-background border-2 border-border text-foreground px-6 py-5 rounded-2xl text-lg font-semibold transition-all focus:border-primary focus:ring-4 focus:ring-primary/10 outline-none hover:border-primary/50"
               type="text"
               placeholder="PIN / ZIP Code"
               onChange={(e) => setPinCode(e.target.value)}

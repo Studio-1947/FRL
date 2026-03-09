@@ -21,10 +21,10 @@ export default function AboutUsPage() {
         </div>
 
         <div className="relative z-10 w-full max-w-7xl mx-auto px-6 lg:px-12 flex flex-col gap-4 animate-in fade-in slide-in-from-bottom-8 duration-1000">
-          <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold tracking-tight text-white uppercase">
+          <h1 className="text-4xl md:text-5xl lg:text-6xl font-semibold tracking-tight text-white uppercase">
             Our Story
           </h1>
-          <p className="text-white/90 text-base md:text-lg lg:text-xl max-w-4xl leading-relaxed font-medium">
+          <p className="text-white/90 text-base md:text-lg lg:text-xl max-w-4xl leading-relaxed font-light">
             At Forum For Responsible Living (FRL), We&apos;re Building A Vibrant
             Ecosystem Of Thinkers, Makers, And Doers Who Prioritise Purpose Over
             Prestige. FRL Is Not Just A Platform—It&apos;s A Movement. A
@@ -43,7 +43,7 @@ export default function AboutUsPage() {
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-16 lg:gap-24 items-center">
           {/* Left Text */}
           <div className="flex flex-col gap-4 order-2 lg:order-1 animate-in fade-in slide-in-from-left-8 duration-1000">
-            <h2 className="text-primary text-3xl md:text-4xl font-bold tracking-tight uppercase">
+            <h2 className="text-primary text-3xl md:text-4xl font-semibold tracking-tight uppercase">
               Our Vision
             </h2>
             <p className="text-2xl md:text-3xl lg:text-4xl text-muted-foreground font-light leading-tight">
@@ -69,7 +69,7 @@ export default function AboutUsPage() {
       {/* Content Section: Our Goal */}
       <section className="w-full max-w-7xl mx-auto px-6 lg:px-12 py-16 text-center animate-in fade-in duration-1000">
         <div className="flex flex-col items-center gap-6">
-          <h2 className="text-primary text-3xl md:text-4xl font-bold tracking-tight uppercase">
+          <h2 className="text-primary text-3xl md:text-4xl font-semibold tracking-tight uppercase">
             Our Goal
           </h2>
           <p className="text-muted-foreground max-w-4xl text-lg md:text-xl lg:text-2xl font-light leading-relaxed">
@@ -83,10 +83,10 @@ export default function AboutUsPage() {
       <section className="w-full max-w-7xl mx-auto px-6 lg:px-12 py-16">
         <div className="flex flex-col gap-8">
           <div className="flex flex-col gap-2 animate-in fade-in slide-in-from-bottom-8 duration-1000">
-            <h3 className="text-2xl md:text-3xl font-bold tracking-tight">
+            <h3 className="text-2xl md:text-3xl font-semibold tracking-tight">
               Safe Spaces For Change-Makers
             </h3>
-            <p className="text-muted-foreground text-lg font-medium">
+            <p className="text-muted-foreground text-lg font-light">
               Create Safe Spaces Where Socio-Ecological Change Makers Can
               Stretch Beyond Their Comfort Zones.
             </p>
@@ -109,10 +109,10 @@ export default function AboutUsPage() {
       <section className="w-full max-w-7xl mx-auto px-6 lg:px-12 py-24">
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-16 items-center">
           <div className="flex flex-col gap-6 order-2 lg:order-1 animate-in fade-in slide-in-from-left-8 duration-1000">
-            <h3 className="text-2xl md:text-3xl font-bold tracking-tight">
+            <h3 className="text-2xl md:text-3xl font-semibold tracking-tight">
               Facilitate Co-Creation
             </h3>
-            <p className="text-muted-foreground text-lg font-medium leading-relaxed max-w-md">
+            <p className="text-muted-foreground text-lg font-light leading-relaxed max-w-md">
               Facilitate Formation Of Constellations Of Co-Creators Based On
               Shared Universal Values To Achieve Impacts We Cannot Imagine On
               Our Own
@@ -147,10 +147,10 @@ export default function AboutUsPage() {
             </GlassCard>
           </div>
           <div className="flex flex-col gap-6 animate-in fade-in slide-in-from-right-8 duration-1000">
-            <h3 className="text-2xl md:text-3xl font-bold tracking-tight">
+            <h3 className="text-2xl md:text-3xl font-semibold tracking-tight">
               Re-Imagine How We Organize Ourselves
             </h3>
-            <p className="text-muted-foreground text-lg font-medium leading-relaxed max-w-md">
+            <p className="text-muted-foreground text-lg font-light leading-relaxed max-w-md">
               Create An Organizationally And Financially Sustainable
               Un-Organization For FRL
             </p>
@@ -161,7 +161,7 @@ export default function AboutUsPage() {
       {/* Our Core Offering Section */}
       <section className="w-full max-w-7xl mx-auto px-6 lg:px-12 py-24">
         <div className="flex flex-col items-center text-center mb-20 gap-4 animate-in fade-in slide-in-from-bottom-8 duration-1000">
-          <h2 className="text-primary text-3xl md:text-4xl font-bold tracking-tight uppercase">
+          <h2 className="text-primary text-3xl md:text-4xl font-semibold tracking-tight uppercase">
             Our Core Offering
           </h2>
         </div>
@@ -179,10 +179,10 @@ export default function AboutUsPage() {
               />
             </div>
             <div className="p-6 flex flex-col gap-3">
-              <h3 className="text-xl font-bold tracking-tight text-foreground">
+              <h3 className="text-xl font-semibold tracking-tight text-foreground">
                 The Human Web
               </h3>
-              <p className="text-muted-foreground text-sm leading-relaxed font-medium">
+              <p className="text-muted-foreground text-sm leading-relaxed font-light">
                 A Living Directory Of Value-Aligned Professionals And Grassroots
                 Changemakers.
               </p>
@@ -201,10 +201,10 @@ export default function AboutUsPage() {
               />
             </div>
             <div className="p-6 flex flex-col gap-3">
-              <h3 className="text-xl font-bold tracking-tight text-foreground">
+              <h3 className="text-xl font-semibold tracking-tight text-foreground">
                 Creative Impact Studios
               </h3>
-              <p className="text-muted-foreground text-sm leading-relaxed font-medium">
+              <p className="text-muted-foreground text-sm leading-relaxed font-light">
                 Collaborative Digital Spaces Where Teams Tackle Real-World
                 Challenges—Designing Society, Economics And Environment.
               </p>
@@ -223,10 +223,10 @@ export default function AboutUsPage() {
               />
             </div>
             <div className="p-6 flex flex-col gap-3">
-              <h3 className="text-xl font-bold tracking-tight text-foreground">
+              <h3 className="text-xl font-semibold tracking-tight text-foreground">
                 Knowledge Commons
               </h3>
-              <p className="text-muted-foreground text-sm leading-relaxed font-medium">
+              <p className="text-muted-foreground text-sm leading-relaxed font-light">
                 Curated Multimedia Libraries Of Ideas, Playbooks, And Frameworks
                 Covering Systems Thinking, Regenerative Practice And Social
                 Innovation.
@@ -242,7 +242,7 @@ export default function AboutUsPage() {
         <div className="absolute top-0 left-0 w-full h-px bg-gradient-to-r from-transparent via-primary/20 to-transparent" />
 
         <div className="max-w-5xl mx-auto px-6 flex flex-col gap-12 items-center relative z-10">
-          <h2 className="text-5xl md:text-7xl font-extrabold text-foreground tracking-tighter text-balance uppercase leading-[0.9]">
+          <h2 className="text-5xl md:text-7xl font-semibold text-foreground tracking-tighter text-balance uppercase leading-[0.9]">
             Join The <span className="text-primary italic">Movement</span>.
           </h2>
           <p className="text-2xl md:text-3xl font-light text-muted-foreground max-w-3xl">

@@ -5,37 +5,34 @@ import React, { useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import { useTheme } from "next-themes";
-import { CircleUser, Moon, Sun, LogOut } from "lucide-react";
+import { CircleUser, Moon, Sun, LogOut, ChevronDown } from "lucide-react";
 import { Button } from "./ui/Button";
 import { useAuth } from "@/app/context/AuthContext";
 
-const navLinks = [
+const navGroups = [
   {
-    title: "RESOURCES",
-    link: "/resources",
+    title: "About",
+    links: [
+      { title: "Our Story", link: "/about" },
+      { title: "Impact", link: "/about" },
+    ],
   },
   {
-    title: "PEOPLE",
-    link: "/people",
+    title: "Community",
+    links: [
+      { title: "Feed", link: "/feed" },
+      { title: "People", link: "/people" },
+    ],
   },
   {
-    title: "FEED",
-    link: "/feed",
+    title: "Ecosystem",
+    links: [
+      { title: "Resources", link: "/resources" },
+      { title: "Knowledge System", link: "/resources" },
+    ],
   },
   {
-    title: "ABOUT US",
-    link: "/about",
-  },
-  {
-    title: "IMPACT",
-    link: "/about",
-  },
-  {
-    title: "KNOWLEDGE SYSTEM",
-    link: "/resources",
-  },
-  {
-    title: "PERSONAL SPACE",
+    title: "Personal Space",
     link: "/personal-space",
   },
 ];
@@ -63,73 +60,118 @@ function Header() {
 
       {/* Desktop Nav */}
       <nav className="hidden lg:flex flex-1 justify-center px-8">
-        <ul className="flex items-center gap-8 xl:gap-12">
-          {navLinks.map((navLink, i) => (
-            <li key={i}>
-              <Link
-                href={navLink.link}
-                className="group relative inline-block text-[12px] font-bold tracking-[0.2em] uppercase text-foreground/70 hover:text-primary transition-all duration-300 whitespace-nowrap"
-              >
-                <span className="relative z-10 transition-transform duration-300">
-                  {navLink.title}
-                </span>
-                <span className="absolute left-0 -bottom-1 h-[1px] w-full scale-x-0 transition-transform duration-500 group-hover:scale-x-100 bg-primary/30 rounded-full" />
-              </Link>
+        <ul className="flex items-center gap-6 xl:gap-10">
+          {navGroups.map((group, i) => (
+            <li key={i} className="group relative py-2">
+              {group.links ? (
+                <>
+                  <button className="flex items-center gap-1.5 text-[14px] font-semibold tracking-tight text-foreground/70 group-hover:text-primary transition-all duration-300 whitespace-nowrap">
+                    {group.title}
+                    <svg
+                      className="w-3.5 h-3.5 opacity-50 group-hover:rotate-180 transition-transform duration-300"
+                      fill="none"
+                      viewBox="0 0 24 24"
+                      stroke="currentColor"
+                    >
+                      <path
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                        strokeWidth={2}
+                        d="M19 9l-7 7-7-7"
+                      />
+                    </svg>
+                  </button>
+                  <div className="absolute top-full left-1/2 -translate-x-1/2 pt-2 opacity-0 translate-y-2 pointer-events-none group-hover:opacity-100 group-hover:translate-y-0 group-hover:pointer-events-auto transition-all duration-300 z-50">
+                    <div className="bg-background/95 backdrop-blur-xl border border-border rounded-2xl shadow-2xl p-2 min-w-[200px]">
+                      {group.links.map((link, j) => (
+                        <Link
+                          key={j}
+                          href={link.link}
+                          className="block px-4 py-2.5 text-[13px] font-medium text-foreground/70 hover:text-primary hover:bg-primary/5 rounded-xl transition-all"
+                        >
+                          {link.title}
+                        </Link>
+                      ))}
+                    </div>
+                  </div>
+                </>
+              ) : (
+                <Link
+                  href={group.link}
+                  className="text-[14px] font-semibold tracking-tight text-foreground/70 hover:text-primary transition-all duration-300 whitespace-nowrap"
+                >
+                  {group.title}
+                </Link>
+              )}
             </li>
           ))}
         </ul>
       </nav>
 
-      {/* Login and Theme Toggle */}
-      <div className="hidden lg:flex items-center gap-3 xl:gap-5 shrink-0">
+      {/* User Actions */}
+      <div className="hidden lg:flex items-center gap-3 shrink-0">
         <button
           onClick={() => setTheme(theme === "dark" ? "light" : "dark")}
-          className="relative text-foreground p-2 rounded-full hover:bg-primary/10 hover:text-primary transition-all flex items-center justify-center h-10 w-10 border border-transparent hover:border-primary/10"
+          className="text-foreground p-2.5 rounded-xl hover:bg-primary/10 hover:text-primary transition-all flex items-center justify-center h-10 w-10 border border-border/50"
           aria-label="Toggle theme"
         >
-          <Sun className="absolute h-[1.3rem] w-[1.3rem] rotate-0 scale-100 transition-all dark:-rotate-90 dark:scale-0" />
-          <Moon className="absolute h-[1.3rem] w-[1.3rem] rotate-90 scale-0 transition-all dark:rotate-0 dark:scale-100" />
-          <span className="sr-only">Toggle theme</span>
+          <Sun className="absolute h-5 w-5 rotate-0 scale-100 transition-all dark:-rotate-90 dark:scale-0" />
+          <Moon className="absolute h-5 w-5 rotate-90 scale-0 transition-all dark:rotate-0 dark:scale-100" />
         </button>
 
         {isAuthenticated ? (
-          <div className="flex gap-3 xl:gap-4">
-            <Link href="/profile">
-              <Button variant="outline" size="default">
-                {user?.avatarUrl ? (
-                  <div className="w-5 h-5 rounded-full overflow-hidden mr-2 border border-slate-200 dark:border-white/20">
-                    <Image
-                      src={user.avatarUrl}
-                      alt="Profile"
-                      width={20}
-                      height={20}
-                      className="object-cover"
-                    />
-                  </div>
-                ) : (
-                  <CircleUser size={18} className="mr-2" />
-                )}
-                <div className="font-bold text-[13px] tracking-tight">
-                  Profile
+          <div className="relative group/user py-2">
+            <button className="flex items-center gap-2 px-3 py-1.5 glass glass-hover border-border/50 rounded-xl transition-all">
+              {user?.avatarUrl ? (
+                <div className="w-7 h-7 rounded-lg overflow-hidden border border-border/50 shadow-inner">
+                  <Image
+                    src={user.avatarUrl}
+                    alt="Profile"
+                    width={28}
+                    height={28}
+                    className="object-cover"
+                  />
                 </div>
-              </Button>
-            </Link>
-            <Button
-              variant="outline"
-              size="default"
-              className="text-red-500 hover:text-red-600 border-red-100 dark:border-red-900/30"
-              onClick={logout}
-              loading={isLoggingOut}
-            >
-              <LogOut size={16} className="mr-2" />
-              <div className="font-bold text-[13px] tracking-tight">Logout</div>
-            </Button>
+              ) : (
+                <div className="w-7 h-7 rounded-lg bg-primary/10 flex items-center justify-center text-primary">
+                  <CircleUser size={18} />
+                </div>
+              )}
+              <span className="text-[13px] font-semibold tracking-tight">
+                Account
+              </span>
+              <ChevronDown className="w-3.5 h-3.5 opacity-50 group-hover/user:rotate-180 transition-transform" />
+            </button>
+
+            <div className="absolute top-full right-0 pt-2 opacity-0 translate-y-2 pointer-events-none group-hover/user:opacity-100 group-hover/user:translate-y-0 group-hover/user:pointer-events-auto transition-all duration-300 z-50">
+              <div className="bg-background/95 backdrop-blur-xl border border-border rounded-2xl shadow-2xl p-2 min-w-[180px]">
+                <Link
+                  href="/profile"
+                  className="flex items-center gap-3 px-4 py-2.5 text-[13px] font-medium text-foreground/70 hover:text-primary hover:bg-primary/5 rounded-xl transition-all"
+                >
+                  <CircleUser size={16} />
+                  Profile
+                </Link>
+                <div className="h-px bg-border my-1 mx-2" />
+                <button
+                  onClick={logout}
+                  disabled={isLoggingOut}
+                  className="w-full flex items-center gap-3 px-4 py-2.5 text-[13px] font-medium text-red-500 hover:bg-red-500/5 rounded-xl transition-all"
+                >
+                  <LogOut size={16} />
+                  {isLoggingOut ? "Logging out..." : "Logout"}
+                </button>
+              </div>
+            </div>
           </div>
         ) : (
           <Link href="/login">
-            <Button variant="outline" size="default">
-              <CircleUser size={18} className="mr-2" />
-              <div>Login</div>
+            <Button
+              variant="primary"
+              size="default"
+              className="rounded-xl px-6"
+            >
+              Login
             </Button>
           </Link>
         )}
@@ -166,16 +208,36 @@ function Header() {
             : "max-h-0 opacity-0 pointer-events-none"
         }`}
       >
-        <ul className="flex flex-col gap-4">
-          {navLinks.map((navLink, i) => (
+        <ul className="flex flex-col gap-2 pt-4">
+          {navGroups.map((group, i) => (
             <li key={i}>
-              <Link
-                href={navLink.link}
-                className="block text-xl font-semibold py-5 border-b border-border/50 text-foreground hover:text-primary transition-colors tracking-tight"
-                onClick={() => setIsMenuOpen(false)}
-              >
-                {navLink.title}
-              </Link>
+              {group.links ? (
+                <div className="flex flex-col gap-1 py-2">
+                  <span className="px-4 text-[12px] font-bold text-muted-foreground uppercase tracking-widest">
+                    {group.title}
+                  </span>
+                  <div className="flex flex-col gap-1 mt-2">
+                    {group.links.map((link, j) => (
+                      <Link
+                        key={j}
+                        href={link.link}
+                        className="block px-6 py-4 text-lg font-semibold text-foreground hover:text-primary transition-colors rounded-2xl hover:bg-primary/5"
+                        onClick={() => setIsMenuOpen(false)}
+                      >
+                        {link.title}
+                      </Link>
+                    ))}
+                  </div>
+                </div>
+              ) : (
+                <Link
+                  href={group.link}
+                  className="block px-4 py-5 text-2xl font-semibold text-foreground hover:text-primary transition-colors border-b border-border/50"
+                  onClick={() => setIsMenuOpen(false)}
+                >
+                  {group.title}
+                </Link>
+              )}
             </li>
           ))}
           <li className="mt-2">
