@@ -202,7 +202,7 @@ function Header() {
 
       {/* Mobile Dropdown Menu */}
       <div
-        className={`absolute top-[72px] left-0 w-full bg-background/95 backdrop-blur-2xl z-50 px-6 lg:hidden transition-all duration-500 ease-in-out overflow-hidden border-b border-border shadow-2xl ${
+        className={`absolute top-[72px] left-0 w-full bg-background z-50 px-6 lg:hidden transition-all duration-500 ease-in-out overflow-hidden border-b border-border shadow-2xl ${
           isMenuOpen
             ? "max-h-[100vh] pb-12 opacity-100"
             : "max-h-0 opacity-0 pointer-events-none"

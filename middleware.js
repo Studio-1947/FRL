@@ -30,10 +30,8 @@ export function middleware(request) {
 export const config = {
   // Add all paths here that require authentication to access.
   matcher: [
-    "/",
     "/profile/:path*",
     "/settings/:path*",
-    "/life-balance/:path*",
     "/people/:path*",
     "/dashboard/:path*",
     "/login",

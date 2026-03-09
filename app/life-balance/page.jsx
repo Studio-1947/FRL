@@ -7,6 +7,7 @@ import IntroSlides from "./slides/IntroSlides";
 import FormSlide from "./slides/FormSlide";
 import QuestionSlides from "./slides/QuestionSlides";
 import Results from "./wheel/Results";
+import DarkVeil from "./ui/src/components/DarkVeil";
 
 const LifeBalancePage = () => {
   const [slideIndex, setSlideIndex] = useState(0);
@@ -25,7 +26,18 @@ const LifeBalancePage = () => {
   };
 
   return (
-    <div className="min-h-screen bg-background text-foreground relative flex flex-col overflow-x-hidden">
+    <div className="dark min-h-screen bg-background text-foreground relative flex flex-col overflow-x-hidden">
+      {/* DarkVeil Background Animation */}
+      <DarkVeil
+        hueShift={47}
+        noiseIntensity={0.03}
+        scanlineIntensity={0.1}
+        speed={0.2}
+        scanlineFrequency={400}
+        warpAmount={0.2}
+        resolutionScale={1}
+      />
+
       {/* Subtle Background Decoration */}
       <div className="fixed inset-0 z-0 pointer-events-none overflow-hidden">
         <div className="absolute top-[-10%] right-[-10%] w-[50%] h-[50%] bg-primary/5 rounded-full blur-[120px]" />

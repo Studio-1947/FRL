@@ -21,7 +21,7 @@ export default function AboutUsPage() {
         </div>
 
         <div className="relative z-10 w-full max-w-7xl mx-auto px-6 lg:px-12 flex flex-col gap-4 animate-in fade-in slide-in-from-bottom-8 duration-1000">
-          <h1 className="text-4xl md:text-5xl lg:text-6xl font-semibold tracking-tight text-white uppercase">
+          <h1 className="text-3xl md:text-5xl lg:text-6xl font-semibold tracking-tight text-white uppercase">
             Our Story
           </h1>
           <p className="text-white/90 text-base md:text-lg lg:text-xl max-w-4xl leading-relaxed font-light">
