@@ -6,7 +6,7 @@ import Link from "next/link";
 import { fetchApi } from "../../lib/api";
 import { useAuth } from "../../app/context/AuthContext";
 import { MapPin, Star, Settings, Loader2, Camera } from "lucide-react";
-import { toast } from "sonner";
+import SecuritySection from "../components/settings/SecuritySection";
 
 export default function ProfilePage() {
   const [profile, setProfile] = useState(null);
@@ -275,6 +275,10 @@ export default function ProfilePage() {
               </p>
             </div>
           )}
+        </div>
+
+        <div className="mt-12">
+          <SecuritySection />
         </div>
       </div>
     </div>
