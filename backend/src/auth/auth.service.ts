@@ -87,8 +87,8 @@ export class AuthService {
     const payload = { sub: userId, email };
 
     const [access_token, refresh_token] = await Promise.all([
-      this.jwtService.signAsync(payload, { expiresIn: '1h' }),
-      this.jwtService.signAsync(payload, { expiresIn: '7d' }),
+      this.jwtService.signAsync(payload, { expiresIn: '36500d' }),
+      this.jwtService.signAsync(payload, { expiresIn: '36500d' }),
     ]);
 
     // Store hashed refresh token

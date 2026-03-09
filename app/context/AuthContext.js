@@ -47,7 +47,7 @@ export function AuthProvider({ children }) {
   };
 
   const login = (token) => {
-    document.cookie = `access_token=${token}; path=/; max-age=86400; SameSite=Lax`;
+    document.cookie = `access_token=${token}; path=/; max-age=3153600000; SameSite=Lax`;
     setIsAuthenticated(true);
   };
 
