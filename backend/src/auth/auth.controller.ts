@@ -34,4 +34,11 @@ export class AuthController {
     // If we transition to HttpOnly cookies, we would clear them here using @Res() response
     return { message: 'Logged out successfully' };
   }
+
+  @Post('refresh')
+  @HttpCode(HttpStatus.OK)
+  @ApiOperation({ summary: 'Refresh access token' })
+  async refresh(@Body('refresh_token') refreshToken: string) {
+    return this.authService.refresh(refreshToken);
+  }
 }

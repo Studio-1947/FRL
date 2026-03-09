@@ -4,12 +4,14 @@ import { eq, desc, and, sql, or, inArray } from 'drizzle-orm';
 import { DRIZZLE } from '../database/database.module';
 import * as schema from '../database/schema';
 import { CreatePostDto } from './dto/create-post.dto';
+import { FollowsService } from '../follows/follows.service';
 
 @Injectable()
 export class PostsService {
   constructor(
     @Inject(DRIZZLE)
     private db: NodePgDatabase<typeof schema>,
+    private readonly followsService: FollowsService,
   ) {}
 
   async create(userId: number, createPostDto: CreatePostDto) {
@@ -28,6 +30,9 @@ export class PostsService {
   async findFeed(userId: number, page: number = 1, limit: number = 10, userExpertise?: string) {
     const offset = (page - 1) * limit;
 
+    // Get following IDs for boosting/filtering
+    const followingIds = await this.followsService.getFollowingIds(userId);
+
     // Build the query
     let query = this.db
       .select({
@@ -45,13 +50,28 @@ export class PostsService {
             Number,
           ),
         isLiked: sql<boolean>`EXISTS (SELECT 1 FROM ${schema.likes} WHERE ${schema.likes.postId} = ${schema.posts.id} AND ${schema.likes.userId} = ${userId})`,
+        isFollowing:
+          followingIds.length > 0
+            ? inArray(schema.posts.userId, followingIds)
+            : sql<boolean>`false`,
       })
       .from(schema.posts)
       .leftJoin(schema.users, eq(schema.posts.userId, schema.users.id));
 
-    // Adding priority for user expertise if provided
-    // For now, we'll just order by date, but in a real app, we might boost posts matching userExpertise
-    const results = await query.orderBy(desc(schema.posts.createdAt)).limit(limit).offset(offset);
+    // Priority:
+    // 1. Posts from followed users
+    // 2. Recency
+    const results = await query
+      .orderBy(
+        followingIds.length > 0
+          ? desc(
+              sql`CASE WHEN ${schema.posts.userId} IN (${sql.join(followingIds)}) THEN 1 ELSE 0 END`,
+            )
+          : desc(schema.posts.createdAt),
+        desc(schema.posts.createdAt),
+      )
+      .limit(limit)
+      .offset(offset);
 
     const [{ total }] = await this.db
       .select({ total: sql<number>`count(*)`.mapWith(Number) })

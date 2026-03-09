@@ -3,9 +3,10 @@ import { PostsService } from './posts.service';
 import { PostsController } from './posts.controller';
 import { DatabaseModule } from '../database/database.module';
 import { UsersModule } from '../users/users.module';
+import { FollowsModule } from '../follows/follows.module';
 
 @Module({
-  imports: [DatabaseModule, UsersModule],
+  imports: [DatabaseModule, UsersModule, FollowsModule],
   controllers: [PostsController],
   providers: [PostsService],
   exports: [PostsService],

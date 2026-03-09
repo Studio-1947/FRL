@@ -1,7 +1,7 @@
 import { Module } from '@nestjs/common';
 import { ConfigModule } from '@nestjs/config';
-import { APP_FILTER, APP_INTERCEPTOR } from '@nestjs/core';
-import { ThrottlerModule } from '@nestjs/throttler';
+import { APP_FILTER, APP_INTERCEPTOR, APP_GUARD } from '@nestjs/core';
+import { ThrottlerModule, ThrottlerGuard } from '@nestjs/throttler';
 import { HttpExceptionFilter } from './common/filters/http-exception.filter';
 import { TransformInterceptor } from './common/interceptors/transform.interceptor';
 
@@ -20,6 +20,8 @@ import { UsersModule } from './users/users.module';
 import { AuthModule } from './auth/auth.module';
 import { AppController } from './app.controller';
 import { PostsModule } from './posts/posts.module';
+import { CommentsModule } from './comments/comments.module';
+import { FollowsModule } from './follows/follows.module';
 
 @Module({
   imports: [
@@ -49,6 +51,10 @@ import { PostsModule } from './posts/posts.module';
 
     PostsModule,
 
+    CommentsModule,
+
+    FollowsModule,
+
     ServeStaticModule.forRoot({
       rootPath: join(__dirname, '..', '..', 'uploads'), // dist/ is two levels deep if we consider src, but wait, dist/main.js is 1 level. Next JS is different.
       // Actually dist/app.module.js -> dir is dist. So '..' -> root. Therefore: join(__dirname, '..', 'uploads')
@@ -69,6 +75,11 @@ import { PostsModule } from './posts/posts.module';
     {
       provide: APP_INTERCEPTOR,
       useClass: TransformInterceptor,
+    },
+    // Global Throttler Guard
+    {
+      provide: APP_GUARD,
+      useClass: ThrottlerGuard,
     },
   ],
   controllers: [AppController],

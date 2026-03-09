@@ -27,9 +27,14 @@ const formatTimeAgo = (date) => {
   return Math.floor(seconds) + " seconds ago";
 };
 
+import { useAuth } from "@/app/context/AuthContext";
+import CommentSection from "./CommentSection";
+
 export default function PostCard({ post }) {
   const [isLiked, setIsLiked] = useState(post.isLiked);
   const [likesCount, setLikesCount] = useState(post.likesCount || 0);
+  const [showComments, setShowComments] = useState(false);
+  const { user } = useAuth();
 
   const toggleLike = async () => {
     const originalLiked = isLiked;
@@ -132,15 +137,25 @@ export default function PostCard({ post }) {
           <span className="text-xs sm:text-sm font-semibold">{likesCount}</span>
         </button>
 
-        <button className="flex items-center gap-1.5 sm:gap-2 p-1.5 sm:p-2 rounded-full transition-all hover:bg-muted text-muted-foreground">
+        <button
+          onClick={() => setShowComments(!showComments)}
+          className={`flex items-center gap-1.5 sm:gap-2 p-1.5 sm:p-2 rounded-full transition-all hover:bg-muted ${showComments ? "text-[#1C5B6F] bg-[#1C5B6F]/5" : "text-muted-foreground"}`}
+        >
           <MessageCircle className="w-5 h-5 sm:w-6 sm:h-6" />
-          <span className="text-xs sm:text-sm font-semibold">0</span>
+          <span className="text-xs sm:text-sm font-semibold">Comments</span>
         </button>
 
         <button className="p-2 ml-auto rounded-full transition-all hover:bg-muted text-muted-foreground">
           <Share2 className="w-5 h-5 sm:w-6 sm:h-6" />
         </button>
       </div>
+
+      {/* Comments Section */}
+      {showComments && (
+        <div className="px-4 pb-6">
+          <CommentSection postId={post.id} currentUserId={user?.id} />
+        </div>
+      )}
     </div>
   );
 }

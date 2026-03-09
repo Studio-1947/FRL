@@ -29,9 +29,9 @@ export class AuthService {
       role: registerDto.role,
     });
 
-    const payload = { sub: user.id, email: user.email };
+    const tokens = await this.generateTokens(user.id, user.email);
     return {
-      access_token: await this.jwtService.signAsync(payload),
+      ...tokens,
       user: {
         id: user.id,
         email: user.email,
@@ -51,14 +51,49 @@ export class AuthService {
       throw new UnauthorizedException('Invalid credentials');
     }
 
-    const payload = { sub: user.id, email: user.email };
+    const tokens = await this.generateTokens(user.id, user.email);
     return {
-      access_token: await this.jwtService.signAsync(payload),
+      ...tokens,
       user: {
         id: user.id,
         email: user.email,
         name: user.name,
       },
     };
+  }
+
+  async refresh(refreshToken: string) {
+    try {
+      const payload = await this.jwtService.verifyAsync(refreshToken);
+      const user = await this.usersService.findById(payload.sub);
+
+      if (!user || !user.refreshToken) {
+        throw new UnauthorizedException();
+      }
+
+      const isTokenValid = await bcrypt.compare(refreshToken, user.refreshToken);
+      if (!isTokenValid) {
+        throw new UnauthorizedException();
+      }
+
+      return this.generateTokens(user.id, user.email);
+    } catch (e) {
+      throw new UnauthorizedException();
+    }
+  }
+
+  private async generateTokens(userId: number, email: string) {
+    const payload = { sub: userId, email };
+
+    const [access_token, refresh_token] = await Promise.all([
+      this.jwtService.signAsync(payload, { expiresIn: '1h' }),
+      this.jwtService.signAsync(payload, { expiresIn: '7d' }),
+    ]);
+
+    // Store hashed refresh token
+    const hashedRefreshToken = await bcrypt.hash(refresh_token, 10);
+    await this.usersService.updateRefreshToken(userId, hashedRefreshToken);
+
+    return { access_token, refresh_token };
   }
 }

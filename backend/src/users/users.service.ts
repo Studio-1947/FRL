@@ -108,6 +108,16 @@ export class UsersService {
     return updatedUser;
   }
 
+  async updateRefreshToken(id: number, refreshToken: string | null) {
+    await this.db
+      .update(schema.users)
+      .set({
+        refreshToken,
+        updatedAt: new Date(),
+      })
+      .where(eq(schema.users.id, id));
+  }
+
   async create(data: {
     email: string;
     password?: string;

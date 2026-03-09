@@ -23,6 +23,7 @@ export const users = pgTable('users', {
   helpNeeded: text('help_needed'),
 
   avatarUrl: text('avatar_url'),
+  refreshToken: text('refresh_token'),
   createdAt: timestamp('created_at').defaultNow().notNull(),
   updatedAt: timestamp('updated_at').defaultNow().notNull(),
 });
@@ -60,6 +61,31 @@ export const likes = pgTable('likes', {
     .notNull(),
   postId: integer('post_id')
     .references(() => posts.id)
+    .notNull(),
+  createdAt: timestamp('created_at').defaultNow().notNull(),
+});
+
+export const comments = pgTable('comments', {
+  id: serial('id').primaryKey(),
+  userId: integer('user_id')
+    .references(() => users.id)
+    .notNull(),
+  postId: integer('post_id')
+    .references(() => posts.id)
+    .notNull(),
+  parentId: integer('parent_id').references(() => comments.id),
+  content: text('content').notNull(),
+  createdAt: timestamp('created_at').defaultNow().notNull(),
+  updatedAt: timestamp('updated_at').defaultNow().notNull(),
+});
+
+export const follows = pgTable('follows', {
+  id: serial('id').primaryKey(),
+  followerId: integer('follower_id')
+    .references(() => users.id)
+    .notNull(),
+  followingId: integer('following_id')
+    .references(() => users.id)
     .notNull(),
   createdAt: timestamp('created_at').defaultNow().notNull(),
 });
