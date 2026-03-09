@@ -10,25 +10,30 @@ export default function AboutUsPage() {
       <section className="relative w-full h-[600px] md:h-[700px] flex flex-col justify-end pb-16 md:pb-24 overflow-hidden">
         <div className="absolute inset-0 z-0">
           <Image
-            src="https://images.unsplash.com/photo-1542744173-8e7e53415bb0?auto=format&fit=crop&q=80"
-            alt="Our Story Background - Team gathering"
+            src="/about-us/1.png"
+            alt="Our Story - Team Gathering"
             fill
-            className="object-cover object-center grayscale opacity-80"
+            className="object-cover object-center"
             priority
           />
           {/* Neutral overlay to ensure text readability */}
-          <div className="absolute inset-0 bg-background/40 backdrop-blur-[2px]" />
-          <div className="absolute inset-0 bg-gradient-to-t from-background via-background/20 to-transparent" />
+          <div className="absolute inset-0 bg-black/40" />
         </div>
 
-        <div className="relative z-10 w-full max-w-7xl mx-auto px-6 lg:px-12 flex flex-col gap-6">
-          <h1 className="text-5xl md:text-7xl lg:text-8xl font-semibold tracking-tighter text-foreground uppercase leading-[0.85]">
+        <div className="relative z-10 w-full max-w-7xl mx-auto px-6 lg:px-12 flex flex-col gap-4 animate-in fade-in slide-in-from-bottom-8 duration-1000">
+          <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold tracking-tight text-white uppercase">
             Our Story
           </h1>
-          <p className="text-foreground/90 text-lg md:text-xl lg:text-2xl max-w-5xl leading-relaxed font-light text-balance italic">
-            At Forum For Responsible Living (FRL), we&apos;re building a vibrant
-            ecosystem of thinkers, makers, and doers who prioritise purpose over
-            prestige. FRL is not just a platform—it&apos;s a movement.
+          <p className="text-white/90 text-base md:text-lg lg:text-xl max-w-4xl leading-relaxed font-medium">
+            At Forum For Responsible Living (FRL), We&apos;re Building A Vibrant
+            Ecosystem Of Thinkers, Makers, And Doers Who Prioritise Purpose Over
+            Prestige. FRL Is Not Just A Platform—It&apos;s A Movement. A
+            Creative Commons Where Designers, Technologists, Researchers, And
+            Visionaries Unite To Craft Ideas And Solutions That Enrich
+            Communities, Revive Ecosystems, And Redefine The Meaning Of
+            Progress. We&apos;re Here To Co-Create A World Whose Growth Is
+            Measured Not By Wealth Alone, But By Collective Impact And
+            Regenerative Outcomes.
           </p>
         </div>
       </section>
@@ -37,114 +42,147 @@ export default function AboutUsPage() {
       <section className="w-full max-w-7xl mx-auto px-6 lg:px-12 py-24 md:py-32">
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-16 lg:gap-24 items-center">
           {/* Left Text */}
-          <div className="flex flex-col gap-8 order-2 lg:order-1">
-            <h2 className="text-primary text-4xl md:text-6xl font-semibold tracking-tighter uppercase leading-[0.9]">
+          <div className="flex flex-col gap-4 order-2 lg:order-1 animate-in fade-in slide-in-from-left-8 duration-1000">
+            <h2 className="text-primary text-3xl md:text-4xl font-bold tracking-tight uppercase">
               Our Vision
             </h2>
             <p className="text-2xl md:text-3xl lg:text-4xl text-muted-foreground font-light leading-tight">
-              Co-creating a{" "}
-              <span className="text-foreground italic font-medium">
-                harmonious
-              </span>{" "}
-              thrived future
+              Co-Creating A Harmonious Thriving Future
             </p>
           </div>
 
           {/* Right Image */}
-          <GlassCard className="!p-0 overflow-hidden shadow-2xl order-1 lg:order-2 aspect-square md:aspect-[4/3] lg:aspect-[4/5] rounded-[2.5rem]">
-            <Image
-              src="https://images.unsplash.com/photo-1573497019940-1c28c88b4f3e?auto=format&fit=crop&q=80"
-              alt="Our Vision - People collaborating"
-              fill
-              className="object-cover grayscale hover:grayscale-0 transition-all duration-700"
-            />
-          </GlassCard>
+          <div className="relative order-1 lg:order-2 aspect-[4/3] w-full max-w-2xl mx-auto animate-in fade-in zoom-in-95 duration-1000">
+            <GlassCard className="!p-0 overflow-hidden shadow-xl rounded-2xl w-full h-full border-none">
+              <Image
+                src="/about-us/2.png"
+                alt="Our Vision - People Meeting"
+                fill
+                className="object-cover"
+                loading="lazy"
+              />
+            </GlassCard>
+          </div>
         </div>
       </section>
 
       {/* Content Section: Our Goal */}
-      <section className="w-full max-w-7xl mx-auto px-6 lg:px-12 py-24 md:py-32">
-        <div className="flex flex-col items-center text-center mb-24 gap-6">
-          <h2 className="text-primary text-4xl md:text-6xl font-semibold tracking-tighter uppercase leading-[0.9]">
+      <section className="w-full max-w-7xl mx-auto px-6 lg:px-12 py-16 text-center animate-in fade-in duration-1000">
+        <div className="flex flex-col items-center gap-6">
+          <h2 className="text-primary text-3xl md:text-4xl font-bold tracking-tight uppercase">
             Our Goal
           </h2>
           <p className="text-muted-foreground max-w-4xl text-lg md:text-xl lg:text-2xl font-light leading-relaxed">
-            To ensure that each one of us can actively contribute towards
-            building a thriving and harmonious future for the planet.
+            To Ensure That Each One Of Us Can Actively Contribute Towards
+            Building A Thriving And Harmonious Future For The Planet.
           </p>
         </div>
+      </section>
 
-        <div className="flex flex-col gap-32">
-          {/* Safe Spaces */}
-          <div className="flex flex-col gap-10">
-            <div className="flex flex-col gap-3">
-              <h3 className="text-3xl md:text-4xl font-bold tracking-tight">
-                Safe Spaces For Change-Makers
-              </h3>
-              <p className="text-muted-foreground text-lg md:text-xl font-medium max-w-3xl">
-                Create safe spaces where socio-ecological change makers can
-                stretch beyond their comfort zones.
-              </p>
-            </div>
-            <GlassCard className="!p-0 h-[300px] md:h-[400px] lg:h-[550px] overflow-hidden rounded-[2.5rem]">
+      {/* Safe Spaces */}
+      <section className="w-full max-w-7xl mx-auto px-6 lg:px-12 py-16">
+        <div className="flex flex-col gap-8">
+          <div className="flex flex-col gap-2 animate-in fade-in slide-in-from-bottom-8 duration-1000">
+            <h3 className="text-2xl md:text-3xl font-bold tracking-tight">
+              Safe Spaces For Change-Makers
+            </h3>
+            <p className="text-muted-foreground text-lg font-medium">
+              Create Safe Spaces Where Socio-Ecological Change Makers Can
+              Stretch Beyond Their Comfort Zones.
+            </p>
+          </div>
+          <div className="relative w-full h-[300px] md:h-[450px] lg:h-[550px] animate-in fade-in slide-in-from-bottom-12 duration-1000">
+            <GlassCard className="!p-0 w-full h-full overflow-hidden rounded-2xl border-none shadow-lg">
               <Image
-                src="https://images.unsplash.com/photo-1515187029135-18ee286d815b?auto=format&fit=crop&q=80"
+                src="/about-us/4.png"
                 alt="Safe Spaces for Change-Makers"
                 fill
-                className="object-cover opacity-90"
+                className="object-cover"
+                loading="lazy"
               />
             </GlassCard>
           </div>
+        </div>
+      </section>
 
-          {/* Facilitate Co-Creation */}
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-16 items-center">
-            <div className="flex flex-col gap-6 order-2 lg:order-1 lg:max-w-md">
-              <h3 className="text-3xl md:text-4xl font-bold tracking-tight">
-                Facilitate Co-Creation
-              </h3>
-              <p className="text-muted-foreground text-lg md:text-xl font-medium leading-relaxed">
-                Facilitate formation of constellations of co-creators based on
-                shared universal values to achieve impacts we cannot imagine on
-                our own.
-              </p>
-            </div>
-            <GlassCard className="!p-0 aspect-square md:aspect-[4/3] lg:aspect-[4/5] overflow-hidden rounded-[2.5rem] order-1 lg:order-2">
+      {/* Facilitate Co-Creation */}
+      <section className="w-full max-w-7xl mx-auto px-6 lg:px-12 py-24">
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-16 items-center">
+          <div className="flex flex-col gap-6 order-2 lg:order-1 animate-in fade-in slide-in-from-left-8 duration-1000">
+            <h3 className="text-2xl md:text-3xl font-bold tracking-tight">
+              Facilitate Co-Creation
+            </h3>
+            <p className="text-muted-foreground text-lg font-medium leading-relaxed max-w-md">
+              Facilitate Formation Of Constellations Of Co-Creators Based On
+              Shared Universal Values To Achieve Impacts We Cannot Imagine On
+              Our Own
+            </p>
+          </div>
+          <div className="relative order-1 lg:order-2 aspect-video lg:aspect-[4/3] w-full animate-in fade-in slide-in-from-right-8 duration-1000">
+            <GlassCard className="!p-0 w-full h-full overflow-hidden rounded-2xl border-none shadow-lg">
               <Image
-                src="https://images.unsplash.com/photo-1522071820081-009f0129c71c?auto=format&fit=crop&q=80"
+                src="/about-us/3.png"
                 alt="Facilitate Co-Creation"
                 fill
-                className="object-cover opacity-90"
+                className="object-cover"
+                loading="lazy"
               />
             </GlassCard>
+          </div>
+        </div>
+      </section>
+
+      {/* Re-Imagine */}
+      <section className="w-full max-w-7xl mx-auto px-6 lg:px-12 py-24">
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-16 items-center">
+          <div className="relative aspect-video lg:aspect-[4/3] w-full animate-in fade-in slide-in-from-left-8 duration-1000">
+            <GlassCard className="!p-0 w-full h-full overflow-hidden rounded-2xl border-none shadow-lg">
+              <Image
+                src="/about-us/5.png"
+                alt="Re-Imagine How We Organize Ourselves"
+                fill
+                className="object-cover"
+                loading="lazy"
+              />
+            </GlassCard>
+          </div>
+          <div className="flex flex-col gap-6 animate-in fade-in slide-in-from-right-8 duration-1000">
+            <h3 className="text-2xl md:text-3xl font-bold tracking-tight">
+              Re-Imagine How We Organize Ourselves
+            </h3>
+            <p className="text-muted-foreground text-lg font-medium leading-relaxed max-w-md">
+              Create An Organizationally And Financially Sustainable
+              Un-Organization For FRL
+            </p>
           </div>
         </div>
       </section>
 
       {/* Our Core Offering Section */}
       <section className="w-full max-w-7xl mx-auto px-6 lg:px-12 py-24">
-        <div className="flex flex-col items-center text-center mb-20 gap-4">
-          <h2 className="text-primary text-4xl md:text-6xl font-semibold tracking-tighter uppercase leading-[0.9]">
+        <div className="flex flex-col items-center text-center mb-20 gap-4 animate-in fade-in slide-in-from-bottom-8 duration-1000">
+          <h2 className="text-primary text-3xl md:text-4xl font-bold tracking-tight uppercase">
             Our Core Offering
           </h2>
         </div>
 
         <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
           {/* Offering 1 */}
-          <GlassCard className="!p-0 group flex flex-col h-full hover:-translate-y-2 transition-transform duration-500">
+          <GlassCard className="!p-0 group flex flex-col h-full hover:shadow-2xl transition-all duration-300 border-none rounded-2xl overflow-hidden bg-white shadow-md animate-in fade-in slide-in-from-bottom-8 duration-1000">
             <div className="relative w-full h-[250px] overflow-hidden">
               <Image
-                src="https://images.unsplash.com/photo-1558494949-ef010cbdcc31?auto=format&fit=crop&q=80"
+                src="/about-us/6.png"
                 alt="The Human Web"
                 fill
-                className="object-cover grayscale group-hover:grayscale-0 transition-all duration-700"
+                className="object-cover"
+                loading="lazy"
               />
-              <div className="absolute inset-0 bg-gradient-to-t from-card/80 to-transparent" />
             </div>
-            <div className="p-8 pb-10 flex flex-col gap-4 flex-grow">
-              <h3 className="text-2xl font-bold tracking-tight">
+            <div className="p-6 flex flex-col gap-3">
+              <h3 className="text-xl font-bold tracking-tight text-foreground">
                 The Human Web
               </h3>
-              <p className="text-muted-foreground text-base leading-relaxed font-medium">
+              <p className="text-muted-foreground text-sm leading-relaxed font-medium">
                 A Living Directory Of Value-Aligned Professionals And Grassroots
                 Changemakers.
               </p>
@@ -152,45 +190,46 @@ export default function AboutUsPage() {
           </GlassCard>
 
           {/* Offering 2 */}
-          <GlassCard className="!p-0 group flex flex-col h-full hover:-translate-y-2 transition-transform duration-500">
+          <GlassCard className="!p-0 group flex flex-col h-full hover:shadow-2xl transition-all duration-300 border-none rounded-2xl overflow-hidden bg-white shadow-md animate-in fade-in slide-in-from-bottom-8 duration-1000 delay-150">
             <div className="relative w-full h-[250px] overflow-hidden">
               <Image
-                src="https://images.unsplash.com/photo-1573164713988-8665fc963095?auto=format&fit=crop&q=80"
+                src="/about-us/7.png"
                 alt="Creative Impact Studios"
                 fill
-                className="object-cover grayscale group-hover:grayscale-0 transition-all duration-700"
+                className="object-cover"
+                loading="lazy"
               />
-              <div className="absolute inset-0 bg-gradient-to-t from-card/80 to-transparent" />
             </div>
-            <div className="p-8 pb-10 flex flex-col gap-4 flex-grow">
-              <h3 className="text-2xl font-bold tracking-tight">
+            <div className="p-6 flex flex-col gap-3">
+              <h3 className="text-xl font-bold tracking-tight text-foreground">
                 Creative Impact Studios
               </h3>
-              <p className="text-muted-foreground text-base leading-relaxed font-medium">
+              <p className="text-muted-foreground text-sm leading-relaxed font-medium">
                 Collaborative Digital Spaces Where Teams Tackle Real-World
-                Challenges.
+                Challenges—Designing Society, Economics And Environment.
               </p>
             </div>
           </GlassCard>
 
           {/* Offering 3 */}
-          <GlassCard className="!p-0 group flex flex-col h-full hover:-translate-y-2 transition-transform duration-500">
+          <GlassCard className="!p-0 group flex flex-col h-full hover:shadow-2xl transition-all duration-300 border-none rounded-2xl overflow-hidden bg-white shadow-md animate-in fade-in slide-in-from-bottom-8 duration-1000 delay-300">
             <div className="relative w-full h-[250px] overflow-hidden">
               <Image
-                src="https://images.unsplash.com/photo-1497366216548-37526070297c?auto=format&fit=crop&q=80"
+                src="/about-us/8.png"
                 alt="Knowledge Commons"
                 fill
-                className="object-cover grayscale group-hover:grayscale-0 transition-all duration-700"
+                className="object-cover"
+                loading="lazy"
               />
-              <div className="absolute inset-0 bg-gradient-to-t from-card/80 to-transparent" />
             </div>
-            <div className="p-8 pb-10 flex flex-col gap-4 flex-grow">
-              <h3 className="text-2xl font-bold tracking-tight">
+            <div className="p-6 flex flex-col gap-3">
+              <h3 className="text-xl font-bold tracking-tight text-foreground">
                 Knowledge Commons
               </h3>
-              <p className="text-muted-foreground text-base leading-relaxed font-medium">
-                Curated Multimedia Libraries Of Ideas, Playbooks, And
-                Frameworks.
+              <p className="text-muted-foreground text-sm leading-relaxed font-medium">
+                Curated Multimedia Libraries Of Ideas, Playbooks, And Frameworks
+                Covering Systems Thinking, Regenerative Practice And Social
+                Innovation.
               </p>
             </div>
           </GlassCard>
@@ -198,13 +237,22 @@ export default function AboutUsPage() {
       </section>
 
       {/* Footer CTA */}
-      <section className="w-full py-24 text-center bg-primary/5 mt-16">
-        <div className="max-w-4xl mx-auto px-6 flex flex-col gap-10 items-center">
-          <p className="text-3xl md:text-4xl font-extrabold text-foreground tracking-tight text-balance">
-            Join The Movement. Create Not Just For Today, But For A Thriving
-            Tomorrow
+      <section className="w-full py-40 text-center relative overflow-hidden">
+        <div className="absolute inset-0 bg-primary/5 -z-1" />
+        <div className="absolute top-0 left-0 w-full h-px bg-gradient-to-r from-transparent via-primary/20 to-transparent" />
+
+        <div className="max-w-5xl mx-auto px-6 flex flex-col gap-12 items-center relative z-10">
+          <h2 className="text-5xl md:text-7xl font-extrabold text-foreground tracking-tighter text-balance uppercase leading-[0.9]">
+            Join The <span className="text-primary italic">Movement</span>.
+          </h2>
+          <p className="text-2xl md:text-3xl font-light text-muted-foreground max-w-3xl">
+            Create not just for today, but for a thriving tomorrow.
           </p>
-          <Button variant="primary" size="lg" className="rounded-2xl px-10">
+          <Button
+            variant="primary"
+            size="lg"
+            className="rounded-2xl px-12 py-8 text-xl h-auto shadow-2xl hover:shadow-primary/40"
+          >
             Get Involved
           </Button>
         </div>
