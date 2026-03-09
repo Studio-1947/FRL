@@ -7,6 +7,7 @@ import { Button } from "../ui/Button";
 import { fetchApi } from "@/lib/api";
 import { toast } from "sonner";
 import { useAuth } from "@/app/context/AuthContext";
+import { ChevronDown, Star } from "lucide-react";
 
 export default function SignupForm() {
   const { login } = useAuth();
@@ -69,40 +70,36 @@ export default function SignupForm() {
       }
 
       const data = await response.json();
-      // Store token using AuthContext (which also updates cookies)
       login(data.access_token);
-      toast.success("Signup successful!");
-      console.log("Registered user:", data.user);
-
-      // Redirect to a protected route using Next.js router
+      toast.success("Registration successful!");
       router.push("/profile");
     } catch (err) {
       console.error(err);
-      toast.error("An error occurred during signup. Is the backend running?");
+      toast.error("Connection failed. Please check your network.");
     } finally {
       setIsLoading(false);
     }
   };
 
   const inputClasses =
-    "w-full bg-[#F9FAFB] dark:bg-[#0F313D] border border-gray-200 dark:border-white/10 text-foreground dark:text-white px-4 py-3 rounded-xl text-sm transition-all duration-300 focus:outline-none focus:ring-2 focus:ring-[#1C5B6F] dark:focus:ring-[#6BE3DF] focus:border-transparent focus:shadow-md hover:bg-white dark:hover:bg-[#0c262f]";
+    "w-full bg-background border-2 border-border text-foreground px-5 py-4 rounded-2xl text-[15px] font-bold transition-all focus:border-primary focus:ring-4 focus:ring-primary/10 outline-none hover:border-primary/50 shadow-sm";
   const labelClasses =
-    "block text-sm font-semibold text-foreground dark:text-white mb-1.5 transition-colors duration-300";
+    "block text-[11px] font-black uppercase tracking-widest text-foreground/70 mb-2 ml-1";
 
   return (
-    <div className="flex flex-col gap-6">
-      <div className="text-center">
-        <h1 className="text-3xl font-bold text-[#0F313D] dark:text-white transition-colors duration-300">
-          Get Started With FRL
+    <div className="flex flex-col gap-10">
+      <div className="text-center md:text-left">
+        <h1 className="text-4xl font-extrabold text-foreground tracking-tight uppercase">
+          Join Us
         </h1>
-        <p className="text-sm font-medium text-muted-foreground dark:text-white/80 mt-2 transition-colors duration-300">
-          Join us for new age of healthcare system for aged people
+        <p className="text-lg font-medium text-muted-foreground mt-2 leading-relaxed">
+          Create an account to join the movement.
         </p>
       </div>
 
-      <form onSubmit={handleSubmit} className="flex flex-col gap-5">
+      <form onSubmit={handleSubmit} className="flex flex-col gap-8">
         {/* Name Row */}
-        <div className="flex flex-col sm:flex-row gap-4">
+        <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
           <div className="flex-1">
             <label className={labelClasses}>First Name</label>
             <input
@@ -110,8 +107,9 @@ export default function SignupForm() {
               name="firstName"
               value={formData.firstName}
               onChange={handleChange}
-              placeholder="Enter Your First Name"
+              placeholder="Ex: Ravi"
               className={inputClasses}
+              required
             />
           </div>
           <div className="flex-1">
@@ -121,14 +119,15 @@ export default function SignupForm() {
               name="lastName"
               value={formData.lastName}
               onChange={handleChange}
-              placeholder="Enter Your Last Name"
+              placeholder="Ex: Kumar"
               className={inputClasses}
+              required
             />
           </div>
         </div>
 
-        {/* Email & Phone Row */}
-        <div className="flex flex-col sm:flex-row gap-4">
+        {/* Email & Phone */}
+        <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
           <div className="flex-1">
             <label className={labelClasses}>Email Address</label>
             <input
@@ -138,30 +137,24 @@ export default function SignupForm() {
               onChange={handleChange}
               placeholder="someone@email.com"
               className={inputClasses}
+              required
             />
           </div>
-          <div className="flex-1">
-            <label className={labelClasses}>Phone Number</label>
-            <div className="flex gap-2">
-              <div className="flex items-center gap-1 bg-[#F9FAFB] hover:bg-white dark:bg-[#0F313D] px-3 py-3 rounded-xl border border-gray-200 dark:border-white/10 text-sm text-foreground dark:text-white transition-all duration-300 cursor-pointer shadow-sm">
-                <span>🇮🇳</span>
-                <span>+91</span>
-                <span className="text-xs ml-1">▼</span>
-              </div>
-              <input
-                type="tel"
-                name="phone"
-                value={formData.phone}
-                onChange={handleChange}
-                placeholder="Enter your phone number"
-                className={inputClasses}
-              />
-            </div>
+          <div className="flex-1 text-left">
+            <label className={labelClasses}>Phone</label>
+            <input
+              type="tel"
+              name="phone"
+              value={formData.phone}
+              onChange={handleChange}
+              placeholder="+91..."
+              className={inputClasses}
+            />
           </div>
         </div>
 
-        {/* Password Row */}
-        <div className="flex flex-col sm:flex-row gap-4">
+        {/* Password */}
+        <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
           <div className="flex-1">
             <label className={labelClasses}>Password</label>
             <input
@@ -169,132 +162,127 @@ export default function SignupForm() {
               name="password"
               value={formData.password}
               onChange={handleChange}
-              placeholder="Enter your memorable password"
+              placeholder="••••••••"
               className={inputClasses}
+              required
             />
           </div>
           <div className="flex-1">
-            <label className={labelClasses}>Confirm Password</label>
+            <label className={labelClasses}>Confirm</label>
             <input
               type="password"
               name="confirmPassword"
               value={formData.confirmPassword}
               onChange={handleChange}
-              placeholder="Re-enter your password"
+              placeholder="••••••••"
               className={inputClasses}
+              required
             />
           </div>
         </div>
 
         {/* Bio */}
         <div>
-          <label className={labelClasses}>Short bio about yourself</label>
+          <label className={labelClasses}>Your Bio</label>
           <textarea
             name="bio"
             value={formData.bio}
             onChange={handleChange}
-            placeholder="Short Bio / About Yourself"
+            placeholder="Tell us about yourself..."
             rows={3}
             className={`${inputClasses} resize-none`}
           />
         </div>
 
-        {/* Sub-areas & Roles */}
-        <div className="flex flex-col sm:flex-row gap-6 mt-2">
+        {/* Expertise & Role */}
+        <div className="grid grid-cols-1 sm:grid-cols-2 gap-10">
           <div className="flex-1">
-            <label className={labelClasses}>Area of Interest / Expertise</label>
-            <select
-              name="expertise"
-              value={formData.expertise}
-              onChange={handleChange}
-              className={`${inputClasses} appearance-none bg-[#1C5B6F] text-white dark:bg-[#0F313D]`}
-            >
-              <option value="" disabled>
-                Select...
-              </option>
-              <option value="healthcare">Healthcare</option>
-              <option value="environment">Environment</option>
-              <option value="education">Education</option>
-            </select>
+            <label className={labelClasses}>Expertise</label>
+            <div className="relative group">
+              <select
+                name="expertise"
+                value={formData.expertise}
+                onChange={handleChange}
+                className={`${inputClasses} appearance-none pr-10`}
+                required
+              >
+                <option value="" disabled>
+                  Select...
+                </option>
+                <option value="healthcare">Healthcare</option>
+                <option value="environment">Environment</option>
+                <option value="education">Education</option>
+                <option value="technology">Technology</option>
+              </select>
+              <ChevronDown className="absolute right-4 top-1/2 -translate-y-1/2 text-muted-foreground group-hover:text-primary transition-colors pointer-events-none w-5 h-5" />
+            </div>
           </div>
           <div className="flex-1">
-            <label className={labelClasses}>Profile Type / Role</label>
-            <div className="flex flex-col gap-3 mt-2">
-              {["Individual", "Organization", "Volunteer", "Donor"].map(
-                (role) => (
-                  <label
-                    key={role}
-                    className="flex items-center gap-3 cursor-pointer"
+            <label className={labelClasses}>Type</label>
+            <div className="flex flex-col gap-4 mt-2">
+              {["Individual", "Organization"].map((role) => (
+                <label
+                  key={role}
+                  className="flex items-center gap-4 cursor-pointer group"
+                >
+                  <div
+                    onClick={() => handleRoleChange(role)}
+                    className={`w-6 h-6 rounded-full border-2 flex items-center justify-center transition-all ${
+                      formData.role === role
+                        ? "border-primary scale-110 shadow-[0_0_10px_rgba(var(--primary),0.3)]"
+                        : "border-border group-hover:border-primary/50"
+                    }`}
                   >
-                    <div
-                      onClick={() => handleRoleChange(role)}
-                      className={`w-5 h-5 rounded-full border-2 flex items-center justify-center transition-colors ${
-                        formData.role === role
-                          ? "border-[#1C5B6F] dark:border-[#6BE3DF]"
-                          : "border-gray-400 dark:border-white/50"
-                      }`}
-                    >
-                      {formData.role === role && (
-                        <div className="w-2.5 h-2.5 bg-[#1C5B6F] dark:bg-[#6BE3DF] rounded-full" />
-                      )}
-                    </div>
-                    <span className="text-sm font-medium text-foreground dark:text-white">
-                      {role}
-                    </span>
-                  </label>
-                ),
-              )}
+                    {formData.role === role && (
+                      <div className="w-3 h-3 bg-primary rounded-full" />
+                    )}
+                  </div>
+                  <span
+                    className={`text-sm font-bold uppercase tracking-widest ${formData.role === role ? "text-primary" : "text-muted-foreground"}`}
+                  >
+                    {role}
+                  </span>
+                </label>
+              ))}
             </div>
           </div>
         </div>
 
         {/* Checkboxes */}
-        <div className="flex flex-col gap-4 mt-4">
-          <label className="flex items-start gap-3 cursor-pointer group">
+        <div className="flex flex-col gap-5 pt-4 border-t border-border/50">
+          <label className="flex items-center gap-4 cursor-pointer group">
             <input
               type="checkbox"
               name="agreeTerms"
               checked={formData.agreeTerms}
               onChange={handleChange}
-              className="mt-0.5 w-5 h-5 accent-[#1C5B6F] dark:accent-[#6BE3DF]"
+              className="w-5 h-5 accent-primary rounded-lg"
+              required
             />
-            <span className="text-sm font-medium text-foreground dark:text-white/90">
+            <span className="text-sm font-semibold text-muted-foreground group-hover:text-foreground transition-colors">
               I agree to the Terms & Conditions
-            </span>
-          </label>
-          <label className="flex items-start gap-3 cursor-pointer group">
-            <input
-              type="checkbox"
-              name="agreeMarketing"
-              checked={formData.agreeMarketing}
-              onChange={handleChange}
-              className="mt-0.5 w-5 h-5 accent-[#1C5B6F] dark:accent-[#6BE3DF]"
-            />
-            <span className="text-sm font-medium text-foreground dark:text-white/90 leading-snug">
-              I would like to receive marketing and latest update information
-              through email communication
             </span>
           </label>
         </div>
 
-        {/* Submit Button */}
-        <div className="mt-6">
+        {/* Submit */}
+        <div className="pt-4">
           <Button
             variant="primary"
             size="lg"
             loading={isLoading}
-            className="w-full bg-[#1C5B6F] hover:bg-[#154655] dark:bg-[#EEFCFD] text-white dark:text-[#0F313D] py-4 rounded-xl text-lg shadow-lg hover:shadow-xl hover:-translate-y-0.5 transition-all duration-300"
+            className="w-full"
           >
-            Sign Up
+            Create Account
           </Button>
         </div>
 
-        <div className="text-center mt-2">
-          <span className="text-sm font-medium text-foreground dark:text-white transition-colors duration-300">
+        <div className="text-center pt-4 border-t border-border/50">
+          <span className="text-sm font-medium text-muted-foreground">
             Already have an account?{" "}
           </span>
-          <Link href="/login">
-            <span className="text-sm font-bold text-[#1C5B6F] dark:text-[#6BE3DF] hover:underline transition-colors duration-300">
+          <Link href="/login" className="group">
+            <span className="text-sm font-bold text-primary group-hover:underline decoration-2 underline-offset-4">
               Login
             </span>
           </Link>

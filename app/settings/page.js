@@ -3,9 +3,18 @@ import React, { useEffect, useState } from "react";
 import { fetchApi } from "../../lib/api";
 import { toast } from "sonner";
 import { Button } from "../components/ui/Button";
-import { Loader2, Camera, Upload } from "lucide-react";
+import {
+  Loader2,
+  Camera,
+  Upload,
+  Shield,
+  User,
+  Globe,
+  Heart,
+} from "lucide-react";
 import Image from "next/image";
 import { useAuth } from "../context/AuthContext";
+import { GlassCard } from "../components/ui/GlassCard";
 
 export default function SettingsPage() {
   const [formData, setFormData] = useState({
@@ -27,7 +36,6 @@ export default function SettingsPage() {
   });
   const fileInputRef = React.useRef(null);
   const [uploading, setUploading] = useState(false);
-
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
   const { refreshUser } = useAuth();
@@ -36,9 +44,7 @@ export default function SettingsPage() {
     async function fetchProfile() {
       try {
         const response = await fetchApi("/v1/users/profile");
-        if (!response.ok) {
-          throw new Error("Failed to load profile");
-        }
+        if (!response.ok) throw new Error("Failed to load profile");
         const data = await response.json();
         const safeData = {};
         for (const key in formData) {
@@ -52,7 +58,6 @@ export default function SettingsPage() {
       }
     }
     fetchProfile();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   const handleChange = (e) => {
@@ -63,287 +68,257 @@ export default function SettingsPage() {
   const handleSubmit = async (e) => {
     e.preventDefault();
     setSaving(true);
-
     try {
       const response = await fetchApi("/v1/users/profile", {
         method: "PATCH",
         body: JSON.stringify(formData),
       });
-
       if (response.ok) {
         toast.success("Settings saved successfully!");
-        refreshUser(); // Refresh global user state for Header
-      } else {
-        throw new Error("Failed to save settings");
-      }
+        refreshUser();
+      } else throw new Error("Failed to save settings");
     } catch (error) {
-      console.error(error);
-      toast.error("Failed to update profile. Please try again.");
+      toast.error("Failed to update profile.");
     } finally {
       setSaving(false);
     }
   };
 
   const inputClasses =
-    "w-full bg-[#F9FAFB] dark:bg-[#0F313D] border border-gray-200 dark:border-white/10 text-foreground dark:text-white px-4 py-3 rounded-xl text-sm transition-all duration-300 focus:outline-none focus:ring-2 focus:ring-[#1C5B6F] focus:border-transparent";
+    "w-full bg-background border-2 border-border text-foreground px-5 py-4 rounded-2xl text-base font-bold transition-all focus:border-primary focus:ring-4 focus:ring-primary/10 outline-none hover:border-primary/50 shadow-sm";
   const labelClasses =
-    "block text-sm font-semibold text-foreground dark:text-white mb-1.5";
+    "block text-[11px] font-black uppercase tracking-widest text-foreground/70 mb-2 ml-1";
 
   if (loading) {
     return (
-      <div className="min-h-screen flex flex-col items-center justify-center bg-background text-foreground gap-4">
-        <div className="relative flex items-center justify-center">
-          <div className="absolute w-16 h-16 border-4 border-[#1C5B6F]/20 rounded-full"></div>
-          <Loader2
-            className="w-16 h-16 text-[#1C5B6F] animate-spin"
-            strokeWidth={1.5}
-          />
-        </div>
-        <p className="text-sm font-medium text-muted-foreground animate-pulse">
-          Loading settings...
+      <div className="min-h-screen flex flex-col items-center justify-center bg-background gap-8">
+        <Loader2
+          className="w-16 h-16 text-primary animate-spin"
+          strokeWidth={1.5}
+        />
+        <p className="text-xs font-black uppercase tracking-[0.3em] text-muted-foreground animate-pulse">
+          Initializing Interface...
         </p>
       </div>
     );
   }
 
   return (
-    <div className="min-h-screen bg-background py-16 px-4 md:px-8">
-      <div className="max-w-4xl mx-auto">
-        <h1 className="text-4xl font-extrabold text-[#0F313D] dark:text-white mb-2">
-          Settings
-        </h1>
-        <p className="text-muted-foreground mb-10">
-          Update your account information and public profile details.
-        </p>
+    <div className="min-h-screen bg-background py-20 px-6 md:px-12 flex flex-col items-center">
+      <div className="w-full max-w-5xl flex flex-col gap-16">
+        {/* Header */}
+        <header className="flex flex-col gap-4 text-left">
+          <h1 className="text-5xl md:text-7xl font-extrabold tracking-tight text-foreground uppercase">
+            Settings
+          </h1>
+          <p className="text-xl text-muted-foreground font-medium max-w-xl leading-relaxed">
+            Personalize your profile and manage how you appear within the FRL
+            ecosystem.
+          </p>
+        </header>
 
-        <div className="mb-10 flex flex-col items-center sm:flex-row sm:gap-8 bg-card p-6 rounded-[2rem] border border-border shadow-sm">
-          <div
-            className="w-32 h-32 rounded-full overflow-hidden bg-muted shadow-md relative group cursor-pointer border-4 border-background"
-            onClick={() => fileInputRef.current?.click()}
-          >
-            <Image
-              src={
-                formData.avatarUrl ||
-                `https://api.dicebear.com/7.x/initials/svg?seed=${encodeURIComponent(formData.name || "User")}`
-              }
-              alt="Profile"
-              fill
-              className="object-cover transition-opacity group-hover:opacity-75"
-            />
-            <div className="absolute inset-0 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity bg-black/20 text-white">
-              <Camera size={24} />
-            </div>
-            {uploading && (
-              <div className="absolute inset-0 flex items-center justify-center bg-black/40 text-white">
-                <Loader2 className="w-8 h-8 animate-spin" />
-              </div>
-            )}
+        <div className="flex flex-col lg:flex-row gap-12 items-start">
+          {/* Sidebar Navigation (Visual Only) */}
+          <div className="lg:w-64 flex flex-col gap-2 w-full lg:sticky lg:top-32">
+            {[
+              { label: "Profile", icon: User, active: true },
+              { label: "Security", icon: Shield, active: false },
+              { label: "Network", icon: Globe, active: false },
+              { label: "Impact", icon: Heart, active: false },
+            ].map((item, i) => (
+              <button
+                key={i}
+                className={`flex items-center gap-4 px-6 py-3 rounded-full text-sm font-semibold tracking-tight transition-all ${item.active ? "bg-primary text-white shadow-lg" : "text-muted-foreground hover:bg-muted"}`}
+              >
+                <item.icon className="w-5 h-5" />
+                {item.label}
+              </button>
+            ))}
           </div>
-          <div className="mt-4 sm:mt-0 text-center sm:text-left">
-            <h3 className="text-xl font-bold text-foreground">
-              Profile Picture
-            </h3>
-            <p className="text-sm text-muted-foreground mb-4">
-              Click the image to upload a new photo. Max 2MB.
-            </p>
-            <Button
-              type="button"
-              variant="outline"
-              size="sm"
-              onClick={() => fileInputRef.current?.click()}
-              className="rounded-full px-6"
-            >
-              <Upload size={16} className="mr-2" />
-              Change Photo
-            </Button>
-            <input
-              type="file"
-              ref={fileInputRef}
-              className="hidden"
-              accept="image/*"
-              onChange={async (e) => {
-                const file = e.target.files?.[0];
-                if (!file) return;
-                if (file.size > 2 * 1024 * 1024) {
-                  toast.error(
-                    "Image too large. Please select a file smaller than 2MB.",
-                  );
-                  return;
-                }
-                const reader = new FileReader();
-                reader.onloadend = () => {
-                  setFormData((prev) => ({
-                    ...prev,
-                    avatarUrl: reader.result,
-                  }));
-                };
-                reader.readAsDataURL(file);
-              }}
-            />
+
+          <div className="flex-1 flex flex-col gap-12 w-full">
+            {/* Avatar Upload */}
+            <GlassCard className="!p-8 md:!p-10 border-primary/5 shadow-xl hover:border-primary/20 transition-all flex flex-col sm:flex-row items-center gap-10">
+              <div
+                className="w-32 h-32 rounded-full overflow-hidden bg-muted shadow-2xl relative group cursor-pointer border-4 border-background shrink-0"
+                onClick={() => fileInputRef.current?.click()}
+              >
+                <Image
+                  src={
+                    formData.avatarUrl ||
+                    `https://api.dicebear.com/7.x/initials/svg?seed=${encodeURIComponent(formData.name || "User")}`
+                  }
+                  alt="Profile"
+                  fill
+                  className="object-cover transition-all grayscale group-hover:grayscale-0 group-hover:scale-110"
+                />
+                <div className="absolute inset-0 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-all bg-black/40 text-white backdrop-blur-sm">
+                  <Camera size={24} />
+                </div>
+                {uploading && (
+                  <div className="absolute inset-0 flex items-center justify-center bg-black/60 text-white backdrop-blur-md">
+                    <Loader2 className="w-8 h-8 animate-spin" />
+                  </div>
+                )}
+              </div>
+              <div className="flex flex-col items-center sm:items-start text-center sm:text-left">
+                <h3 className="text-2xl font-extrabold text-foreground uppercase tracking-tight">
+                  Identity Image
+                </h3>
+                <p className="text-muted-foreground font-medium mb-6 max-w-xs leading-relaxed">
+                  Customize your visual representation across the platform.
+                </p>
+                <div className="flex gap-4">
+                  <Button
+                    type="button"
+                    variant="primary"
+                    size="sm"
+                    onClick={() => fileInputRef.current?.click()}
+                  >
+                    <Upload size={16} className="mr-2" /> Change
+                  </Button>
+                  <input
+                    type="file"
+                    ref={fileInputRef}
+                    className="hidden"
+                    accept="image/*"
+                    onChange={async (e) => {
+                      const file = e.target.files?.[0];
+                      if (!file) return;
+                      const reader = new FileReader();
+                      reader.onloadend = () =>
+                        setFormData((prev) => ({
+                          ...prev,
+                          avatarUrl: reader.result,
+                        }));
+                      reader.readAsDataURL(file);
+                    }}
+                  />
+                </div>
+              </div>
+            </GlassCard>
+
+            {/* Settings Form */}
+            <form onSubmit={handleSubmit} className="flex flex-col gap-12">
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+                <div className="flex flex-col gap-2">
+                  <label className={labelClasses}>Legal Name</label>
+                  <input
+                    type="text"
+                    name="name"
+                    value={formData.name}
+                    onChange={handleChange}
+                    className={inputClasses}
+                    required
+                  />
+                </div>
+                <div className="flex flex-col gap-2">
+                  <label className={labelClasses}>Contact Link (Phone)</label>
+                  <input
+                    type="text"
+                    name="phone"
+                    value={formData.phone}
+                    onChange={handleChange}
+                    className={inputClasses}
+                  />
+                </div>
+              </div>
+
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+                <div className="flex flex-col gap-2">
+                  <label className={labelClasses}>Domain of Action</label>
+                  <select
+                    name="role"
+                    value={formData.role}
+                    onChange={handleChange}
+                    className={`${inputClasses} appearance-none`}
+                  >
+                    <option value="Individual">Individual</option>
+                    <option value="Organization">Organization</option>
+                    <option value="Volunteer">Volunteer</option>
+                    <option value="Donor">Donor</option>
+                  </select>
+                </div>
+                <div className="flex flex-col gap-2">
+                  <label className={labelClasses}>Core Mastery</label>
+                  <select
+                    name="expertise"
+                    value={formData.expertise}
+                    onChange={handleChange}
+                    className={`${inputClasses} appearance-none`}
+                  >
+                    <option value="">Select...</option>
+                    <option value="healthcare">Healthcare</option>
+                    <option value="environment">Environment</option>
+                    <option value="education">Education</option>
+                  </select>
+                </div>
+              </div>
+
+              <div className="flex flex-col gap-2">
+                <label className={labelClasses}>Ethical Compass (#Tags)</label>
+                <input
+                  type="text"
+                  name="values"
+                  value={formData.values}
+                  onChange={handleChange}
+                  className={inputClasses}
+                  placeholder="#Regeneration #Justice #Harmony"
+                />
+              </div>
+
+              <div className="flex flex-col gap-2">
+                <label className={labelClasses}>Professional Narrative</label>
+                <textarea
+                  name="professionalProfile"
+                  value={formData.professionalProfile}
+                  onChange={handleChange}
+                  rows={5}
+                  className={`${inputClasses} resize-none`}
+                  placeholder="Elaborate on your life's work..."
+                ></textarea>
+              </div>
+
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+                <div className="flex flex-col gap-2">
+                  <label className={labelClasses}>Geographical Focus</label>
+                  <input
+                    type="text"
+                    name="geographicalSpread"
+                    value={formData.geographicalSpread}
+                    onChange={handleChange}
+                    className={inputClasses}
+                    placeholder="Regional impact zones..."
+                  />
+                </div>
+                <div className="flex flex-col gap-2">
+                  <label className={labelClasses}>
+                    Abundance (What you offer)
+                  </label>
+                  <input
+                    type="text"
+                    name="abundance"
+                    value={formData.abundance}
+                    onChange={handleChange}
+                    className={inputClasses}
+                    placeholder="Skills, time, resources..."
+                  />
+                </div>
+              </div>
+
+              <div className="pt-10 border-t border-border flex justify-end">
+                <Button
+                  type="submit"
+                  loading={saving}
+                  size="lg"
+                  className="px-12"
+                >
+                  Preserve Changes
+                </Button>
+              </div>
+            </form>
           </div>
         </div>
-
-        <form
-          onSubmit={handleSubmit}
-          className="bg-card text-card-foreground p-8 rounded-[2rem] border border-border shadow-sm flex flex-col gap-6"
-        >
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-            <div>
-              <label className={labelClasses}>Full Name</label>
-              <input
-                type="text"
-                name="name"
-                value={formData.name}
-                onChange={handleChange}
-                className={inputClasses}
-                required
-              />
-            </div>
-            <div>
-              <label className={labelClasses}>Phone</label>
-              <input
-                type="text"
-                name="phone"
-                value={formData.phone}
-                onChange={handleChange}
-                className={inputClasses}
-              />
-            </div>
-          </div>
-
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-            <div>
-              <label className={labelClasses}>Role Type</label>
-              <select
-                name="role"
-                value={formData.role}
-                onChange={handleChange}
-                className={`${inputClasses} appearance-none`}
-              >
-                <option value="Individual">Individual</option>
-                <option value="Organization">Organization</option>
-                <option value="Volunteer">Volunteer</option>
-                <option value="Donor">Donor</option>
-              </select>
-            </div>
-            <div>
-              <label className={labelClasses}>Core Expertise Area</label>
-              <select
-                name="expertise"
-                value={formData.expertise}
-                onChange={handleChange}
-                className={`${inputClasses} appearance-none`}
-              >
-                <option value="">Select...</option>
-                <option value="healthcare">Healthcare</option>
-                <option value="environment">Environment</option>
-                <option value="education">Education</option>
-              </select>
-            </div>
-          </div>
-
-          <div>
-            <label className={labelClasses}>
-              Values (Hashtags, e.g. #Equity #Love)
-            </label>
-            <input
-              type="text"
-              name="values"
-              value={formData.values}
-              onChange={handleChange}
-              className={inputClasses}
-              placeholder="#Compassion #Integrity"
-            />
-          </div>
-
-          <div>
-            <label className={labelClasses}>Professional Profile</label>
-            <textarea
-              name="professionalProfile"
-              value={formData.professionalProfile}
-              onChange={handleChange}
-              rows={4}
-              className={`${inputClasses} resize-none`}
-              placeholder="Describe your professional background..."
-            ></textarea>
-          </div>
-
-          <div>
-            <label className={labelClasses}>Geographical Spread</label>
-            <input
-              type="text"
-              name="geographicalSpread"
-              value={formData.geographicalSpread}
-              onChange={handleChange}
-              className={inputClasses}
-              placeholder="e.g. New Delhi, Noida"
-            />
-          </div>
-
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-            <div>
-              <label className={labelClasses}>Interventions</label>
-              <textarea
-                name="interventions"
-                value={formData.interventions}
-                onChange={handleChange}
-                rows={4}
-                className={`${inputClasses} resize-none`}
-              ></textarea>
-            </div>
-            <div>
-              <label className={labelClasses}>Problem Scope</label>
-              <textarea
-                name="problem"
-                value={formData.problem}
-                onChange={handleChange}
-                rows={4}
-                className={`${inputClasses} resize-none`}
-              ></textarea>
-            </div>
-            <div>
-              <label className={labelClasses}>System Change</label>
-              <textarea
-                name="systemChange"
-                value={formData.systemChange}
-                onChange={handleChange}
-                rows={4}
-                className={`${inputClasses} resize-none`}
-              ></textarea>
-            </div>
-            <div>
-              <label className={labelClasses}>What I Have in Abundance</label>
-              <textarea
-                name="abundance"
-                value={formData.abundance}
-                onChange={handleChange}
-                rows={4}
-                className={`${inputClasses} resize-none`}
-              ></textarea>
-            </div>
-          </div>
-
-          <div>
-            <label className={labelClasses}>Help Needed</label>
-            <textarea
-              name="helpNeeded"
-              value={formData.helpNeeded}
-              onChange={handleChange}
-              rows={3}
-              className={`${inputClasses} resize-none`}
-            ></textarea>
-          </div>
-
-          <div className="flex justify-end mt-4 pt-6 border-t border-border">
-            <Button
-              type="submit"
-              loading={saving}
-              className="px-8 bg-[#1C5B6F] hover:bg-[#154655] dark:bg-[#EEFCFD] text-white dark:text-[#0F313D] rounded-xl font-bold shadow-md transition-all h-12"
-            >
-              Save Settings
-            </Button>
-          </div>
-        </form>
       </div>
     </div>
   );

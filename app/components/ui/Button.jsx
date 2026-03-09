@@ -16,24 +16,26 @@ const Button = React.forwardRef(
   ) => {
     // Determine base classes
     const baseStyles =
-      "inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-[2rem] text-sm font-medium ring-offset-background transition-all duration-300 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 hover:scale-105 active:scale-95 shadow-sm cursor-pointer";
+      "inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-full text-sm font-semibold tracking-tight ring-offset-background transition-all duration-300 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 hover:scale-[1.01] active:scale-95 shadow-sm cursor-pointer";
 
     // Determine variant classes
     const variants = {
       primary:
-        "bg-primary text-primary-foreground dark:bg-[#EEFCFD] dark:text-[#0F313D] shadow-xl hover:bg-primary/90 dark:hover:bg-[#EEFCFD]/90",
+        "bg-primary text-primary-foreground shadow-lg hover:shadow-primary/20 transition-all",
       secondary:
-        "bg-[#F6F5F0] text-[#2D201B] dark:bg-[#19667A] dark:text-[#EEFCFD] shadow-sm hover:bg-[#F6F5F0]/90 dark:hover:bg-[#19667A]/90",
+        "bg-secondary text-secondary-foreground shadow-sm hover:bg-secondary/80",
       outline:
-        "border border-primary/20 dark:border-white/20 bg-transparent text-primary dark:text-[#EEFCFD] hover:bg-primary hover:text-primary-foreground dark:hover:bg-[#EEFCFD] dark:hover:text-[#0F313D]",
-      ghost: "hover:bg-accent hover:text-accent-foreground",
+        "border border-primary/20 bg-transparent text-primary hover:bg-primary/5 transition-all text-xs font-bold uppercase tracking-widest",
+      ghost:
+        "hover:bg-primary/5 hover:text-primary transition-colors text-xs font-bold uppercase tracking-widest",
+      glass: "glass glass-hover text-foreground border-primary/5",
     };
 
     // Determine size classes
     const sizes = {
-      default: "h-10 px-4 py-2",
-      sm: "h-9 rounded-md px-3",
-      lg: "px-6 py-[0.9375rem] text-lg lg:text-xl",
+      default: "h-10 px-5",
+      sm: "h-8 px-3 text-xs",
+      lg: "h-12 px-8 text-base",
       icon: "h-10 w-10",
     };
 

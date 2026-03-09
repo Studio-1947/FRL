@@ -3,8 +3,8 @@ import React, { useMemo, useRef, useState } from "react";
 import BalanceWheel from "./BalanceWheel";
 import { Download, Share2 } from "lucide-react";
 import { Button } from "@/app/components/ui/Button";
+import { GlassCard } from "@/app/components/ui/GlassCard";
 
-// Maps the ordered answers array to the BalanceWheel formData contract
 const toFormData = (answers = []) => {
   const safe = (i, def = 5) => {
     const v = Number(answers[i]);
@@ -28,7 +28,6 @@ const Results = ({ answers, formValues }) => {
 
   const formData = useMemo(() => toFormData(answers), [answers]);
 
-  // Display date in dd/mm/yyyy
   const today = new Date();
   const dd = String(today.getDate()).padStart(2, "0");
   const mm = String(today.getMonth() + 1).padStart(2, "0");
@@ -38,13 +37,8 @@ const Results = ({ answers, formValues }) => {
   const handleDownload = async () => {
     try {
       setDownloading(true);
-      const today = new Date();
-      const dd = String(today.getDate()).padStart(2, "0");
-      const mm = String(today.getMonth() + 1).padStart(2, "0");
-      const yyyy = today.getFullYear();
-      const date = `${dd}/${mm}/${yyyy}`;
       const mod = await import("./generateBalanceWheelImage");
-      await mod.generateBalanceWheelImage(graphRef.current, date);
+      await mod.generateBalanceWheelImage(graphRef.current, displayDate);
     } finally {
       setDownloading(false);
     }
@@ -52,8 +46,8 @@ const Results = ({ answers, formValues }) => {
 
   const handleShare = async () => {
     const shareData = {
-      title: "My Life Balance Wheel",
-      text: "Check out my Life Balance Wheel snapshot. How balanced are you feeling today?",
+      title: "My Life Balance Wheel | FRL",
+      text: "Explore my current state of balance. How are you feeling today?",
       url: typeof window !== "undefined" ? window.location.href : undefined,
     };
     try {
@@ -61,80 +55,68 @@ const Results = ({ answers, formValues }) => {
         await navigator.share(shareData);
       } else if (navigator.clipboard && shareData.url) {
         await navigator.clipboard.writeText(shareData.url);
+        // Using alert for simplicity, but could use toast
         alert("Link copied to clipboard");
-      } else {
-        alert("Sharing not supported on this device.");
       }
-    } catch (e) {
-      // Swallow user-cancel
-    }
+    } catch (e) {}
   };
 
   return (
-    <div className="w-full h-full overflow-hidden flex flex-col lg:flex-row-reverse items-stretch gap-6 lg:gap-10">
+    <div className="w-full h-full flex flex-col lg:flex-row-reverse items-center justify-center gap-12 lg:gap-20 max-w-7xl mx-auto px-4">
       {/* Wheel section */}
-      <div className="flex justify-center lg:justify-end items-center lg:w-1/2 flex-shrink-0 overflow-visible">
-        <div className="relative w-full max-w-[90vw] sm:max-w-[400px] md:max-w-[500px] lg:max-w-[600px] xl:max-w-[700px] aspect-square">
+      <div className="flex justify-center items-center lg:w-1/2 relative">
+        <div className="absolute inset-0 bg-primary/5 rounded-full blur-[100px] animate-pulse" />
+        <div className="relative z-10 w-full max-w-[500px] lg:max-w-none aspect-square">
           <BalanceWheel formData={formData} graphRef={graphRef} />
         </div>
       </div>
 
       {/* Text + actions */}
-      <div className="flex flex-col gap-4 flex-1 justify-start lg:justify-center lg:items-start overflow-hidden">
-        <div className="capitalize">
-          <div className="font-bold text-4xl md:text-5xl pb-2 text-foreground dark:text-white transition-colors duration-300">
-            Your Life Balance Wheel
-          </div>
-          <div className="text-foreground dark:text-white transition-colors duration-300 font-semibold tracking-wide text-2xl md:text-4xl">
-            On {displayDate}
+      <div className="flex flex-col gap-10 flex-1 lg:items-start text-center lg:text-left">
+        <div className="flex flex-col gap-4">
+          <h1 className="text-3xl md:text-5xl lg:text-7xl font-semibold tracking-tighter text-foreground uppercase leading-[0.9]">
+            Your Life Balance
+          </h1>
+          <div className="text-primary font-bold tracking-[0.2em] text-lg md:text-xl uppercase italic">
+            Snapshot: {displayDate}
           </div>
         </div>
 
-        {/* Supporting text */}
-        <p className="font-medium text-base md:text-lg text-muted-foreground dark:text-white/90 transition-colors duration-300 max-w-[36rem]">
-          This is your current life balance wheel. Scores may shift hourly,
-          daily, or weekly. Don’t seek ultimate truth — just notice how you feel
-          right now.
-        </p>
-
-        {/* Optional location line */}
-        {Boolean(formValues?.location || formValues?.pinCode) && (
-          <p className="text-muted-foreground dark:text-white/70 transition-colors duration-300 text-sm lg:text-base">
-            Country: {formValues?.location || "-"} | ZIP:{" "}
-            {formValues?.pinCode || "-"}
+        <GlassCard className="p-8 lg:p-10 border-primary/10 shadow-2xl">
+          <p className="text-lg md:text-xl text-muted-foreground font-medium leading-relaxed max-w-xl italic">
+            "Balance is not something you find, it's something you create."
           </p>
-        )}
+          <div className="mt-8 pt-8 border-t border-border/50 flex flex-col gap-2">
+            <p className="text-base font-semibold text-foreground">
+              Location Summary
+            </p>
+            <p className="text-muted-foreground">
+              {formValues?.location || "Global"}{" "}
+              {formValues?.pinCode ? `| ${formValues.pinCode}` : ""}
+            </p>
+          </div>
+        </GlassCard>
 
-        <div className="flex gap-3 pt-3">
+        <div className="flex flex-wrap justify-center lg:justify-start gap-4">
           <Button
             variant="primary"
             onClick={handleDownload}
             disabled={downloading}
-            className="px-5 py-3 lg:text-lg"
-            aria-label="Download"
+            size="lg"
           >
-            <span>{downloading ? "Preparing..." : "Download"}</span>
-            <Download className="w-4 h-4" />
+            {downloading ? "Processing..." : "Download PDF"}
+            <Download className="w-5 h-5 ml-2" />
           </Button>
-          <Button
-            variant="outline"
-            onClick={handleShare}
-            className="px-5 py-3 lg:text-lg"
-            aria-label="Share"
-          >
-            <span>Share</span>
-            <Share2 className="w-4 h-4" />
+          <Button variant="outline" onClick={handleShare} size="lg">
+            Share
+            <Share2 className="w-5 h-5 ml-2" />
           </Button>
         </div>
 
         {/* Footer credit */}
-        <p className="mt-6 text-[11px] leading-snug text-muted-foreground dark:text-white/70 transition-colors duration-300 max-w-[36rem]">
+        <p className="text-xs text-muted-foreground font-medium mt-auto max-w-md opacity-60">
           The Life Balance Wheel Tool has been developed by the Academy of
-          Leadership Coaching & NLP (ALCN). To know more about this work please
-          visit
-          <span className="px-1 underline decoration-muted-foreground dark:decoration-white/50 transition-colors duration-300 underline-offset-2">
-            https://nlp-leadership-coaching.com/
-          </span>
+          Leadership Coaching & NLP (ALCN).
         </p>
       </div>
     </div>

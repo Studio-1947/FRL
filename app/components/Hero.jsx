@@ -1,133 +1,103 @@
-import { ArrowRight, CircleUser, Play } from "lucide-react";
+import { ArrowRight, CircleUser, Play, Sparkles } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
 import React from "react";
 import { Button } from "./ui/Button";
+import { GlassCard } from "./ui/GlassCard";
 
 export default function Hero() {
   return (
-    <div className="flex  flex-col  lg:flex-row gap-8 px-3">
-      {/* first section */}
-      <div className="lg:w-1/2 flex flex-col gap-8 ">
-        {/* card */}
-        <div className="flex flex-col sm:flex-row gap-5 pb-4 w-full">
-          <div className="w-full sm:w-[200px] shrink-0 rounded-xl inline-flex flex-col justify-start items-start overflow-hidden transition-all duration-300 hover:scale-105 shadow-2xl">
-            <Image
-              className="object-cover h-32 relative"
-              src="/Hero/hero_card.webp"
-              alt="hero image card"
-              width={400}
-              height={50}
-            />
-            <div className="self-stretch p-2.5 flex flex-col justify-start items-start gap-2 bg-stone-100">
-              <div className="size- px-3 py-1.5 bg-[#EAE5D7] rounded-3xl flex flex-col justify-start items-start gap-2.5 overflow-hidden">
-                <div className="justify-start text-[#5C4537] text-xs font-medium ">
-                  Notice Board
-                </div>
-              </div>
-              <div className="self-stretch flex flex-col justify-start items-start">
-                <div className="self-stretch p-[5px] flex flex-col justify-start items-start gap-2.5 overflow-hidden">
-                  <div className="self-stretch justify-start text-[#70543E] text-lg  capitalize tracking-wide font-semibold">
-                    Featured Member
-                  </div>
-                </div>
-                <div className="self-stretch p-[5px] flex flex-col justify-start items-start gap-2.5 overflow-hidden">
-                  <div className="self-stretch justify-start text-[#9C8056] text-xs font-medium hover:text-[#5C4537] cursor-pointer transition-all duration-300 hover:scale-105">
-                    Click here to know more
-                  </div>
-                </div>
-              </div>
-            </div>
+    <div className="flex flex-col lg:flex-row gap-12 px-4 py-8 lg:py-16 items-center">
+      {/* Left section: Text & Primary Action */}
+      <div className="lg:w-1/2 flex flex-col gap-10 animate-fade-in">
+        <div className="flex flex-col gap-6">
+          <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-primary/5 text-primary text-sm font-medium w-fit">
+            <Sparkles size={16} />
+            <span>Forum for Responsible Living</span>
           </div>
-          <div className="w-full sm:w-[200px] shrink-0 rounded-xl inline-flex flex-col justify-start items-start overflow-hidden transition-all duration-300 hover:scale-105 shadow-2xl">
-            <Image
-              className="object-cover h-32 relative"
-              src="/Hero/hero_card2.webp"
-              alt="hero image card"
-              width={400}
-              height={50}
-            />
-            <div className="self-stretch p-2.5 flex flex-col justify-start items-start gap-2 bg-stone-100">
-              <div className="size- px-3 py-1.5 bg-[#EAE5D7] rounded-3xl flex flex-col justify-start items-start gap-2.5 overflow-hidden">
-                <div className="justify-start text-[#5C4537] text-xs font-medium ">
-                  Notice Board
-                </div>
-              </div>
-              <div className="self-stretch flex flex-col justify-start items-start">
-                <div className="self-stretch p-[5px] flex flex-col justify-start items-start gap-2.5 overflow-hidden">
-                  <div className="self-stretch justify-start text-[#70543E] text-lg  capitalize tracking-wide font-semibold">
-                    What&apos;s new in FRL
-                  </div>
-                </div>
-                <div className="self-stretch p-[5px] flex flex-col justify-start items-start gap-2.5 overflow-hidden">
-                  <div className="self-stretch justify-start text-[#9C8056] text-xs font-medium hover:text-[#5C4537] cursor-pointer transition-all duration-300 hover:scale-105">
-                    Click here to know more
-                  </div>
-                </div>
-              </div>
-            </div>
+          <h1 className="text-4xl md:text-5xl lg:text-7xl font-semibold leading-[0.95] tracking-tighter text-foreground uppercase">
+            Co-creating a{" "}
+            <span className="text-primary italic font-light opacity-90 lowercase">
+              harmonious
+            </span>{" "}
+            thriving future
+          </h1>
+          <p className="text-lg lg:text-xl text-muted-foreground max-w-xl leading-relaxed font-light">
+            A safe space for members to explore how each of us can contribute
+            towards healing ourselves, local communities, and ecosystems.
+          </p>
+          <div className="flex flex-wrap gap-4 pt-4">
+            <Link href="/login">
+              <Button variant="primary" size="lg">
+                <span>Join the Community</span>
+                <CircleUser size={20} />
+              </Button>
+            </Link>
+            <Button variant="outline" size="lg">
+              <span>Watch Story</span>
+              <Play size={18} fill="currentColor" />
+            </Button>
           </div>
         </div>
 
-        {/* text section */}
-        <div className="text-foreground dark:text-white">
-          <h1 className="text-3xl font-bold capitalize pb-2">
-            Co-creating a harmonious thriving future
-          </h1>
-          <p className="text-base mb-2">
-            The Forum for Responsible Living (FRL) is a safe space for members
-            to explore how each of us can contribute towards healing ourselves,
-            local communities and ecosystems.
-          </p>
-          <p>
-            Explore FRL supports members to explore fresh perspectives on
-            themselves and the systems that influence social, ecological and
-            economic (SEE) challenges that concern them the most – helping them
-            to emerge as change-makers who are systems aware & guided by
-            universal values.
-          </p>
-        </div>
-        <div className="flex gap-3">
-          <Link href="/login">
-            <Button variant="primary" size="lg">
-              <div className="">Login</div>
-              <CircleUser size={22} />
-            </Button>
-          </Link>
-          <Button variant="outline" size="lg">
-            <div>Play Video</div>
-            <Play size={22} />
-          </Button>
+        {/* Feature Cards Grid */}
+        <div className="grid grid-cols-1 sm:grid-cols-2 gap-6 pt-4">
+          <GlassCard className="flex flex-col gap-4 !p-5 group">
+            <div className="h-12 w-12 rounded-2xl bg-primary/5 flex items-center justify-center text-primary group-hover:bg-primary group-hover:text-primary-foreground transition-all duration-500">
+              <span className="text-xl font-bold">01</span>
+            </div>
+            <div>
+              <h3 className="text-xl font-bold mb-1">Notice Board</h3>
+              <p className="text-sm text-muted-foreground">
+                Stay updated with the latest from the FRL community.
+              </p>
+            </div>
+          </GlassCard>
+          <GlassCard className="flex flex-col gap-4 !p-5 group">
+            <div className="h-12 w-12 rounded-2xl bg-secondary flex items-center justify-center text-secondary-foreground group-hover:bg-primary group-hover:text-primary-foreground transition-all duration-500">
+              <span className="text-xl font-bold">02</span>
+            </div>
+            <div>
+              <h3 className="text-xl font-bold mb-1">Featured Members</h3>
+              <p className="text-sm text-muted-foreground">
+                Discover stories of change-makers across India.
+              </p>
+            </div>
+          </GlassCard>
         </div>
       </div>
-      {/* second section */}
-      <div className="lg:w-1/2 flex flex-col gap-[1.25rem] rounded-2xl bg-[rgba(246,246,246,0.05)] pb-5">
-        {/* image goes here */}
-        <div className="rounded-t-2xl overflow-hidden">
-          <div className="self-stretch h-[290px] relative bg-[#ffffff] opacity-[0.1] " />
-        </div>
-        {/* second heading */}
-        <div className="px-5 text-foreground dark:text-white">
-          <h2 className="text-3xl font-bold capitalize ">
-            Experience Life balance Tool
-          </h2>
-          <p className="text-base pt-2">
-            No matter where we are from and what we do, there are universal
-            values that we share. This magical reality can help us to co-create
-            ecosystems of knowledge. One way to begin is to consciously
-            prioritize personal & planetary well-being. Change begins with you,
-            visualize all the important areas of your life at once, and become
-            aware of how fulfilled you feel in each area.
-          </p>
-        </div>
-        <div className="px-5 ">
-          <Link href="/life-balance">
-            <Button variant="primary" size="lg" className="w-full sm:w-auto">
-              <div className="">Explore Now</div>
-              <ArrowRight size={22} />
-            </Button>
-          </Link>
-        </div>
+
+      {/* Right section: Feature Spotlight */}
+      <div className="lg:w-1/2 w-full">
+        <GlassCard className="relative overflow-hidden !p-0 border-primary/5 shadow-2xl group">
+          <div className="aspect-[4/3] relative bg-primary/5">
+            {/* Using a placeholder-like div until actual images are refined */}
+            <div className="absolute inset-0 bg-gradient-to-br from-primary/10 via-transparent to-primary/5" />
+            <div className="absolute inset-0 flex items-center justify-center">
+              <div className="w-24 h-24 rounded-full bg-white/10 backdrop-blur-xl flex items-center justify-center text-primary shadow-inner animate-pulse">
+                <Play size={40} fill="currentColor" className="ml-1" />
+              </div>
+            </div>
+          </div>
+          <div className="p-6 md:p-10 flex flex-col gap-6 bg-background/40 backdrop-blur-md">
+            <div className="flex flex-col gap-3">
+              <h2 className="text-2xl md:text-3xl font-bold tracking-tight">
+                Experience Life Balance
+              </h2>
+              <p className="text-base text-muted-foreground leading-relaxed">
+                Visualize all the important areas of your life at once. Become
+                aware of how fulfilled you feel and begin your journey of
+                personal and planetary well-being.
+              </p>
+            </div>
+            <Link href="/life-balance">
+              <Button variant="primary" size="lg" className="w-full sm:w-auto">
+                <span>Explore Life Balance Tool</span>
+                <ArrowRight size={20} />
+              </Button>
+            </Link>
+          </div>
+        </GlassCard>
       </div>
     </div>
   );

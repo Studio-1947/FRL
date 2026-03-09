@@ -1,8 +1,10 @@
+"use client";
 import React, { useState } from "react";
 import PointTracker from "../ui/PointTracker";
 import { ArrowRight } from "lucide-react";
 import Circle from "../ui/Circle";
 import { Button } from "@/app/components/ui/Button";
+import { GlassCard } from "@/app/components/ui/GlassCard";
 
 const QuestionSlides = ({
   header,
@@ -16,61 +18,66 @@ const QuestionSlides = ({
     answerCollector(currentAnswer);
     setSlideIndex();
   };
+
   return (
-    <div className="flex flex-col justify-between gap-5 lg:flex-row-reverse lg:items-center lg:h-full">
+    <div className="flex flex-col justify-between gap-12 lg:flex-row-reverse lg:items-center lg:h-full max-w-7xl mx-auto w-full">
       {/* Circle section - right side on large screens */}
-      <div className="flex justify-center items-center text-center lg:w-1/2 lg:justify-center relative">
-        {/* Responsive square container for the circles */}
-        <div className="w-[70vw] max-w-[15.625rem] aspect-square lg:w-[30.75rem] lg:max-w-none lg:aspect-square rounded-full relative">
-          <Circle stage={slideIndex} />
+      <div className="flex justify-center items-center text-center lg:w-1/2 relative">
+        <div className="w-[70vw] max-w-[18rem] aspect-square lg:w-[35rem] lg:max-w-none rounded-full relative">
+          <div className="absolute inset-0 bg-primary/5 rounded-full blur-3xl animate-pulse" />
+          <div className="relative z-10 w-full h-full">
+            <Circle stage={slideIndex} />
+          </div>
         </div>
       </div>
 
       {/* Content section - left side on large screens */}
-      <div className="lg:w-1/2 lg:flex lg:flex-col lg:justify-center lg:gap-8">
+      <div className="lg:w-1/2 flex flex-col justify-center gap-10">
         <form
           id="question-form"
           onSubmit={savingAndGoingToNextQuestion}
-          className="overflow-hidden lg:pb-0 flex flex-col gap-5"
+          className="flex flex-col gap-10"
         >
-          <div className="flex flex-col justify-between gap-4 lg:min-h-[10rem]">
-            {/* question */}
-            <div className="text-2xl font-semibold lg:text-4xl lg:font-bold lg:text-left text-foreground dark:text-white transition-colors duration-300">
+          <div className="flex flex-col gap-6">
+            <h2 className="text-3xl md:text-4xl lg:text-5xl font-extrabold tracking-tight text-foreground uppercase leading-tight">
               {header}
-            </div>
-            <div className="text-lg font-medium lg:text-xl lg:text-left text-muted-foreground dark:text-white transition-colors duration-300">
-              Rate your level of satisfaction in a scale of 1 - 10
-            </div>
+            </h2>
+            <p className="text-lg md:text-xl text-muted-foreground font-medium mb-4">
+              Rate your level of satisfaction on a scale of 1 - 10
+            </p>
           </div>
-          {/* slider goes here */}
-          <div className="fixed bottom-19 left-0 flex lg:static lg:flex-none w-full lg:max-w-none">
-            <PointTracker onChange={setCurrentAnswer} />
-          </div>
-          {/* Desktop/large screens: inline button */}
-          <div className="hidden lg:flex items-baseline justify-start lg:items-start">
+
+          <GlassCard className="!p-8 lg:!p-10 shadow-xl border-primary/10">
+            <div className="w-full">
+              <PointTracker onChange={setCurrentAnswer} />
+            </div>
+          </GlassCard>
+
+          {/* Desktop Next button */}
+          <div className="hidden lg:flex justify-start">
             <Button
               variant="primary"
               size="lg"
-              className="px-[1.75rem] py-[0.75rem] lg:text-xl"
+              className="px-10 py-5 text-lg lg:text-xl rounded-2xl group shadow-xl"
             >
-              Next
-              <ArrowRight className="w-[1.5rem] h-[1.3rem]" />
+              Next Component
+              <ArrowRight className="w-6 h-6 group-hover:translate-x-1 transition-transform" />
             </Button>
           </div>
         </form>
       </div>
 
       {/* Mobile: sticky bottom Next button */}
-      <div className="lg:hidden fixed bottom-0 left-0 right-0 p-4 bg-background dark:bg-[#19667A] transition-colors duration-300 flex justify-end">
+      <div className="lg:hidden fixed bottom-0 left-0 right-0 p-6 bg-background/80 backdrop-blur-xl border-t border-border z-50 flex justify-end">
         <Button
           form="question-form"
           type="submit"
           variant="primary"
           size="lg"
-          className="px-[1.75rem] py-[0.9rem]"
+          className="px-10 py-5 rounded-2xl shadow-2xl"
         >
           Next
-          <ArrowRight className="w-[1.5rem] h-[1.3rem]" />
+          <ArrowRight className="w-6 h-6" />
         </Button>
       </div>
     </div>

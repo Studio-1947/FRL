@@ -118,6 +118,23 @@ export class UsersService {
       .where(eq(schema.users.id, id));
   }
 
+  async updateResetToken(id: number, token: string | null, expires: Date | null) {
+    await this.db
+      .update(schema.users)
+      .set({
+        resetToken: token,
+        resetTokenExpires: expires,
+        updatedAt: new Date(),
+      })
+      .where(eq(schema.users.id, id));
+  }
+
+  async findByResetToken(token: string) {
+    return this.db.query.users.findFirst({
+      where: eq(schema.users.resetToken, token),
+    });
+  }
+
   async create(data: {
     email: string;
     password?: string;

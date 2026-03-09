@@ -4,6 +4,9 @@ import { useEffect, useState } from "react";
 import NotesList from "../components/notes/NotesList";
 import CreateNoteModal from "../components/notes/CreateNoteModal";
 import { fetchApi } from "../../lib/api";
+import { Button } from "../components/ui/Button";
+import { GlassCard } from "../components/ui/GlassCard";
+import { Plus, Loader2 } from "lucide-react";
 
 export default function PersonalSpacePage() {
   const [notes, setNotes] = useState([]);
@@ -44,39 +47,65 @@ export default function PersonalSpacePage() {
   }, []);
 
   return (
-    <div className="min-h-screen bg-[#F4F4F5] dark:bg-[#0c0c0c] py-12 px-4 sm:px-6 lg:px-8">
-      <div className="max-w-4xl mx-auto">
-        <div className="flex justify-between items-center mb-8">
-          <div>
-            <h1 className="text-3xl font-bold text-gray-900 dark:text-gray-100 tracking-tight">
+    <div className="min-h-screen bg-background py-16 px-6 sm:px-10 lg:px-16 flex flex-col items-center">
+      <div className="w-full max-w-5xl">
+        <header className="flex flex-col md:flex-row justify-between items-end gap-8 mb-16">
+          <div className="flex flex-col gap-4">
+            <h1 className="text-5xl md:text-8xl font-semibold tracking-tighter text-foreground uppercase leading-[0.85]">
               Personal Space
             </h1>
-            <p className="text-sm text-gray-500 dark:text-gray-400 mt-1">
-              Your private collection of thoughts and audio recordings.
+            <p className="text-xl text-muted-foreground font-light max-w-md leading-relaxed italic">
+              Private records of your reflections, insights, and audio
+              recordings.
             </p>
           </div>
-          <button
+          <Button
             onClick={() => {
               setNoteToEdit(null);
               setIsModalOpen(true);
             }}
-            className="flex items-center gap-2 px-4 py-2 bg-black text-white dark:bg-white dark:text-black rounded-full font-medium shadow-sm hover:scale-105 transition-transform"
+            variant="primary"
+            size="lg"
           >
-            <span>+</span> New Note
-          </button>
-        </div>
+            <Plus className="w-5 h-5 mr-2" strokeWidth={2.5} />
+            Create Entry
+          </Button>
+        </header>
 
-        {isLoading ? (
-          <div className="flex justify-center py-20">
-            <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary"></div>
-          </div>
-        ) : (
-          <NotesList
-            notes={notes}
-            onNotesUpdate={loadNotes}
-            onEdit={handleEdit}
-          />
-        )}
+        <main className="relative min-h-[400px]">
+          {isLoading ? (
+            <div className="flex flex-col items-center justify-center py-32 gap-6">
+              <Loader2
+                className="w-12 h-12 text-primary animate-spin"
+                strokeWidth={1.5}
+              />
+              <p className="text-xs font-black uppercase tracking-[0.3em] text-muted-foreground animate-pulse">
+                Synchronizing entries...
+              </p>
+            </div>
+          ) : notes.length === 0 ? (
+            <GlassCard className="!p-20 text-center border-dashed opacity-80">
+              <p className="text-xl font-bold text-muted-foreground italic mb-8">
+                Your digital sanctuary is empty.
+              </p>
+              <Button
+                variant="outline"
+                onClick={() => setIsModalOpen(true)}
+                className="rounded-xl px-8"
+              >
+                Start Refecting
+              </Button>
+            </GlassCard>
+          ) : (
+            <div className="animate-in fade-in slide-in-from-bottom-6 duration-700">
+              <NotesList
+                notes={notes}
+                onNotesUpdate={loadNotes}
+                onEdit={handleEdit}
+              />
+            </div>
+          )}
+        </main>
 
         {isModalOpen && (
           <CreateNoteModal

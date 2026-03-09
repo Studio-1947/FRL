@@ -117,4 +117,43 @@ export class AuthService {
 
     return { message: 'Password changed successfully' };
   }
+
+  async forgotPassword(email: string) {
+    const user = await this.usersService.findByEmail(email);
+    if (!user) {
+      // Don't reveal if user exists for security, just return success
+      return { message: 'If an account exists with this email, a reset link will be sent' };
+    }
+
+    const resetToken = require('crypto').randomBytes(32).toString('hex');
+    const resetTokenExpires = new Date(Date.now() + 3600000); // 1 hour
+
+    await this.usersService.updateResetToken(user.id, resetToken, resetTokenExpires);
+
+    // In a real app, send email. For now, log to console
+    const frontendUrl = process.env.FRONTEND_URL || 'http://localhost:3000';
+    console.log('--- PASSWORD RESET LINK ---');
+    console.log(`URL: ${frontendUrl}/reset-password?token=${resetToken}`);
+    console.log('---------------------------');
+
+    return { message: 'If an account exists with this email, a reset link will be sent' };
+  }
+
+  async resetPassword(token: string, newPassword: string) {
+    const user = await this.usersService.findByResetToken(token);
+
+    if (!user || !user.resetTokenExpires || user.resetTokenExpires < new Date()) {
+      throw new UnauthorizedException('Invalid or expired reset token');
+    }
+
+    const hashedNewPassword = await bcrypt.hash(newPassword, 10);
+    await this.usersService.updateProfile(user.id, {
+      password: hashedNewPassword,
+      resetToken: null,
+      resetTokenExpires: null,
+      refreshToken: null, // Revoke active sessions
+    });
+
+    return { message: 'Password reset successfully' };
+  }
 }

@@ -24,6 +24,8 @@ export const users = pgTable('users', {
 
   avatarUrl: text('avatar_url'),
   refreshToken: text('refresh_token'),
+  resetToken: varchar('reset_token', { length: 255 }),
+  resetTokenExpires: timestamp('reset_token_expires'),
   createdAt: timestamp('created_at').defaultNow().notNull(),
   updatedAt: timestamp('updated_at').defaultNow().notNull(),
 });

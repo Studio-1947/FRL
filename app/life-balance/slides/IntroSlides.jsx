@@ -10,30 +10,30 @@ import { Button } from "@/app/components/ui/Button";
 // 4 to 11 is question
 const IntroSlides = ({ header, paragraph, setSlideIndex, image }) => {
   return (
-    <div className="flex flex-col lg:flex-row-reverse items-between justify-between gap-8 pt-10 lg:pt-0 max-w-[1200px] mx-auto lg:min-h-screen h-full lg:mt-[-60px]">
-      <div className="flex justify-center items-center lg:w-1/2 overflow-visible min-h-0">
+    <div className="flex flex-col lg:flex-row-reverse items-center justify-between gap-12 pt-10 lg:pt-0 max-w-7xl mx-auto lg:min-h-screen h-full lg:mt-[-60px]">
+      <div className="flex justify-center items-center lg:w-1/2 overflow-visible min-h-0 relative">
         <BalanceImage image={image} />
       </div>
 
-      <div className="flex flex-col justify-between flex-1 lg:w-1/2 lg:justify-center lg:gap-7 min-h-0">
-        <div className="capitalize">
-          <div className="font-semibold text-3xl pb-2 lg:text-5xl lg:font-bold text-center lg:text-left text-foreground dark:text-white transition-colors duration-300">
+      <div className="flex flex-col justify-center flex-1 lg:w-1/2 gap-10 min-h-0">
+        <div className="flex flex-col gap-6">
+          <h1 className="text-4xl md:text-5xl lg:text-7xl font-extrabold tracking-tight text-center lg:text-left text-foreground uppercase">
             {header}
-          </div>
-          <p className="font-medium text-base lg:text-xl text-center lg:text-left text-muted-foreground dark:text-white transition-colors duration-300">
+          </h1>
+          <p className="text-lg md:text-xl lg:text-2xl text-center lg:text-left text-muted-foreground font-medium leading-relaxed max-w-xl mx-auto lg:mx-0">
             {paragraph}
           </p>
         </div>
 
-        <div className="flex items-baseline justify-end lg:justify-start lg:items-start">
+        <div className="flex justify-center lg:justify-start">
           <Button
             variant="primary"
             size="lg"
-            className="px-[1.75rem] py-[0.75rem] lg:text-xl"
+            className="px-10 py-5 text-lg lg:text-xl rounded-2xl group shadow-xl"
             onClick={setSlideIndex}
           >
             Explore Now
-            <ArrowRight className="w-[1.5rem] h-[1.3rem]" />
+            <ArrowRight className="w-6 h-6 group-hover:translate-x-1 transition-transform" />
           </Button>
         </div>
       </div>

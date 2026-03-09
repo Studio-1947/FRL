@@ -12,8 +12,10 @@ import {
   Loader2,
 } from "lucide-react";
 import { toast } from "sonner";
-
 import { fetchApi } from "../../lib/api";
+import { GlassCard } from "../components/ui/GlassCard";
+import { Button } from "../components/ui/Button";
+
 export default function PeoplePage() {
   const [people, setPeople] = React.useState([]);
   const [loading, setLoading] = React.useState(true);
@@ -21,16 +23,17 @@ export default function PeoplePage() {
   const [totalPages, setTotalPages] = React.useState(1);
   const [totalResults, setTotalResults] = React.useState(0);
 
+  const ITEMS_PER_PAGE = 3;
+
   React.useEffect(() => {
     async function loadPeople() {
       setLoading(true);
       try {
         const response = await fetchApi(
-          `/v1/users/people?page=${page}&limit=3`,
+          `/v1/users/people?page=${page}&limit=${ITEMS_PER_PAGE}`,
         );
         if (response.ok) {
           const result = await response.json();
-          // Backend now returns { data, meta }
           setPeople(result.data || []);
           setTotalPages(result.meta?.totalPages || 1);
           setTotalResults(result.meta?.total || 0);
@@ -46,211 +49,156 @@ export default function PeoplePage() {
   }, [page]);
 
   return (
-    <div className="min-h-screen bg-background transition-colors duration-300 flex flex-col items-center py-10 px-4 md:px-8">
-      {/* Search Bar Section */}
-      <div className="w-full max-w-[1200px] mb-8 md:mb-12">
-        <div className="flex w-full items-center bg-card rounded-xl sm:rounded-2xl shadow-sm border border-border overflow-hidden h-[50px] sm:h-[60px] transition-colors duration-300 focus-within:ring-2 focus-within:ring-ring focus-within:border-transparent">
-          <label htmlFor="people-search" className="sr-only">
-            Search People
-          </label>
-          <button className="flex items-center gap-1.5 sm:gap-2 bg-[#122e3b] dark:bg-slate-800 text-white px-4 sm:px-8 h-full hover:bg-[#0d212a] dark:hover:bg-slate-700 transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-[#122e3b]">
-            <span className="font-medium text-[14px] sm:text-[16px]">
-              People
-            </span>
-            <ChevronDown
-              className="w-3 h-3 sm:w-4 sm:h-4 text-gray-300"
-              aria-hidden="true"
-            />
-          </button>
-          <div className="flex-1 flex items-center px-3 sm:px-6 h-full relative">
+    <div className="min-h-screen bg-background flex flex-col items-center py-20 px-6 md:px-12">
+      {/* Header Section */}
+      <div className="w-full max-w-7xl mb-16 flex flex-col md:flex-row justify-between items-end gap-10">
+        <div className="flex flex-col gap-4 text-left">
+          <h1 className="text-4xl md:text-7xl font-semibold tracking-tighter text-foreground uppercase leading-[0.9]">
+            Directory
+          </h1>
+          <p className="text-xl text-muted-foreground font-light max-w-xl leading-relaxed">
+            Connecting change-makers from across the globe to build a thriving
+            future.
+          </p>
+        </div>
+
+        {/* Search Bar */}
+        <div className="w-full md:max-w-md">
+          <div className="relative group">
             <input
-              id="people-search"
               type="text"
-              placeholder="Search..."
-              className="w-full h-full bg-transparent outline-none text-foreground placeholder-muted-foreground text-[14px] sm:text-[16px]"
+              placeholder="Search by name, role or expertise..."
+              className="w-full bg-background border-2 border-border text-foreground px-6 py-5 pr-14 rounded-2xl text-lg font-bold transition-all focus:border-primary focus:ring-4 focus:ring-primary/10 outline-none hover:border-primary/50 shadow-sm"
             />
-            <button
-              className="text-muted-foreground hover:text-foreground transition-colors ml-1 sm:ml-4 focus:outline-none focus-visible:ring-2 focus-visible:ring-ring rounded"
-              aria-label="Submit search"
-            >
-              <Search className="w-4 h-4 sm:w-5 sm:h-5 pointer-events-none" />
-            </button>
+            <Search className="absolute right-6 top-1/2 -translate-y-1/2 text-muted-foreground group-focus-within:text-primary transition-colors" />
           </div>
         </div>
       </div>
 
       {/* People Grid */}
-      <div className="w-full max-w-[1200px] grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8 pb-12">
+      <div className="w-full max-w-7xl grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-10 pb-20">
         {loading ? (
-          <div className="col-span-full flex flex-col items-center justify-center py-20 gap-4">
-            <div className="relative flex items-center justify-center">
-              <div className="absolute w-16 h-16 border-4 border-[#1C5B6F]/20 rounded-full"></div>
-              <Loader2
-                className="w-16 h-16 text-[#1C5B6F] animate-spin"
-                strokeWidth={1.5}
-              />
-            </div>
-            <p className="text-sm font-medium text-muted-foreground animate-pulse">
-              Finding people...
+          <div className="col-span-full flex flex-col items-center justify-center py-32 gap-8">
+            <Loader2
+              className="w-16 h-16 text-primary animate-spin"
+              strokeWidth={1.5}
+            />
+            <p className="text-xl font-extrabold text-muted-foreground animate-pulse tracking-tight uppercase">
+              Curating profiles...
             </p>
           </div>
         ) : people.length === 0 ? (
-          <div className="col-span-full text-center text-muted-foreground py-12">
-            No profiles found
+          <div className="col-span-full py-32">
+            <GlassCard className="text-center p-20 border-dashed">
+              <p className="text-2xl font-bold text-muted-foreground">
+                No matches found in our ecosystem.
+              </p>
+            </GlassCard>
           </div>
         ) : (
           people.map((person) => {
-            // Process badges from the 'values' or 'expertise' field
             const badgeString = person.values || person.expertise || "";
             const badges = badgeString
               .split(/#|\s+/)
               .map((b) => b.trim())
               .filter((b) => b.length > 0);
 
-            // Create a DiceBear avatar if no image is present
             const imageUrl =
               person.avatarUrl ||
               person.image ||
               `https://api.dicebear.com/7.x/initials/svg?seed=${encodeURIComponent(person.name)}`;
 
             return (
-              <div
+              <GlassCard
                 key={person.id}
-                className="bg-card text-card-foreground rounded-[2rem] overflow-hidden border border-border shadow-[0_2px_16px_rgba(0,0,0,0.04)] dark:shadow-none flex flex-col transition-all duration-300 hover:shadow-[0_8px_30px_rgba(0,0,0,0.08)] dark:hover:border-slate-600 group h-full focus-within:ring-2 focus-within:ring-ring focus-within:ring-offset-2 dark:focus-within:ring-offset-slate-900"
+                className="!p-0 flex flex-col group h-full hover:-translate-y-2 transition-all duration-700 shadow-xl border-[1.5px] border-primary/30 hover:border-primary/50 hover:shadow-2xl"
               >
-                {/* Image container */}
-                <div className="w-full aspect-[4/3] p-4 pb-0 relative shrink-0">
-                  <div className="w-full h-full relative rounded-t-[1.5rem] rounded-b-[0.5rem] overflow-hidden bg-muted flex items-center justify-center">
-                    {imageUrl ? (
-                      <Image
-                        src={imageUrl}
-                        alt={`Profile image of ${person.name}`}
-                        fill
-                        className="object-cover group-hover:scale-105 transition-transform duration-700 ease-out"
-                        sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw"
-                        priority={person.id <= 3} // Priority load top rows
-                      />
-                    ) : (
-                      <div className="w-full h-full flex flex-col justify-center items-center text-muted-foreground gap-2">
-                        <span className="text-4xl">🧑‍🏫</span>
-                        <span className="text-sm font-medium">No Image</span>
-                      </div>
-                    )}
+                {/* Image */}
+                <div className="w-full aspect-[4/3] p-6 pb-0 shrink-0">
+                  <div className="w-full h-full relative rounded-2xl overflow-hidden bg-muted">
+                    <Image
+                      src={imageUrl}
+                      alt={person.name}
+                      fill
+                      className="object-cover grayscale group-hover:grayscale-0 group-hover:scale-110 transition-all duration-1000 ease-out"
+                      sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 25vw"
+                    />
+                    <div className="absolute inset-0 bg-gradient-to-t from-background/40 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
                   </div>
                 </div>
 
-                {/* Content container */}
-                <div className="p-6 sm:p-8 flex flex-col flex-1 h-full">
-                  <h2
-                    className="text-[#6d4c3d] dark:text-[#dfc3b4] transition-colors text-[24px] sm:text-[28px] leading-tight font-extrabold mb-3 tracking-tight line-clamp-2"
-                    title={person.name}
-                  >
-                    {person.name || "Unknown Person"}
+                {/* Content */}
+                <div className="p-8 pb-10 flex flex-col flex-1">
+                  <h2 className="text-3xl font-semibold text-foreground mb-3 tracking-tighter group-hover:text-primary transition-colors line-clamp-2 uppercase leading-none">
+                    {person.name}
                   </h2>
 
-                  <div className="flex items-center text-muted-foreground mb-6 gap-2 transition-colors shrink-0">
-                    <MapPin
-                      className="w-4 h-4 text-muted-foreground shrink-0"
-                      aria-hidden="true"
-                    />
-                    <span
-                      className="font-medium text-[14px] sm:text-[15px] truncate"
-                      title={person.location || "Location unknown"}
-                    >
-                      {person.location || "Location unknown"}
+                  <div className="flex items-center text-muted-foreground mb-6 gap-2 shrink-0">
+                    <MapPin className="w-5 h-5 text-primary" />
+                    <span className="font-bold text-base truncate lowercase italic">
+                      {person.location || "Earth"}
                     </span>
                   </div>
 
                   {/* Badges */}
-                  <div className="flex flex-wrap gap-2.5 mb-6 shrink-0">
-                    {badges && badges.length > 0 ? (
-                      badges.slice(0, 4).map(
-                        (
-                          badge,
-                          idx, // Cap badges at 4 for UI consistency
-                        ) => (
-                          <div
-                            key={idx}
-                            className="flex items-center gap-1.5 bg-[#f6f4f0] dark:bg-slate-800 px-3 py-1 sm:px-4 sm:py-1.5 rounded-full transition-colors border border-transparent dark:border-slate-700 break-words max-w-full"
-                          >
-                            <Star
-                              className="w-3 h-3 sm:w-[14px] sm:h-[14px] text-muted-foreground shrink-0"
-                              strokeWidth={1.5}
-                              aria-hidden="true"
-                            />
-                            <span className="text-[12px] sm:text-[13px] font-semibold text-[#5a463a] dark:text-gray-300 truncate">
-                              {badge}
-                            </span>
-                          </div>
-                        ),
-                      )
-                    ) : (
-                      <span className="text-[13px] text-muted-foreground italic">
-                        No badges available
-                      </span>
-                    )}
+                  <div className="flex flex-wrap gap-2 mb-8 shrink-0">
+                    {badges.slice(0, 3).map((badge, idx) => (
+                      <div
+                        key={idx}
+                        className="flex items-center gap-2 bg-primary/5 px-4 py-1.5 rounded-full border border-primary/10"
+                      >
+                        <Star className="w-3.5 h-3.5 text-primary" />
+                        <span className="text-xs font-black uppercase tracking-widest text-foreground/80">
+                          {badge}
+                        </span>
+                      </div>
+                    ))}
                   </div>
 
-                  {/* Description */}
-                  <p className="text-muted-foreground text-[14px] leading-[1.6] mb-8 flex-1 transition-colors line-clamp-4">
+                  {/* Bio */}
+                  <p className="text-muted-foreground text-base leading-relaxed mb-10 flex-1 line-clamp-3 font-light">
                     {person.professionalProfile ||
                       person.bio ||
-                      "No biography provided for this person."}
+                      "Crafting a better world through action."}
                   </p>
 
-                  {/* Button */}
-                  <Link
-                    href={`/people/${person.id}`}
-                    className="self-start mt-auto focus:outline-none focus:ring-2 focus:ring-[#8b654b] dark:focus:ring-[#dfc3b4] focus:ring-offset-2 rounded-full ring-offset-background"
-                    aria-label={`Know more about ${person.name}`}
-                  >
-                    <button
-                      tabIndex={-1}
-                      className="bg-[#8b654b] dark:bg-[#9c7860] hover:bg-[#72533c] dark:hover:bg-[#b08b73] text-white font-medium py-[12px] sm:py-[14px] px-6 sm:px-7 rounded-full flex items-center justify-center gap-2 transition-all duration-300 text-[14px] sm:text-[15px] shadow-sm active:scale-95 group-hover:shadow-md w-full sm:w-auto"
+                  <Link href={`/people/${person.id}`} className="block">
+                    <Button
+                      variant="outline"
+                      className="w-full justify-center group/btn gap-3"
                     >
-                      Know More
-                      <ArrowRight
-                        className="w-[16px] h-[16px] sm:w-[18px] sm:h-[18px] ml-1 group-hover:translate-x-1 transition-transform"
-                        aria-hidden="true"
-                      />
-                    </button>
+                      <span>View Profile</span>
+                      <ArrowRight className="w-5 h-5 group-hover/btn:translate-x-1 transition-transform" />
+                    </Button>
                   </Link>
                 </div>
-              </div>
+              </GlassCard>
             );
           })
         )}
       </div>
-      {/* Pagination Section */}
-      {!loading && people.length > 0 && (
-        <div className="w-full max-w-[1200px] flex flex-col items-center gap-6 mt-4 pb-16">
-          <div className="text-sm font-medium text-muted-foreground">
-            Showing{" "}
-            <span className="text-foreground">{(page - 1) * 3 + 1}</span> to{" "}
-            <span className="text-foreground">
-              {Math.min(page * 3, totalResults)}
-            </span>{" "}
-            of <span className="text-foreground">{totalResults}</span> people
-          </div>
 
-          <div className="flex items-center gap-2">
+      {/* Pagination */}
+      {!loading && totalPages > 1 && (
+        <div className="w-full max-w-7xl flex flex-col items-center gap-10 border-t border-border pt-20">
+          <div className="flex items-center gap-6">
             <button
               onClick={() => setPage((p) => Math.max(1, p - 1))}
               disabled={page === 1}
-              className="px-4 py-2 rounded-xl bg-card border border-border text-foreground font-medium transition-all hover:bg-muted disabled:opacity-50 disabled:cursor-not-allowed shadow-sm active:scale-95"
+              className="w-16 h-16 rounded-2xl border-2 border-border flex items-center justify-center transition-all hover:bg-muted disabled:opacity-30 disabled:cursor-not-allowed group"
             >
-              Previous
+              <ArrowRight className="rotate-180 w-6 h-6 group-hover:-translate-x-1 transition-transform" />
             </button>
 
-            <div className="flex items-center gap-1 mx-2">
+            <div className="flex items-center gap-4">
               {Array.from({ length: totalPages }, (_, i) => i + 1).map((p) => (
                 <button
                   key={p}
                   onClick={() => setPage(p)}
-                  className={`w-10 h-10 rounded-xl font-bold transition-all ${
+                  className={`w-14 h-14 rounded-2xl font-black text-lg transition-all ${
                     page === p
-                      ? "bg-[#1C5B6F] text-white shadow-md scale-110"
-                      : "bg-card border border-border text-muted-foreground hover:bg-muted"
+                      ? "bg-primary text-white scale-110 shadow-xl"
+                      : "bg-background border-2 border-border text-muted-foreground hover:border-primary/50"
                   }`}
                 >
                   {p}
@@ -261,11 +209,14 @@ export default function PeoplePage() {
             <button
               onClick={() => setPage((p) => Math.min(totalPages, p + 1))}
               disabled={page === totalPages}
-              className="px-4 py-2 rounded-xl bg-card border border-border text-foreground font-medium transition-all hover:bg-muted disabled:opacity-50 disabled:cursor-not-allowed shadow-sm active:scale-95"
+              className="w-16 h-16 rounded-2xl border-2 border-border flex items-center justify-center transition-all hover:bg-muted disabled:opacity-30 disabled:cursor-not-allowed group"
             >
-              Next
+              <ArrowRight className="w-6 h-6 group-hover:translate-x-1 transition-transform" />
             </button>
           </div>
+          <p className="text-sm font-black uppercase tracking-[0.2em] text-muted-foreground opacity-50">
+            Page {page} of {totalPages}
+          </p>
         </div>
       )}
     </div>

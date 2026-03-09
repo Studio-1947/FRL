@@ -12,112 +12,112 @@ import {
   Film,
   BookOpen,
 } from "lucide-react";
+import { GlassCard } from "../components/ui/GlassCard";
+import { Button } from "../components/ui/Button";
 
 export default function ResourcesPage() {
   const resources = [
     {
       title: "Podcasts",
-      icon: <Mic className="w-6 h-6 text-[#2D201B] dark:text-[#EEFCFD]" />,
-      desc: "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Ut et massa mi. Aliquam in hendrerit urna.",
+      icon: <Mic className="w-6 h-6" />,
+      desc: "In-depth conversations and audio journals exploring sustainable shifts.",
       link: "/resources/podcasts",
     },
     {
       title: "Events",
-      icon: <Calendar className="w-6 h-6 text-[#2D201B] dark:text-[#EEFCFD]" />,
-      desc: "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Ut et massa mi. Aliquam in hendrerit urna.",
+      icon: <Calendar className="w-6 h-6" />,
+      desc: "Gatherings, workshops and seminars fostering collective action.",
       link: "/resources/events",
     },
     {
       title: "Notice Board",
-      icon: <Bookmark className="w-6 h-6 text-[#2D201B] dark:text-[#EEFCFD]" />,
-      desc: "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Ut et massa mi. Aliquam in hendrerit urna.",
+      icon: <Bookmark className="w-6 h-6" />,
+      desc: "Real-time updates, announcements and community opportunities.",
       link: "/resources/notice-board",
     },
     {
       title: "Blogs",
-      icon: (
-        <Newspaper className="w-6 h-6 text-[#2D201B] dark:text-[#EEFCFD]" />
-      ),
-      desc: "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Ut et massa mi. Aliquam in hendrerit urna.",
+      icon: <Newspaper className="w-6 h-6" />,
+      desc: "Thought pieces and field notes from our network of change-makers.",
       link: "/resources/blogs",
     },
     {
       title: "Films",
-      icon: <Film className="w-6 h-6 text-[#2D201B] dark:text-[#EEFCFD]" />,
-      desc: "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Ut et massa mi. Aliquam in hendrerit urna.",
+      icon: <Film className="w-6 h-6" />,
+      desc: "Visual narratives documenting social and ecological transformation.",
       link: "/resources/films",
     },
     {
       title: "Publications",
-      icon: <BookOpen className="w-6 h-6 text-[#2D201B] dark:text-[#EEFCFD]" />,
-      desc: "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Ut et massa mi. Aliquam in hendrerit urna.",
+      icon: <BookOpen className="w-6 h-6" />,
+      desc: "Formal research, guides and documentation of our methodologies.",
       link: "/resources/publications",
     },
   ];
 
   return (
-    <div className="min-h-screen bg-white dark:bg-[#0F313D] text-foreground dark:text-white transition-colors duration-300">
-      <div className="max-w-[1400px] mx-auto px-6 lg:px-12 py-16 lg:py-24">
-        <div className="flex flex-col lg:flex-row gap-12 lg:gap-20 w-full items-center">
-          {/* Left Hero Area */}
-          <div className="lg:w-5/12 flex flex-col justify-center">
-            <h1 className="font-bold text-4xl lg:text-[45px] xl:text-[54px] xl:leading-[1.1] text-foreground dark:text-white mb-6 transition-colors duration-300">
-              Explore Your Life Balance Wheel
+    <div className="min-h-screen bg-background py-20 px-6 lg:px-12 flex flex-col items-center">
+      <div className="max-w-7xl w-full flex flex-col lg:flex-row gap-16 lg:gap-24 items-start">
+        {/* Hero Section */}
+        <div className="lg:w-1/2 flex flex-col pt-4">
+          <div className="flex flex-col gap-6 text-left mb-12">
+            <h1 className="text-3xl md:text-8xl font-semibold tracking-tighter text-foreground uppercase leading-[0.85]">
+              Knowledge Hub
             </h1>
-            <p className="text-xl lg:text-[22px] font-medium leading-[1.4] text-muted-foreground dark:text-white/80 mb-10 transition-colors duration-300">
-              Lorem Ipsum Dolor Sit Amet, Consectetur Adipiscing Elit. Ut Et
-              Massa Mi. Aliquam In Hendrerit Urna.
+            <p className="text-xl md:text-2xl text-muted-foreground font-light leading-relaxed max-w-lg italic">
+              A curated collection of resources designed to inspire personal and
+              social transformation.
             </p>
-            <div>
+          </div>
+
+          <GlassCard className="!p-10 border-primary/5 bg-primary/[0.02] shadow-2xl relative overflow-hidden group">
+            <div className="absolute top-0 right-0 p-4 opacity-10 group-hover:opacity-20 transition-opacity">
+              <ArrowUpRight className="w-24 h-24" />
+            </div>
+            <h2 className="text-2xl font-bold text-foreground mb-4 uppercase tracking-tight">
+              Self-Assessment
+            </h2>
+            <p className="text-muted-foreground mb-8 text-lg font-light leading-relaxed">
+              Map your current state of balance and identify areas for growth
+              with our interactive diagnostic tool.
+            </p>
+            <Link href="/life-balance">
+              <Button variant="primary" size="default">
+                Launch Wheel
+                <ArrowRight className="w-5 h-5 ml-2" />
+              </Button>
+            </Link>
+          </GlassCard>
+        </div>
+
+        {/* Resource Grid */}
+        <div className="lg:w-1/2 w-full grid grid-cols-1 sm:grid-cols-2 gap-6 md:gap-8">
+          {resources.map((res, i) => (
+            <GlassCard
+              key={i}
+              className="group !p-8 flex flex-col h-full border-[1.5px] border-primary/30 hover:border-primary/50 hover:-translate-y-2 transition-all duration-500 shadow-xl hover:shadow-2xl"
+            >
+              <div className="w-14 h-14 bg-primary/5 rounded-2xl flex items-center justify-center mb-6 border border-primary/10 group-hover:bg-primary group-hover:text-white transition-all duration-500">
+                {res.icon}
+              </div>
+
+              <h3 className="text-2xl font-bold text-foreground mb-3 tracking-tight uppercase group-hover:text-primary transition-colors">
+                {res.title}
+              </h3>
+
+              <p className="text-muted-foreground text-sm font-light leading-relaxed mb-8 flex-1">
+                {res.desc}
+              </p>
+
               <Link
-                href="/life-balance"
-                className="inline-flex items-center gap-2 group text-[#0F313D] dark:text-[#EEFCFD] font-semibold text-lg transition-colors duration-300"
+                href={res.link}
+                className="inline-flex items-center gap-2 text-xs font-bold uppercase tracking-[0.2em] text-primary hover:tracking-[0.3em] transition-all"
               >
-                <span>Explore Now</span>
-                <ArrowUpRight className="w-5 h-5 transition-transform duration-300 group-hover:translate-x-1 group-hover:-translate-y-1" />
+                <span>View Content</span>
+                <ArrowRight className="w-4 h-4" />
               </Link>
-            </div>
-          </div>
-
-          {/* Right Resource Grid */}
-          <div className="lg:w-7/12 w-full">
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 lg:gap-6">
-              {resources.map((res, i) => (
-                <div
-                  key={i}
-                  className="bg-[#F6F5F0] dark:bg-[#19667A] transition-all duration-300 rounded-[2rem] p-8 flex border border-transparent dark:border-white/10 shadow-sm hover:shadow-lg dark:shadow-none hover:-translate-y-1"
-                >
-                  <div className="flex flex-col h-full w-full">
-                    {/* Top half: Icon and Title aligned correctly */}
-                    <div className="flex flex-col gap-6 w-full">
-                      <div className="flex items-center gap-6">
-                        <div className="flex-shrink-0">{res.icon}</div>
-                        <h3 className="font-bold text-2xl text-[#2D201B] dark:text-white transition-colors duration-300">
-                          {res.title}
-                        </h3>
-                      </div>
-                      <p className="text-sm font-medium text-muted-foreground dark:text-white/70 transition-colors duration-300 pl-[3rem]">
-                        {res.desc}
-                      </p>
-                    </div>
-
-                    {/* Bottom half: Link aligned horizontally in the center of the description text column */}
-                    <div className="mt-8 flex justify-center w-full">
-                      <Link
-                        href={res.link}
-                        className="inline-flex pl-[3rem] items-center gap-2 group text-[#2D201B] dark:text-[#EEFCFD] font-semibold text-base transition-colors duration-300"
-                      >
-                        <span className="group-hover:underline underline-offset-4">
-                          Read More
-                        </span>
-                        <ArrowRight className="w-4 h-4 transition-transform duration-300 group-hover:translate-x-1" />
-                      </Link>
-                    </div>
-                  </div>
-                </div>
-              ))}
-            </div>
-          </div>
+            </GlassCard>
+          ))}
         </div>
       </div>
     </div>

@@ -7,7 +7,6 @@ import IntroSlides from "./slides/IntroSlides";
 import FormSlide from "./slides/FormSlide";
 import QuestionSlides from "./slides/QuestionSlides";
 import Results from "./wheel/Results";
-import DarkVeil from "./ui/src/components/DarkVeil";
 
 const LifeBalancePage = () => {
   const [slideIndex, setSlideIndex] = useState(0);
@@ -26,30 +25,23 @@ const LifeBalancePage = () => {
   };
 
   return (
-    <div className="h-dvh relative flex justify-center overflow-hidden">
-      {/* Background layer */}
-      <div className="absolute inset-0 z-0 overflow-hidden">
-        <DarkVeil
-          hueShift={38}
-          noiseIntensity={0.03}
-          scanlineIntensity={0.1}
-          speed={0.3}
-          scanlineFrequency={0.5}
-          warpAmount={1}
-          resolutionScale={0.8}
-        />
+    <div className="min-h-screen bg-background text-foreground relative flex flex-col overflow-x-hidden">
+      {/* Subtle Background Decoration */}
+      <div className="fixed inset-0 z-0 pointer-events-none overflow-hidden">
+        <div className="absolute top-[-10%] right-[-10%] w-[50%] h-[50%] bg-primary/5 rounded-full blur-[120px]" />
+        <div className="absolute bottom-[-10%] left-[-10%] w-[40%] h-[40%] bg-primary/5 rounded-full blur-[100px]" />
       </div>
 
-      {/* Content layer */}
-      <div className="px-5 py-5 lg:px-10 lg:py-10 max-w-[1400px] w-full flex flex-col relative z-10">
-        {/* back button */}
-        <div className="">
+      {/* Content wrapper */}
+      <div className="relative z-10 w-full max-w-7xl mx-auto px-6 lg:px-12 py-8 md:py-12 flex flex-col flex-1">
+        {/* Navigation */}
+        <div className="mb-10 lg:mb-16">
           <BackButton setSlideIndex={setSlideIndex} slideIndex={slideIndex} />
         </div>
 
-        <div className="flex flex-col justify-start h-full flex-1 gap-4 lg:flex-row-reverse overflow-y-hidden z-50 ">
+        <main className="flex-1 flex flex-col justify-center min-h-0">
           {!isResults && currentSlide && (
-            <>
+            <div className="animate-in fade-in slide-in-from-bottom-4 duration-700 ease-out fill-mode-forwards">
               {currentSlide.type === "intro" && (
                 <IntroSlides
                   header={currentSlide.header}
@@ -73,11 +65,15 @@ const LifeBalancePage = () => {
                   slideIndex={slideIndex}
                 />
               )}
-            </>
+            </div>
           )}
 
-          {isResults && <Results answers={answers} formValues={formValues} />}
-        </div>
+          {isResults && (
+            <div className="animate-in fade-in zoom-in-95 duration-1000 ease-out fill-mode-forwards">
+              <Results answers={answers} formValues={formValues} />
+            </div>
+          )}
+        </main>
       </div>
     </div>
   );

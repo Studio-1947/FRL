@@ -7,6 +7,9 @@ import { fetchApi } from "../../lib/api";
 import { useAuth } from "../../app/context/AuthContext";
 import { MapPin, Star, Settings, Loader2, Camera } from "lucide-react";
 import SecuritySection from "../components/settings/SecuritySection";
+import { GlassCard } from "../components/ui/GlassCard";
+import { Button } from "../components/ui/Button";
+import { toast } from "sonner";
 
 export default function ProfilePage() {
   const [profile, setProfile] = useState(null);
@@ -73,7 +76,7 @@ export default function ProfilePage() {
 
       const updatedUser = await response.json();
       setProfile(updatedUser);
-      refreshUser(); // Refresh global user state for Header
+      refreshUser();
       toast.success("Profile picture updated!");
     } catch (err) {
       toast.error(`Error: ${err.message}`);
@@ -84,16 +87,13 @@ export default function ProfilePage() {
 
   if (loading) {
     return (
-      <div className="min-h-screen flex flex-col items-center justify-center bg-background text-foreground gap-4">
-        <div className="relative flex items-center justify-center">
-          <div className="absolute w-16 h-16 border-4 border-[#1C5B6F]/20 rounded-full"></div>
-          <Loader2
-            className="w-16 h-16 text-[#1C5B6F] animate-spin"
-            strokeWidth={1.5}
-          />
-        </div>
-        <p className="text-sm font-medium text-muted-foreground animate-pulse">
-          Loading your profile...
+      <div className="min-h-screen flex flex-col items-center justify-center bg-background text-foreground gap-6">
+        <Loader2
+          className="w-16 h-16 text-primary animate-spin"
+          strokeWidth={1.5}
+        />
+        <p className="text-base font-bold text-muted-foreground animate-pulse tracking-tight">
+          Crafting your profile...
         </p>
       </div>
     );
@@ -101,15 +101,15 @@ export default function ProfilePage() {
 
   if (error || !profile) {
     return (
-      <div className="min-h-screen flex flex-col items-center justify-center bg-background text-foreground">
-        <h2 className="text-2xl font-bold mb-4">Error loading profile</h2>
-        <p className="text-muted-foreground mb-6">
+      <div className="min-h-screen flex flex-col items-center justify-center bg-background text-foreground gap-6">
+        <h2 className="text-3xl font-extrabold tracking-tight">
+          Something went wrong
+        </h2>
+        <p className="text-muted-foreground text-lg">
           {error || "Profile not found"}
         </p>
         <Link href="/">
-          <button className="bg-[#1C5B6F] text-white px-6 py-2 rounded-xl">
-            Go Home
-          </button>
+          <Button variant="primary">Return Home</Button>
         </Link>
       </div>
     );
@@ -126,79 +126,71 @@ export default function ProfilePage() {
     `https://api.dicebear.com/7.x/initials/svg?seed=${encodeURIComponent(profile.name)}`;
 
   return (
-    <div className="min-h-screen bg-background py-16 px-4 md:px-8">
-      <div className="max-w-4xl mx-auto">
-        <div className="flex justify-between items-center mb-10">
-          <h1 className="text-4xl font-extrabold text-[#0F313D] dark:text-white">
+    <div className="min-h-screen bg-background py-20 px-6 md:px-12">
+      <div className="max-w-5xl mx-auto">
+        <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center mb-10 gap-6">
+          <h1 className="text-4xl md:text-5xl font-extrabold tracking-tight text-foreground">
             My Profile
           </h1>
           <Link href="/settings">
-            <button className="flex items-center gap-2 bg-[#8b654b] hover:bg-[#72533c] text-white px-5 py-2.5 rounded-full transition-colors font-medium shadow-sm">
-              <Settings size={18} />
-              Edit Profile
-            </button>
+            <Button variant="outline" size="lg" className="gap-3">
+              <Settings size={20} />
+              <span>Personalize</span>
+            </Button>
           </Link>
         </div>
 
-        <div className="bg-card text-card-foreground rounded-[2rem] overflow-hidden border border-border shadow-lg p-8 sm:p-12 mb-8">
-          <div className="flex flex-col md:flex-row gap-8 items-start">
+        <GlassCard className="relative overflow-hidden shadow-2xl p-8 sm:p-16 mb-12">
+          <div className="flex flex-col md:flex-row gap-12 items-center md:items-start text-center md:text-left">
             <div
-              className="w-48 h-48 md:w-64 md:h-64 rounded-full overflow-hidden bg-muted flex-shrink-0 mx-auto md:mx-0 shadow-md relative group cursor-pointer"
+              className="w-48 h-48 md:w-64 md:h-64 rounded-[2.5rem] overflow-hidden bg-muted flex-shrink-0 shadow-xl relative group cursor-pointer border-2 border-primary/5"
               onClick={handleImageClick}
             >
               <Image
                 src={imageUrl}
                 alt={profile.name}
                 fill
-                className="object-cover transition-opacity group-hover:opacity-75"
+                className="object-cover grayscale hover:grayscale-0 transition-all duration-700"
               />
-              <div className="absolute inset-0 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity bg-black/20 text-white">
+              <div className="absolute inset-0 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity bg-background/40 backdrop-blur-sm text-foreground">
                 <div className="flex flex-col items-center">
-                  <Camera size={32} />
-                  <span className="text-xs font-bold mt-1 uppercase tracking-wider">
-                    Change Photo
+                  <Camera size={40} />
+                  <span className="text-xs font-black mt-2 uppercase tracking-widest">
+                    Update Photo
                   </span>
                 </div>
               </div>
               {uploading && (
-                <div className="absolute inset-0 flex items-center justify-center bg-black/40 text-white">
-                  <Loader2 className="w-10 h-10 animate-spin" />
+                <div className="absolute inset-0 flex items-center justify-center bg-background/60 text-primary">
+                  <Loader2 className="w-12 h-12 animate-spin" />
                 </div>
               )}
             </div>
 
-            <input
-              type="file"
-              ref={fileInputRef}
-              className="hidden"
-              accept="image/*"
-              onChange={handleFileChange}
-            />
-
-            <div className="flex-1 w-full text-center md:text-left">
-              <h2 className="text-3xl font-bold text-[#6d4c3d] dark:text-[#dfc3b4] mb-2">
+            <div className="flex-1 w-full pt-4">
+              <h2 className="text-3xl md:text-4xl font-extrabold text-foreground mb-3 tracking-tight">
                 {profile.name}
               </h2>
-              <div className="text-lg text-muted-foreground mb-4 italic">
+              <div className="text-xl text-primary/80 font-bold mb-6 italic">
                 {profile.role}
               </div>
 
-              <div className="flex items-center justify-center md:justify-start gap-2 text-muted-foreground mb-6">
-                <MapPin className="w-5 h-5" />
-                <span className="font-medium">
-                  {profile.geographicalSpread || "Location unknown"}
+              <div className="flex items-center justify-center md:justify-start gap-3 text-muted-foreground mb-8">
+                <MapPin className="w-6 h-6 text-primary" />
+                <span className="font-semibold text-lg">
+                  {profile.geographicalSpread || "Global Citizen"}
                 </span>
               </div>
 
               {badges.length > 0 && (
-                <div className="flex flex-wrap justify-center md:justify-start gap-2.5 mb-8">
+                <div className="flex flex-wrap justify-center md:justify-start gap-3">
                   {badges.map((badge, idx) => (
                     <div
                       key={idx}
-                      className="flex items-center gap-1.5 bg-[#f6f4f0] dark:bg-slate-800 px-4 py-1.5 rounded-full text-sm"
+                      className="flex items-center gap-2 bg-primary/5 px-5 py-2 rounded-full text-sm font-bold border border-primary/10 shadow-sm"
                     >
-                      <Star className="w-3.5 h-3.5 text-muted-foreground" />
-                      <span className="font-semibold text-[#5a463a] dark:text-gray-300">
+                      <Star className="w-4 h-4 text-primary" />
+                      <span className="text-foreground/80 lowercase italic">
                         {badge}
                       </span>
                     </div>
@@ -207,80 +199,47 @@ export default function ProfilePage() {
               )}
             </div>
           </div>
-        </div>
+        </GlassCard>
 
         <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-          {profile.professionalProfile && (
-            <div className="bg-card p-8 rounded-3xl border border-border shadow-md">
-              <h3 className="text-xl font-bold text-[#0F313D] dark:text-white mb-4">
-                Professional Profile
-              </h3>
-              <p className="text-muted-foreground leading-relaxed whitespace-pre-wrap">
-                {profile.professionalProfile}
-              </p>
-            </div>
-          )}
-
-          {profile.interventions && (
-            <div className="bg-card p-8 rounded-3xl border border-border shadow-md">
-              <h3 className="text-xl font-bold text-[#0F313D] dark:text-white mb-4">
-                Interventions
-              </h3>
-              <p className="text-muted-foreground leading-relaxed whitespace-pre-wrap">
-                {profile.interventions}
-              </p>
-            </div>
-          )}
-
-          {profile.problem && (
-            <div className="bg-card p-8 rounded-3xl border border-border shadow-md">
-              <h3 className="text-xl font-bold text-[#0F313D] dark:text-white mb-4">
-                Problem Scope
-              </h3>
-              <p className="text-muted-foreground leading-relaxed whitespace-pre-wrap">
-                {profile.problem}
-              </p>
-            </div>
-          )}
-
-          {profile.systemChange && (
-            <div className="bg-card p-8 rounded-3xl border border-border shadow-md">
-              <h3 className="text-xl font-bold text-[#0F313D] dark:text-white mb-4">
-                System Change
-              </h3>
-              <p className="text-muted-foreground leading-relaxed whitespace-pre-wrap">
-                {profile.systemChange}
-              </p>
-            </div>
-          )}
-
-          {profile.abundance && (
-            <div className="bg-card p-8 rounded-3xl border border-border shadow-md">
-              <h3 className="text-xl font-bold text-[#0F313D] dark:text-white mb-4">
-                What I Have in Abundance
-              </h3>
-              <p className="text-muted-foreground leading-relaxed whitespace-pre-wrap">
-                {profile.abundance}
-              </p>
-            </div>
-          )}
-
-          {profile.helpNeeded && (
-            <div className="bg-card p-8 rounded-3xl border border-border shadow-md">
-              <h3 className="text-xl font-bold text-[#0F313D] dark:text-white mb-4">
-                Help Needed
-              </h3>
-              <p className="text-muted-foreground leading-relaxed whitespace-pre-wrap">
-                {profile.helpNeeded}
-              </p>
-            </div>
-          )}
+          {[
+            {
+              title: "Professional Profile",
+              content: profile.professionalProfile,
+            },
+            { title: "Interventions", content: profile.interventions },
+            { title: "Problem Scope", content: profile.problem },
+            { title: "System Change", content: profile.systemChange },
+            { title: "What I Have in Abundance", content: profile.abundance },
+            { title: "Help Needed", content: profile.helpNeeded },
+          ]
+            .filter((item) => item.content)
+            .map((item, idx) => (
+              <GlassCard
+                key={idx}
+                className="p-10 flex flex-col gap-5 border-primary/5 hover:border-primary/20 transition-all duration-500"
+              >
+                <h3 className="text-2xl font-extrabold text-foreground tracking-tight">
+                  {item.title}
+                </h3>
+                <p className="text-muted-foreground leading-relaxed font-medium whitespace-pre-wrap text-[17px]">
+                  {item.content}
+                </p>
+              </GlassCard>
+            ))}
         </div>
 
-        <div className="mt-12">
+        <div className="mt-16">
           <SecuritySection />
         </div>
       </div>
+      <input
+        type="file"
+        ref={fileInputRef}
+        className="hidden"
+        accept="image/*"
+        onChange={handleFileChange}
+      />
     </div>
   );
 }

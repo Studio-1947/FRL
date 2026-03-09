@@ -42,38 +42,34 @@ export default function LoginForm() {
       }
 
       const data = await response.json();
-      // Store token using AuthContext (which also updates cookies)
       login(data.access_token);
-      toast.success("Login successful!");
-      console.log("Logged in user:", data.user);
-
-      // Redirect to a protected route using Next.js router
+      toast.success("Welcome back to FRL!");
       router.push("/profile");
     } catch (err) {
       console.error(err);
-      toast.error("An error occurred during login. Is the backend running?");
+      toast.error("Connecting to server failed. Please try again.");
     } finally {
       setIsLoading(false);
     }
   };
 
   const inputClasses =
-    "w-full bg-[#F9FAFB] dark:bg-[#0F313D] border border-gray-200 dark:border-white/10 text-foreground dark:text-white px-4 py-3 rounded-xl text-sm transition-all duration-300 focus:outline-none focus:ring-2 focus:ring-[#1C5B6F] dark:focus:ring-[#6BE3DF] focus:border-transparent focus:shadow-md hover:bg-white dark:hover:bg-[#0c262f]";
+    "w-full bg-background border-2 border-border text-foreground px-5 py-4 rounded-2xl text-base font-bold transition-all focus:border-primary focus:ring-4 focus:ring-primary/10 outline-none hover:border-primary/50 shadow-sm";
   const labelClasses =
-    "block text-sm font-semibold text-foreground dark:text-white mb-1.5 transition-colors duration-300";
+    "block text-sm font-black uppercase tracking-widest text-foreground/80 mb-2 transition-colors duration-300 ml-1";
 
   return (
-    <div className="flex flex-col gap-8 w-full max-w-md mx-auto">
-      <div className="text-center">
-        <h1 className="text-3xl font-bold text-[#0F313D] dark:text-white transition-colors duration-300">
-          Welcome Back
+    <div className="flex flex-col gap-10 w-full">
+      <div className="text-center md:text-left">
+        <h1 className="text-4xl md:text-5xl font-extrabold text-foreground tracking-tight uppercase">
+          Welcome
         </h1>
-        <p className="text-sm font-medium text-muted-foreground dark:text-white/80 mt-3 transition-colors duration-300">
-          Login to your account to continue exploring fresh perspectives
+        <p className="text-lg font-medium text-muted-foreground mt-3 leading-relaxed">
+          Sign in to access your dashboard and perspectives.
         </p>
       </div>
 
-      <form onSubmit={handleSubmit} className="flex flex-col gap-6">
+      <form onSubmit={handleSubmit} className="flex flex-col gap-8">
         <div>
           <label className={labelClasses}>Email Address</label>
           <input
@@ -81,8 +77,9 @@ export default function LoginForm() {
             name="email"
             value={formData.email}
             onChange={handleChange}
-            placeholder="Enter your email"
+            placeholder="someone@email.com"
             className={inputClasses}
+            required
           />
         </div>
 
@@ -93,15 +90,19 @@ export default function LoginForm() {
             name="password"
             value={formData.password}
             onChange={handleChange}
-            placeholder="Enter your password"
+            placeholder="••••••••"
             className={inputClasses}
+            required
           />
         </div>
 
-        <div className="flex justify-end mt-[-10px]">
-          <span className="text-sm font-medium text-[#1C5B6F] dark:text-[#6BE3DF] cursor-pointer hover:underline transition-colors duration-300">
+        <div className="flex justify-end mt-[-15px]">
+          <Link
+            href="/forgot-password"
+            className="text-xs font-semibold uppercase tracking-tight text-primary cursor-pointer hover:underline transition-all"
+          >
             Forgot Password?
-          </span>
+          </Link>
         </div>
 
         <div className="mt-4">
@@ -109,19 +110,19 @@ export default function LoginForm() {
             variant="primary"
             size="lg"
             loading={isLoading}
-            className="w-full bg-[#1C5B6F] hover:bg-[#154655] dark:bg-[#EEFCFD] text-white dark:text-[#0F313D] py-4 rounded-xl text-lg shadow-lg hover:shadow-xl hover:-translate-y-0.5 transition-all duration-300"
+            className="w-full"
           >
-            Login
+            Authenticate
           </Button>
         </div>
 
-        <div className="text-center mt-2">
-          <span className="text-sm font-medium text-foreground dark:text-white transition-colors duration-300">
-            Don't have an account?{" "}
+        <div className="text-center pt-4 border-t border-border/50">
+          <span className="text-sm font-medium text-muted-foreground">
+            New here?{" "}
           </span>
-          <Link href="/signup">
-            <span className="text-sm font-bold text-[#1C5B6F] dark:text-[#6BE3DF] hover:underline transition-colors duration-300">
-              Sign Up
+          <Link href="/signup" className="group">
+            <span className="text-sm font-bold text-primary group-hover:underline decoration-2 underline-offset-4">
+              Create an account
             </span>
           </Link>
         </div>

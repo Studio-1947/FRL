@@ -1,8 +1,9 @@
 "use client";
 import { ArrowRight, ChevronDown } from "lucide-react";
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import { Button } from "@/app/components/ui/Button";
 import { countries } from "./slidesData";
+import { GlassCard } from "@/app/components/ui/GlassCard";
 
 const FormSlide = ({ header, setSlideIndex, fromDataCallBack }) => {
   const [location, setLocation] = useState("");
@@ -15,72 +16,69 @@ const FormSlide = ({ header, setSlideIndex, fromDataCallBack }) => {
   };
 
   return (
-    <>
-      <div className="flex justify-center items-center content-center text-center lg:w-1/2 ">
-        <div className="bg-primary/10 dark:bg-[#F6F5F0] w-[15.625rem] h-[15.625rem] lg:w-[30.75rem] lg:h-[30.75rem] rounded-full transition-colors duration-300" />
+    <div className="flex flex-col lg:flex-row items-center justify-between gap-12 pt-10 lg:pt-0 max-w-7xl mx-auto lg:min-h-screen h-full lg:mt-[-60px]">
+      <div className="flex justify-center items-center lg:w-1/2 relative">
+        <div className="relative w-64 h-64 lg:w-[450px] lg:h-[450px]">
+          <GlassCard className="absolute inset-0 rounded-full flex items-center justify-center border-primary/20 shadow-2xl animate-pulse duration-[4000ms]">
+            <div className="w-1/2 h-1/2 bg-primary/10 rounded-full blur-2xl" />
+          </GlassCard>
+          <div className="absolute inset-4 rounded-full border-2 border-dashed border-primary/10 animate-spin-slow" />
+        </div>
       </div>
+
       <form
-        className="flex flex-col justify-between gap-5 h-full lg:w-1/2 lg:justify-center lg:items-start lg:gap-7 capitalize"
+        className="flex flex-col justify-center gap-10 h-full lg:w-1/2 lg:items-start"
         onSubmit={submitForm}
       >
-        <div className="font-semibold text-3xl  lg:text-5xl lg:font-bold text-foreground dark:text-white transition-colors duration-300">
+        <h2 className="text-4xl md:text-5xl lg:text-6xl font-extrabold tracking-tight text-foreground uppercase">
           {header}
-        </div>
+        </h2>
 
-        <div className="flex flex-col justify-center  gap-4 w-full">
-          <div class="inline-block relative w-full">
+        <div className="flex flex-col gap-6 w-full max-w-md">
+          <div className="relative group">
             <select
-              class="block appearance-none w-full bg-background dark:bg-[#19667A] border-[2px] border-input dark:border-[#EEFCFD] text-foreground dark:text-white px-[1.375rem] py-[1.5rem] pr-8  shadow leading-tight focus:outline-none focus:shadow-outline capitalize rounded-3xl text-base font-medium lg:text-xl transition-colors duration-300"
+              className="appearance-none w-full bg-background border-2 border-border text-foreground px-6 py-5 pr-12 rounded-2xl text-lg font-bold transition-all focus:border-primary focus:ring-4 focus:ring-primary/10 outline-none hover:border-primary/50 cursor-pointer"
               value={location}
               onChange={(e) => setLocation(e.target.value)}
+              required
             >
-              <option
-                className="bg-background dark:bg-[#0F313D] text-foreground dark:text-white"
-                value=""
-                disabled
-              >
+              <option value="" disabled>
                 Select your country
               </option>
               {countries.map((country, index) => (
-                <option
-                  key={index}
-                  className="bg-background dark:bg-[#0F313D] text-foreground dark:text-white"
-                  value={country}
-                >
+                <option key={index} value={country}>
                   {country}
                 </option>
               ))}
             </select>
-            <div class="pointer-events-none absolute inset-y-0 right-0 flex items-center px-5 text-muted-foreground dark:text-[#EEFCFD] transition-colors duration-300">
-              <ChevronDown />
-            </div>
+            <ChevronDown className="absolute right-5 top-1/2 -translate-y-1/2 text-muted-foreground group-hover:text-primary transition-colors pointer-events-none" />
           </div>
-          <div>
-            <div class="inline-block relative w-full">
-              <input
-                class="block appearance-none  bg-transparent border-input dark:border-[#EEFCFD] border-[2px] text-foreground dark:text-white px-[1.375rem] py-[1.5rem] pr-8  shadow leading-tight focus:outline-none focus:shadow-outline capitalize rounded-3xl text-base font-medium w-full lg:text-xl transition-colors duration-300"
-                type="number"
-                placeholder="PIN / ZIP Code"
-                onChange={(e) => setPinCode(e.target.value)}
-                value={pinCode}
-              />
-            </div>
+
+          <div className="relative">
+            <input
+              className="w-full bg-background border-2 border-border text-foreground px-6 py-5 rounded-2xl text-lg font-bold transition-all focus:border-primary focus:ring-4 focus:ring-primary/10 outline-none hover:border-primary/50"
+              type="text"
+              placeholder="PIN / ZIP Code"
+              onChange={(e) => setPinCode(e.target.value)}
+              value={pinCode}
+              required
+            />
           </div>
         </div>
 
-        {/* next button */}
-        <div className="flex items-baseline justify-end lg:justify-start lg:items-start">
+        <div className="flex justify-center lg:justify-start">
           <Button
             variant="primary"
             size="lg"
-            className="px-[1.75rem] py-[0.75rem] lg:text-xl"
+            className="px-10 py-5 text-lg lg:text-xl rounded-2xl group shadow-xl"
+            type="submit"
           >
-            Next
-            <ArrowRight className="w-[1.5rem] h-[1.3rem]" />
+            Continue
+            <ArrowRight className="w-6 h-6 group-hover:translate-x-1 transition-transform" />
           </Button>
         </div>
       </form>
-    </>
+    </div>
   );
 };
 

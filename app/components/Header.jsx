@@ -1,6 +1,4 @@
-// #205a6a as hover effect color
-// #0f313d as hover effect for button text
-// #EEFCFD as hover effect for button bg
+// Refined palette integration
 
 "use client";
 import React, { useState } from "react";
@@ -48,7 +46,7 @@ function Header() {
   const { isAuthenticated, logout, isLoggingOut, user } = useAuth();
 
   return (
-    <header className="relative z-50 py-3 sm:py-4 px-4 sm:px-8 flex justify-between items-center bg-white/10 dark:bg-[#081B23]/30 backdrop-blur-md border-b border-white/5 shadow-sm">
+    <header className="sticky top-0 z-50 py-4 px-6 sm:px-12 flex justify-between items-center glass border-none !rounded-none backdrop-blur-xl bg-background/60 shadow-none">
       {/* Logo */}
       <Link
         href="/"
@@ -59,23 +57,23 @@ function Header() {
           width={110}
           height={44}
           alt="nav_logo"
-          className="transition-all duration-300 hover:scale-105 object-contain invert dark:invert-0"
+          className="transition-all duration-300 hover:scale-105 object-contain invert dark:invert-0 w-[90px] sm:w-[110px]"
         />
       </Link>
 
       {/* Desktop Nav */}
       <nav className="hidden lg:flex flex-1 justify-center px-8">
-        <ul className="flex items-center gap-6 xl:gap-10">
+        <ul className="flex items-center gap-8 xl:gap-12">
           {navLinks.map((navLink, i) => (
             <li key={i}>
               <Link
                 href={navLink.link}
-                className="group relative inline-block text-[13px] font-bold tracking-wider text-slate-900 dark:text-gray-200 hover:text-[#205a6a] dark:hover:text-white transition-colors duration-200 whitespace-nowrap"
+                className="group relative inline-block text-[12px] font-bold tracking-[0.2em] uppercase text-foreground/70 hover:text-primary transition-all duration-300 whitespace-nowrap"
               >
-                <span className="relative z-10 transition-transform duration-300 group-hover:scale-101">
+                <span className="relative z-10 transition-transform duration-300">
                   {navLink.title}
                 </span>
-                <span className="absolute left-0 -bottom-1 h-[2px] w-full scale-x-0 transition-transform duration-300 group-hover:scale-x-100 bg-[#205a6a] " />
+                <span className="absolute left-0 -bottom-1 h-[1px] w-full scale-x-0 transition-transform duration-500 group-hover:scale-x-100 bg-primary/30 rounded-full" />
               </Link>
             </li>
           ))}
@@ -86,7 +84,7 @@ function Header() {
       <div className="hidden lg:flex items-center gap-3 xl:gap-5 shrink-0">
         <button
           onClick={() => setTheme(theme === "dark" ? "light" : "dark")}
-          className="relative text-slate-900 dark:text-gray-300 p-2 rounded-full hover:bg-[#EEFCFD] hover:text-[#0f313d] dark:hover:bg-white/10 dark:hover:text-white transition-all flex items-center justify-center h-10 w-10 border border-transparent hover:border-slate-200 dark:hover:border-white/10"
+          className="relative text-foreground p-2 rounded-full hover:bg-primary/10 hover:text-primary transition-all flex items-center justify-center h-10 w-10 border border-transparent hover:border-primary/10"
           aria-label="Toggle theme"
         >
           <Sun className="absolute h-[1.3rem] w-[1.3rem] rotate-0 scale-100 transition-all dark:-rotate-90 dark:scale-0" />
@@ -97,10 +95,7 @@ function Header() {
         {isAuthenticated ? (
           <div className="flex gap-3 xl:gap-4">
             <Link href="/profile">
-              <Button
-                variant="outline"
-                className="px-4 py-2 h-10 rounded-xl border-slate-200 dark:border-white/10 bg-transparent hover:bg-slate-50 dark:hover:bg-white/5 transition-all"
-              >
+              <Button variant="outline" size="default">
                 {user?.avatarUrl ? (
                   <div className="w-5 h-5 rounded-full overflow-hidden mr-2 border border-slate-200 dark:border-white/20">
                     <Image
@@ -121,7 +116,8 @@ function Header() {
             </Link>
             <Button
               variant="outline"
-              className="px-4 py-2 h-10 rounded-xl border-red-100 dark:border-red-900/30 text-red-500 bg-transparent hover:bg-red-50 dark:hover:bg-red-900/20 hover:text-red-700 dark:hover:text-red-400 transition-all"
+              size="default"
+              className="text-red-500 hover:text-red-600 border-red-100 dark:border-red-900/30"
               onClick={logout}
               loading={isLoggingOut}
             >
@@ -131,10 +127,7 @@ function Header() {
           </div>
         ) : (
           <Link href="/login">
-            <Button
-              variant="outline"
-              className="px-6 py-2 h-10 rounded-xl font-bold text-[13px] tracking-tight border-slate-200 dark:border-white/10 hover:bg-slate-100 dark:hover:bg-white/10"
-            >
+            <Button variant="outline" size="default">
               <CircleUser size={18} className="mr-2" />
               <div>Login</div>
             </Button>
@@ -167,9 +160,9 @@ function Header() {
 
       {/* Mobile Dropdown Menu */}
       <div
-        className={`absolute top-[72px] left-0 w-full bg-white/80 dark:bg-[#0F313D]/90 backdrop-blur-xl z-50 px-6 lg:hidden transition-all duration-500 ease-in-out overflow-hidden border-b border-slate-200 dark:border-white/10 shadow-xl ${
+        className={`absolute top-[72px] left-0 w-full bg-background/95 backdrop-blur-2xl z-50 px-6 lg:hidden transition-all duration-500 ease-in-out overflow-hidden border-b border-border shadow-2xl ${
           isMenuOpen
-            ? "max-h-[80vh] pb-8 opacity-100"
+            ? "max-h-[100vh] pb-12 opacity-100"
             : "max-h-0 opacity-0 pointer-events-none"
         }`}
       >
@@ -178,7 +171,7 @@ function Header() {
             <li key={i}>
               <Link
                 href={navLink.link}
-                className="block text-lg font-bold py-4 border-b border-slate-100 dark:border-white/10 text-slate-900 dark:text-white hover:text-[#205a6a] dark:hover:text-[#6BE3DF] transition-colors"
+                className="block text-xl font-semibold py-5 border-b border-border/50 text-foreground hover:text-primary transition-colors tracking-tight"
                 onClick={() => setIsMenuOpen(false)}
               >
                 {navLink.title}
@@ -190,26 +183,28 @@ function Header() {
               <div className="flex flex-col gap-4">
                 <Link
                   href="/profile"
-                  className="flex gap-4 items-center w-full py-4 border-b border-slate-100 dark:border-white/10 text-slate-900 dark:text-white"
+                  className="flex gap-4 items-center w-full py-5 border-b border-border/50 text-foreground"
                   onClick={() => setIsMenuOpen(false)}
                 >
-                  <div className="w-8 h-8 rounded-full overflow-hidden bg-slate-100 dark:bg-white/10 flex items-center justify-center border border-slate-200 dark:border-white/20">
+                  <div className="w-10 h-10 rounded-full overflow-hidden bg-muted flex items-center justify-center border border-border">
                     {user?.avatarUrl ? (
                       <Image
                         src={user.avatarUrl}
                         alt="Profile"
-                        width={32}
-                        height={32}
+                        width={40}
+                        height={40}
                         className="object-cover"
                       />
                     ) : (
                       <CircleUser size={24} />
                     )}
                   </div>
-                  <div className="font-bold text-lg">MY PROFILE</div>
+                  <div className="font-semibold text-lg tracking-tight uppercase">
+                    My Profile
+                  </div>
                 </Link>
                 <button
-                  className="flex gap-4 items-center w-full py-5 text-red-500 font-bold hover:bg-red-50 dark:hover:bg-red-900/10 transition-colors rounded-xl px-2"
+                  className="flex gap-4 items-center w-full py-6 text-red-500 font-semibold hover:bg-red-500/5 transition-colors rounded-full px-2"
                   onClick={() => {
                     logout();
                     setIsMenuOpen(false);
@@ -217,21 +212,23 @@ function Header() {
                   disabled={isLoggingOut}
                 >
                   <LogOut size={24} />
-                  <div className="text-lg">
-                    {isLoggingOut ? "LOGGING OUT..." : "LOGOUT"}
+                  <div className="text-lg tracking-tight uppercase">
+                    {isLoggingOut ? "Logging out..." : "Logout"}
                   </div>
                 </button>
               </div>
             ) : (
               <Link
                 href="/login"
-                className="flex gap-4 items-center w-full py-6 border-b border-slate-100 dark:border-white/10 text-slate-900 dark:text-white"
+                className="flex gap-4 items-center w-full py-8 border-b border-border/50 text-foreground"
                 onClick={() => setIsMenuOpen(false)}
               >
-                <div className="w-10 h-10 rounded-full bg-[#1C5B6F] text-white flex items-center justify-center shadow-lg">
-                  <CircleUser size={24} />
+                <div className="w-12 h-12 rounded-full bg-primary text-primary-foreground flex items-center justify-center shadow-lg">
+                  <CircleUser size={28} />
                 </div>
-                <div className="font-bold text-lg">LOGIN TO FRL</div>
+                <div className="font-semibold text-lg tracking-tight uppercase">
+                  Login to FRL
+                </div>
               </Link>
             )}
           </li>
