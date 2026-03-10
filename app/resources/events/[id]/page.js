@@ -11,14 +11,20 @@ import {
   Share2,
 } from "lucide-react";
 import Link from "next/link";
+import Image from "next/image";
 import { fetchApi } from "../../../../lib/api";
 import { GlassCard } from "../../../components/ui/GlassCard";
 import { Button } from "../../../components/ui/Button";
+import { toast } from "sonner";
+import { useAuth } from "../../../context/AuthContext";
 
 export default function EventDetailPage() {
   const { id } = useParams();
   const [event, setEvent] = useState(null);
   const [loading, setLoading] = useState(true);
+  const [isRegistered, setIsRegistered] = useState(false);
+  const [isRegistering, setIsRegistering] = useState(false);
+  const { user } = useAuth();
 
   useEffect(() => {
     const loadEvent = async () => {
@@ -28,6 +34,17 @@ export default function EventDetailPage() {
           const data = await response.json();
           setEvent(data);
         }
+
+        // Check registration status if user is logged in
+        if (user) {
+          const statusRes = await fetchApi(
+            `/v1/events/${id}/registration-status`,
+          );
+          if (statusRes.ok) {
+            const { isRegistered } = await statusRes.json();
+            setIsRegistered(isRegistered);
+          }
+        }
       } catch (err) {
         console.error("Failed to load event", err);
       } finally {
@@ -35,7 +52,33 @@ export default function EventDetailPage() {
       }
     };
     loadEvent();
-  }, [id]);
+  }, [id, user]);
+
+  const handleRegister = async () => {
+    if (!user) {
+      toast.error("Please login to register for this event");
+      return;
+    }
+
+    setIsRegistering(true);
+    try {
+      const response = await fetchApi(`/v1/events/${id}/register`, {
+        method: "POST",
+      });
+
+      if (response.ok) {
+        setIsRegistered(true);
+        toast.success("Successfully registered for the event!");
+      } else {
+        const error = await response.json();
+        toast.error(error.message || "Failed to register");
+      }
+    } catch (err) {
+      toast.error("An error occurred during registration");
+    } finally {
+      setIsRegistering(false);
+    }
+  };
 
   if (loading) {
     return (
@@ -72,10 +115,11 @@ export default function EventDetailPage() {
         {/* Hero Image */}
         {event.imageUrl && (
           <div className="relative w-full aspect-video rounded-3xl overflow-hidden border border-border/40">
-            <img
+            <Image
               src={event.imageUrl}
               alt={event.title}
-              className="object-cover w-full h-full"
+              fill
+              className="object-cover"
             />
             <div className="absolute inset-0 bg-gradient-to-t from-background/60 to-transparent" />
           </div>
@@ -113,8 +157,16 @@ export default function EventDetailPage() {
           </h1>
 
           <div className="flex items-center gap-4 py-6 border-y border-border/40">
-            <Button className="flex-1 md:flex-none uppercase tracking-widest font-bold">
-              Register Now
+            <Button
+              className="flex-1 md:flex-none uppercase tracking-widest font-bold"
+              onClick={handleRegister}
+              disabled={isRegistering || isRegistered}
+            >
+              {isRegistering
+                ? "Registering..."
+                : isRegistered
+                  ? "Registered"
+                  : "Register Now"}
             </Button>
             <Button variant="outline" className="flex items-center gap-2">
               <Share2 size={18} /> Share

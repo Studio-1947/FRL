@@ -1,14 +1,18 @@
-import { Injectable, Inject, NotFoundException } from '@nestjs/common';
+import { Injectable, Inject, NotFoundException, ConflictException } from '@nestjs/common';
 import { CreateEventDto } from './dto/create-event.dto';
 import { UpdateEventDto } from './dto/update-event.dto';
 import { NodePgDatabase } from 'drizzle-orm/node-postgres';
-import { eq, desc, sql } from 'drizzle-orm';
+import { eq, desc, sql, and } from 'drizzle-orm';
 import { DRIZZLE } from '../database/database.module';
 import * as schema from '../database/schema';
+import { NotificationsService } from '../notifications/notifications.service';
 
 @Injectable()
 export class EventsService {
-  constructor(@Inject(DRIZZLE) private readonly db: NodePgDatabase<typeof schema>) {}
+  constructor(
+    @Inject(DRIZZLE) private readonly db: NodePgDatabase<typeof schema>,
+    private readonly notificationsService: NotificationsService,
+  ) {}
 
   async create(createEventDto: CreateEventDto, userId: number) {
     const [newEvent] = await this.db
@@ -87,5 +91,59 @@ export class EventsService {
 
     if (!deletedEvent) throw new NotFoundException('Event not found');
     return { success: true };
+  }
+
+  async registerForEvent(eventId: number, userId: number) {
+    // Check if already registered
+    const existing = await this.db.query.eventRegistrations.findFirst({
+      where: and(
+        eq(schema.eventRegistrations.eventId, eventId),
+        eq(schema.eventRegistrations.userId, userId),
+      ),
+    });
+
+    if (existing) {
+      throw new ConflictException('You are already registered for this event');
+    }
+
+    // Check if event exists
+    const event = await this.findOne(eventId);
+
+    const [registration] = await this.db
+      .insert(schema.eventRegistrations)
+      .values({
+        eventId,
+        userId,
+      })
+      .returning();
+
+    // Trigger Notification
+    await this.notificationsService.create(
+      userId,
+      'Event Registration Successful',
+      `You have successfully registered for the event: ${event.title}`,
+      'event_registration',
+    );
+
+    return registration;
+  }
+
+  async getRegistrationStatus(eventId: number, userId: number) {
+    const registration = await this.db.query.eventRegistrations.findFirst({
+      where: and(
+        eq(schema.eventRegistrations.eventId, eventId),
+        eq(schema.eventRegistrations.userId, userId),
+      ),
+    });
+    return !!registration;
+  }
+
+  async getUserRegistrations(userId: number) {
+    return this.db.query.eventRegistrations.findMany({
+      where: eq(schema.eventRegistrations.userId, userId),
+      with: {
+        event: true,
+      },
+    });
   }
 }

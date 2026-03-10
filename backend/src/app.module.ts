@@ -27,6 +27,7 @@ import { BlogsModule } from './blogs/blogs.module';
 import { PublicationsModule } from './publications/publications.module';
 import { FilmsModule } from './films/films.module';
 import { UploadModule } from './upload/upload.module';
+import { NotificationsModule } from './notifications/notifications.module';
 
 @Module({
   imports: [
@@ -43,6 +44,8 @@ import { UploadModule } from './upload/upload.module';
     UsersModule,
 
     AuthModule,
+
+    NotificationsModule,
 
     NotesModule,
 

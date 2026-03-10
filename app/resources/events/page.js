@@ -2,6 +2,7 @@
 
 import React, { useEffect, useState } from "react";
 import Link from "next/link";
+import Image from "next/image";
 import { Calendar, MapPin, Clock, Loader2, ArrowRight } from "lucide-react";
 import { fetchApi } from "../../../lib/api";
 import { GlassCard } from "../../components/ui/GlassCard";
@@ -77,10 +78,11 @@ export default function EventsPage() {
               >
                 {event.imageUrl && (
                   <div className="relative aspect-video overflow-hidden">
-                    <img
+                    <Image
                       src={event.imageUrl}
                       alt={event.title}
-                      className="object-cover w-full h-full group-hover:scale-110 transition-transform duration-700"
+                      fill
+                      className="object-cover group-hover:scale-110 transition-transform duration-700"
                     />
                     <div className="absolute inset-0 bg-gradient-to-t from-background/80 to-transparent" />
                   </div>

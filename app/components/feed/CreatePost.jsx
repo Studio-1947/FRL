@@ -2,6 +2,7 @@
 
 import React, { useState } from "react";
 import { Image as ImageIcon, Send, Loader2, X } from "lucide-react";
+import Image from "next/image";
 import { Button } from "../ui/Button";
 import { toast } from "sonner";
 import { fetchApi } from "@/lib/api";
@@ -80,10 +81,11 @@ export default function CreatePost({ onPostCreated }) {
 
         {imagePreview && (
           <div className="relative mt-4 rounded-2xl overflow-hidden aspect-video bg-muted group">
-            <img
+            <Image
               src={imagePreview}
               alt="Preview"
-              className="w-full h-full object-cover"
+              fill
+              className="object-cover"
             />
             <button
               type="button"

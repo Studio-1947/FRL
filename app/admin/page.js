@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useCallback } from "react";
 import { fetchApi } from "../../lib/api";
 import { withRoleProtection } from "../components/auth/withRoleProtection";
 import { GlassCard } from "../components/ui/GlassCard";
@@ -20,6 +20,7 @@ import {
   Camera,
   Upload,
 } from "lucide-react";
+import Image from "next/image";
 import { toast } from "sonner";
 
 const TABS = [
@@ -69,11 +70,7 @@ function AdminPanel() {
   const [submitting, setSubmitting] = useState(false);
   const [uploading, setUploading] = useState(false);
 
-  useEffect(() => {
-    loadItems();
-  }, [activeTab]);
-
-  const loadItems = async () => {
+  const loadItems = useCallback(async () => {
     setLoading(true);
     try {
       const response = await fetchApi(`/v1/${activeTab}?limit=100`); // Admin view gets more items
@@ -95,7 +92,11 @@ function AdminPanel() {
     } finally {
       setLoading(false);
     }
-  };
+  }, [activeTab]);
+
+  useEffect(() => {
+    loadItems();
+  }, [loadItems]);
 
   const handleFileUpload = async (file) => {
     if (!file) return;
@@ -216,9 +217,11 @@ function AdminPanel() {
               <div className="flex items-center gap-4">
                 <div className="relative w-32 h-20 bg-muted rounded-xl overflow-hidden border border-border/40 shrink-0">
                   {formData.imageUrl ? (
-                    <img
+                    <Image
                       src={formData.imageUrl}
                       alt="Preview"
+                      width={128}
+                      height={80}
                       className="w-full h-full object-cover"
                     />
                   ) : (
@@ -347,9 +350,11 @@ function AdminPanel() {
               <div className="flex items-center gap-4">
                 <div className="relative w-32 h-20 bg-muted rounded-xl overflow-hidden border border-border/40 shrink-0">
                   {formData.imageUrl ? (
-                    <img
+                    <Image
                       src={formData.imageUrl}
                       alt="Preview"
+                      width={128}
+                      height={80}
                       className="w-full h-full object-cover"
                     />
                   ) : (

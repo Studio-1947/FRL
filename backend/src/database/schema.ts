@@ -158,12 +158,55 @@ export const publications = pgTable('publications', {
   updatedAt: timestamp('updated_at').defaultNow().notNull(),
 });
 
+export const eventRegistrations = pgTable('event_registrations', {
+  id: serial('id').primaryKey(),
+  eventId: integer('event_id')
+    .references(() => events.id)
+    .notNull(),
+  userId: integer('user_id')
+    .references(() => users.id)
+    .notNull(),
+  registeredAt: timestamp('registered_at').defaultNow().notNull(),
+});
+
+export const notifications = pgTable('notifications', {
+  id: serial('id').primaryKey(),
+  userId: integer('user_id')
+    .references(() => users.id)
+    .notNull(),
+  title: varchar('title', { length: 255 }).notNull(),
+  message: text('message').notNull(),
+  type: varchar('type', { length: 50 }).default('general'),
+  isRead: boolean('is_read').default(false).notNull(),
+  createdAt: timestamp('created_at').defaultNow().notNull(),
+});
+
 export const usersRelations = relations(users, ({ many }) => ({
   events: many(events),
   notices: many(notices),
   blogs: many(blogs),
   films: many(films),
   publications: many(publications),
+  eventRegistrations: many(eventRegistrations),
+  notifications: many(notifications),
+}));
+
+export const eventRegistrationsRelations = relations(eventRegistrations, ({ one }) => ({
+  event: one(events, {
+    fields: [eventRegistrations.eventId],
+    references: [events.id],
+  }),
+  user: one(users, {
+    fields: [eventRegistrations.userId],
+    references: [users.id],
+  }),
+}));
+
+export const notificationsRelations = relations(notifications, ({ one }) => ({
+  user: one(users, {
+    fields: [notifications.userId],
+    references: [users.id],
+  }),
 }));
 
 export const eventsRelations = relations(events, ({ one }) => ({

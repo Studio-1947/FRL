@@ -5,7 +5,15 @@ import Image from "next/image";
 import Link from "next/link";
 import { fetchApi } from "../../lib/api";
 import { useAuth } from "../../app/context/AuthContext";
-import { MapPin, Star, Settings, Loader2, Camera, Trash2 } from "lucide-react";
+import {
+  MapPin,
+  Star,
+  Settings,
+  Loader2,
+  Camera,
+  Trash2,
+  Calendar,
+} from "lucide-react";
 import SecuritySection from "../components/settings/SecuritySection";
 import { GlassCard } from "../components/ui/GlassCard";
 import { Button } from "../components/ui/Button";
@@ -13,7 +21,9 @@ import { toast } from "sonner";
 
 export default function ProfilePage() {
   const [profile, setProfile] = useState(null);
+  const [registrations, setRegistrations] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [loadingRegistrations, setLoadingRegistrations] = useState(true);
   const [uploading, setUploading] = useState(false);
   const [error, setError] = useState(null);
   const fileInputRef = React.useRef(null);
@@ -35,7 +45,23 @@ export default function ProfilePage() {
         setLoading(false);
       }
     }
+
+    async function fetchRegistrations() {
+      try {
+        const response = await fetchApi("/v1/events/my-registrations");
+        if (response.ok) {
+          const data = await response.json();
+          setRegistrations(data);
+        }
+      } catch (err) {
+        console.error("Failed to load registrations", err);
+      } finally {
+        setLoadingRegistrations(false);
+      }
+    }
+
     fetchProfile();
+    fetchRegistrations();
   }, []);
 
   const handleImageClick = () => {
@@ -272,6 +298,61 @@ export default function ProfilePage() {
                 </p>
               </GlassCard>
             ))}
+        </div>
+
+        {/* Registered Events Section */}
+        <div className="mt-16 animate-in fade-in slide-in-from-bottom-4 duration-700 delay-300">
+          <h2 className="text-3xl font-extrabold tracking-tight text-foreground mb-8">
+            Registered Events
+          </h2>
+          {loadingRegistrations ? (
+            <div className="flex justify-center py-12">
+              <Loader2 className="w-8 h-8 text-primary animate-spin" />
+            </div>
+          ) : registrations.length === 0 ? (
+            <GlassCard className="p-12 text-center border-dashed border-2 border-border/40">
+              <p className="text-muted-foreground font-medium text-lg">
+                You haven&apos;t registered for any events yet.
+              </p>
+              <Link href="/resources/events" className="inline-block mt-4">
+                <Button variant="outline">Explore Gatherings</Button>
+              </Link>
+            </GlassCard>
+          ) : (
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+              {registrations.map((reg) => (
+                <Link key={reg.id} href={`/resources/events/${reg.event.id}`}>
+                  <GlassCard className="h-full p-6 hover:border-primary/40 transition-all group">
+                    <div className="flex flex-col gap-4">
+                      <div className="relative aspect-video rounded-xl overflow-hidden bg-muted">
+                        {reg.event.imageUrl && (
+                          <Image
+                            src={reg.event.imageUrl}
+                            alt={reg.event.title}
+                            fill
+                            className="object-cover group-hover:scale-105 transition-transform duration-500"
+                          />
+                        )}
+                        <div className="absolute inset-0 bg-gradient-to-t from-background/40 to-transparent" />
+                      </div>
+                      <div className="flex flex-col gap-2">
+                        <div className="flex items-center gap-2 text-xs font-bold text-primary uppercase tracking-widest">
+                          <Calendar size={12} />
+                          {new Date(reg.event.date).toLocaleDateString()}
+                        </div>
+                        <h4 className="text-lg font-bold text-foreground line-clamp-1">
+                          {reg.event.title}
+                        </h4>
+                        <p className="text-sm text-muted-foreground line-clamp-2">
+                          {reg.event.description}
+                        </p>
+                      </div>
+                    </div>
+                  </GlassCard>
+                </Link>
+              ))}
+            </div>
+          )}
         </div>
 
         <div className="mt-16">

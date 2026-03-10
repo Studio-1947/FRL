@@ -11,6 +11,7 @@ import {
   MessageSquare,
 } from "lucide-react";
 import Link from "next/link";
+import Image from "next/image";
 import { fetchApi } from "../../../../lib/api";
 import { GlassCard } from "../../../components/ui/GlassCard";
 import { Button } from "../../../components/ui/Button";
@@ -104,10 +105,11 @@ export default function BlogDetailPage() {
         {/* Hero Image */}
         {blog.imageUrl && (
           <div className="relative w-full aspect-[21/9] rounded-3xl overflow-hidden border border-border/40">
-            <img
+            <Image
               src={blog.imageUrl}
               alt={blog.title}
-              className="object-cover w-full h-full"
+              fill
+              className="object-cover"
             />
           </div>
         )}

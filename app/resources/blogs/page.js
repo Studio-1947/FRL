@@ -2,6 +2,7 @@
 
 import React, { useEffect, useState } from "react";
 import Link from "next/link";
+import Image from "next/image";
 import { Newspaper, User, Clock, Loader2, ArrowRight } from "lucide-react";
 import { fetchApi } from "../../../lib/api";
 import { GlassCard } from "../../components/ui/GlassCard";
@@ -77,10 +78,11 @@ export default function BlogsPage() {
               >
                 {blog.imageUrl && (
                   <div className="relative aspect-[16/10] overflow-hidden">
-                    <img
+                    <Image
                       src={blog.imageUrl}
                       alt={blog.title}
-                      className="object-cover w-full h-full group-hover:scale-110 transition-transform duration-700"
+                      fill
+                      className="object-cover group-hover:scale-110 transition-transform duration-700"
                     />
                   </div>
                 )}
