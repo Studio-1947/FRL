@@ -21,7 +21,7 @@ export default function ResourcesPage() {
       title: "Podcasts",
       icon: <Mic className="w-6 h-6" />,
       desc: "In-depth conversations and audio journals exploring sustainable shifts.",
-      link: "/resources/podcasts",
+      link: "/resources/podcast",
     },
     {
       title: "Events",
