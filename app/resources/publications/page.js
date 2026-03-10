@@ -9,12 +9,18 @@ import { Button } from "../../components/ui/Button";
 export default function PublicationsPage() {
   const [publications, setPublications] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [page, setPage] = useState(1);
+  const [totalPages, setTotalPages] = useState(1);
 
   useEffect(() => {
     const loadPublications = async () => {
+      setLoading(true);
       try {
-        const data = await fetchApi("/v1/publications");
-        if (Array.isArray(data)) setPublications(data);
+        const result = await fetchApi(`/v1/publications?page=${page}&limit=6`);
+        if (result && result.data) {
+          setPublications(result.data);
+          setTotalPages(result.meta.totalPages);
+        }
       } catch (err) {
         console.error("Failed to load publications", err);
       } finally {
@@ -22,7 +28,7 @@ export default function PublicationsPage() {
       }
     };
     loadPublications();
-  }, []);
+  }, [page]);
 
   if (loading) {
     return (
@@ -97,6 +103,29 @@ export default function PublicationsPage() {
                 </div>
               </GlassCard>
             ))}
+          </div>
+        )}
+
+        {/* Pagination */}
+        {totalPages > 1 && (
+          <div className="flex justify-center items-center gap-6 pt-12 border-t border-border/40">
+            <button
+              onClick={() => setPage((p) => Math.max(1, p - 1))}
+              disabled={page === 1}
+              className="text-xs font-bold uppercase tracking-widest px-8 py-4 rounded-full border border-border hover:border-primary hover:text-primary transition-all disabled:opacity-30 disabled:hover:border-border disabled:hover:text-foreground"
+            >
+              ΓåÉ Previous
+            </button>
+            <span className="text-sm font-bold opacity-50 uppercase tracking-widest">
+              Page {page} of {totalPages}
+            </span>
+            <button
+              onClick={() => setPage((p) => Math.min(totalPages, p + 1))}
+              disabled={page === totalPages}
+              className="text-xs font-bold uppercase tracking-widest px-8 py-4 rounded-full border border-border hover:border-primary hover:text-primary transition-all disabled:opacity-30 disabled:hover:border-border disabled:hover:text-foreground"
+            >
+              Next ΓåÆ
+            </button>
           </div>
         )}
       </div>

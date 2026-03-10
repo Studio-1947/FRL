@@ -8,12 +8,18 @@ import { GlassCard } from "../../components/ui/GlassCard";
 export default function FilmsPage() {
   const [films, setFilms] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [page, setPage] = useState(1);
+  const [totalPages, setTotalPages] = useState(1);
 
   useEffect(() => {
     const loadFilms = async () => {
+      setLoading(true);
       try {
-        const data = await fetchApi("/v1/films");
-        if (Array.isArray(data)) setFilms(data);
+        const result = await fetchApi(`/v1/films?page=${page}&limit=4`);
+        if (result && result.data) {
+          setFilms(result.data);
+          setTotalPages(result.meta.totalPages);
+        }
       } catch (err) {
         console.error("Failed to load films", err);
       } finally {
@@ -21,7 +27,7 @@ export default function FilmsPage() {
       }
     };
     loadFilms();
-  }, []);
+  }, [page]);
 
   if (loading) {
     return (
@@ -86,6 +92,29 @@ export default function FilmsPage() {
                 </div>
               </GlassCard>
             ))}
+          </div>
+        )}
+
+        {/* Pagination */}
+        {totalPages > 1 && (
+          <div className="flex justify-center items-center gap-6 pt-12 border-t border-border/40">
+            <button
+              onClick={() => setPage((p) => Math.max(1, p - 1))}
+              disabled={page === 1}
+              className="text-xs font-bold uppercase tracking-widest px-8 py-4 rounded-full border border-border hover:border-primary hover:text-primary transition-all disabled:opacity-30 disabled:hover:border-border disabled:hover:text-foreground"
+            >
+              ΓåÉ Previous
+            </button>
+            <span className="text-sm font-bold opacity-50 uppercase tracking-widest">
+              Page {page} of {totalPages}
+            </span>
+            <button
+              onClick={() => setPage((p) => Math.min(totalPages, p + 1))}
+              disabled={page === totalPages}
+              className="text-xs font-bold uppercase tracking-widest px-8 py-4 rounded-full border border-border hover:border-primary hover:text-primary transition-all disabled:opacity-30 disabled:hover:border-border disabled:hover:text-foreground"
+            >
+              Next ΓåÆ
+            </button>
           </div>
         )}
       </div>

@@ -38,12 +38,14 @@ import { FilmsModule } from './films/films.module';
     }),
 
     // Rate Limiting
-    ThrottlerModule.forRoot([
-      {
-        ttl: 60000,
-        limit: 10,
-      },
-    ]),
+    ThrottlerModule.forRoot({
+      throttlers: [
+        {
+          ttl: 60000,
+          limit: 10,
+        },
+      ],
+    }),
 
     // Database
     DatabaseModule,
@@ -61,8 +63,7 @@ import { FilmsModule } from './films/films.module';
     FollowsModule,
 
     ServeStaticModule.forRoot({
-      rootPath: join(__dirname, '..', '..', 'uploads'), // dist/ is two levels deep if we consider src, but wait, dist/main.js is 1 level. Next JS is different.
-      // Actually dist/app.module.js -> dir is dist. So '..' -> root. Therefore: join(__dirname, '..', 'uploads')
+      rootPath: join(__dirname, '..', '..', 'uploads'),
       serveRoot: '/uploads',
     }),
 
@@ -75,10 +76,6 @@ import { FilmsModule } from './films/films.module';
     PublicationsModule,
 
     FilmsModule,
-
-    // Feature Modules
-    // AuthModule,
-    // UsersModule,
   ],
   providers: [
     // Global Exception Filter

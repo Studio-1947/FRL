@@ -1,4 +1,15 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete, UseGuards, Req } from '@nestjs/common';
+import {
+  Controller,
+  Get,
+  Post,
+  Body,
+  Patch,
+  Param,
+  Delete,
+  UseGuards,
+  Req,
+  Query,
+} from '@nestjs/common';
 import { ApiTags, ApiOperation, ApiResponse, ApiBearerAuth } from '@nestjs/swagger';
 import { Request } from 'express';
 import { PublicationsService } from './publications.service';
@@ -23,9 +34,9 @@ export class PublicationsController {
   }
 
   @Get()
-  @ApiOperation({ summary: 'Get all publications' })
-  findAll() {
-    return this.publicationsService.findAll();
+  @ApiOperation({ summary: 'Get all public publications' })
+  findAll(@Query('page') page: number = 1, @Query('limit') limit: number = 5) {
+    return this.publicationsService.findAll(+page, +limit);
   }
 
   @Get(':id')

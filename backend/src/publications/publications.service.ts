@@ -2,7 +2,7 @@ import { Injectable, Inject, NotFoundException } from '@nestjs/common';
 import { CreatePublicationDto } from './dto/create-publication.dto';
 import { UpdatePublicationDto } from './dto/update-publication.dto';
 import { NodePgDatabase } from 'drizzle-orm/node-postgres';
-import { eq, desc } from 'drizzle-orm';
+import { eq, desc, sql } from 'drizzle-orm';
 import { DRIZZLE } from '../database/database.module';
 import * as schema from '../database/schema';
 
@@ -21,10 +21,37 @@ export class PublicationsService {
     return newPub;
   }
 
-  async findAll() {
-    return this.db.query.publications.findMany({
-      orderBy: [desc(schema.publications.createdAt)],
-    });
+  async findAll(page: number = 1, limit: number = 5) {
+    const offset = (page - 1) * limit;
+
+    const [data, [{ count }]] = await Promise.all([
+      this.db.query.publications.findMany({
+        limit,
+        offset,
+        orderBy: [desc(schema.publications.createdAt)],
+        with: {
+          creator: {
+            columns: {
+              name: true,
+              email: true,
+            },
+          },
+        },
+      }),
+      this.db.select({ count: sql<number>`count(*)` }).from(schema.publications),
+    ]);
+
+    const total = Number(count);
+
+    return {
+      data,
+      meta: {
+        total,
+        page,
+        limit,
+        totalPages: Math.ceil(total / limit),
+      },
+    };
   }
 
   async findOne(id: number) {

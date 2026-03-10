@@ -2,7 +2,7 @@ import { Injectable, Inject, NotFoundException } from '@nestjs/common';
 import { CreateBlogDto } from './dto/create-blog.dto';
 import { UpdateBlogDto } from './dto/update-blog.dto';
 import { NodePgDatabase } from 'drizzle-orm/node-postgres';
-import { eq, desc } from 'drizzle-orm';
+import { eq, desc, sql } from 'drizzle-orm';
 import { DRIZZLE } from '../database/database.module';
 import * as schema from '../database/schema';
 
@@ -21,10 +21,37 @@ export class BlogsService {
     return newBlog;
   }
 
-  async findAll() {
-    return this.db.query.blogs.findMany({
-      orderBy: [desc(schema.blogs.createdAt)],
-    });
+  async findAll(page: number = 1, limit: number = 5) {
+    const offset = (page - 1) * limit;
+
+    const [data, [{ count }]] = await Promise.all([
+      this.db.query.blogs.findMany({
+        limit,
+        offset,
+        orderBy: [desc(schema.blogs.createdAt)],
+        with: {
+          creator: {
+            columns: {
+              name: true,
+              email: true,
+            },
+          },
+        },
+      }),
+      this.db.select({ count: sql<number>`count(*)` }).from(schema.blogs),
+    ]);
+
+    const total = Number(count);
+
+    return {
+      data,
+      meta: {
+        total,
+        page,
+        limit,
+        totalPages: Math.ceil(total / limit),
+      },
+    };
   }
 
   async findOne(id: number) {

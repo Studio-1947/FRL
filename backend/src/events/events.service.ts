@@ -2,7 +2,7 @@ import { Injectable, Inject, NotFoundException } from '@nestjs/common';
 import { CreateEventDto } from './dto/create-event.dto';
 import { UpdateEventDto } from './dto/update-event.dto';
 import { NodePgDatabase } from 'drizzle-orm/node-postgres';
-import { eq, desc } from 'drizzle-orm';
+import { eq, desc, sql } from 'drizzle-orm';
 import { DRIZZLE } from '../database/database.module';
 import * as schema from '../database/schema';
 
@@ -22,13 +22,37 @@ export class EventsService {
     return newEvent;
   }
 
-  async findAll() {
-    return this.db.query.events.findMany({
-      orderBy: [desc(schema.events.date)],
-      with: {
-        // Assume createdBy relation is needed (may require relation definition in schema)
+  async findAll(page: number = 1, limit: number = 5) {
+    const offset = (page - 1) * limit;
+
+    const [data, [{ count }]] = await Promise.all([
+      this.db.query.events.findMany({
+        limit,
+        offset,
+        orderBy: [desc(schema.events.date)],
+        with: {
+          creator: {
+            columns: {
+              name: true,
+              email: true,
+            },
+          },
+        },
+      }),
+      this.db.select({ count: sql<number>`count(*)` }).from(schema.events),
+    ]);
+
+    const total = Number(count);
+
+    return {
+      data,
+      meta: {
+        total,
+        page,
+        limit,
+        totalPages: Math.ceil(total / limit),
       },
-    });
+    };
   }
 
   async findOne(id: number) {

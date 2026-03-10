@@ -1,4 +1,15 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete, UseGuards, Req } from '@nestjs/common';
+import {
+  Controller,
+  Get,
+  Post,
+  Body,
+  Patch,
+  Param,
+  Delete,
+  UseGuards,
+  Req,
+  Query,
+} from '@nestjs/common';
 import { ApiTags, ApiOperation, ApiResponse, ApiBearerAuth } from '@nestjs/swagger';
 import { Request } from 'express';
 import { EventsService } from './events.service';
@@ -24,8 +35,8 @@ export class EventsController {
 
   @Get()
   @ApiOperation({ summary: 'Get all public events' })
-  findAll() {
-    return this.eventsService.findAll();
+  findAll(@Query('page') page: number = 1, @Query('limit') limit: number = 5) {
+    return this.eventsService.findAll(+page, +limit);
   }
 
   @Get(':id')

@@ -1,4 +1,5 @@
 import { pgTable, serial, varchar, timestamp, text, boolean, integer } from 'drizzle-orm/pg-core';
+import { relations } from 'drizzle-orm';
 
 // Example User Table
 export const users = pgTable('users', {
@@ -156,3 +157,46 @@ export const publications = pgTable('publications', {
   createdAt: timestamp('created_at').defaultNow().notNull(),
   updatedAt: timestamp('updated_at').defaultNow().notNull(),
 });
+
+export const usersRelations = relations(users, ({ many }) => ({
+  events: many(events),
+  notices: many(notices),
+  blogs: many(blogs),
+  films: many(films),
+  publications: many(publications),
+}));
+
+export const eventsRelations = relations(events, ({ one }) => ({
+  creator: one(users, {
+    fields: [events.createdBy],
+    references: [users.id],
+  }),
+}));
+
+export const noticesRelations = relations(notices, ({ one }) => ({
+  creator: one(users, {
+    fields: [notices.createdBy],
+    references: [users.id],
+  }),
+}));
+
+export const blogsRelations = relations(blogs, ({ one }) => ({
+  creator: one(users, {
+    fields: [blogs.createdBy],
+    references: [users.id],
+  }),
+}));
+
+export const filmsRelations = relations(films, ({ one }) => ({
+  creator: one(users, {
+    fields: [films.createdBy],
+    references: [users.id],
+  }),
+}));
+
+export const publicationsRelations = relations(publications, ({ one }) => ({
+  creator: one(users, {
+    fields: [publications.createdBy],
+    references: [users.id],
+  }),
+}));
