@@ -1,6 +1,9 @@
-import React from "react";
+"use client";
+
+import React, { useState } from "react";
 import { GlassCard } from "../../components/ui/GlassCard";
-import { Headphones, Radio } from "lucide-react";
+import { Headphones, Radio, ChevronLeft, ChevronRight } from "lucide-react";
+import { Button } from "../../components/ui/Button";
 
 // Add new podcast episodes here. Use the SoundCloud share link directly.
 const episodes = [
@@ -13,6 +16,80 @@ const episodes = [
       "https://soundcloud.com/dset-tldp/visible-and-invisible-walls-exploring-inequality",
     date: "2024",
   },
+  {
+    id: 2,
+    title: "Questioning Authority",
+    description:
+      "Exploring the layers of authority and how we interact with systems of power and governance.",
+    soundcloudUrl: "https://soundcloud.com/dset-tldp/questioningauthority",
+    date: "2024",
+  },
+  {
+    id: 3,
+    title: "Breaking Barriers",
+    description:
+      "Overcoming institutional and societal barriers to create more inclusive spaces.",
+    soundcloudUrl: "https://soundcloud.com/dset-tldp/breakingbarriers",
+    date: "2024",
+  },
+  {
+    id: 4,
+    title: "Questioning Privilege",
+    description:
+      "A deep dive into recognizing and utilizing privilege for building equity.",
+    soundcloudUrl: "https://soundcloud.com/dset-tldp/questioning-privilege",
+    date: "2024",
+  },
+  {
+    id: 5,
+    title: "Democracy Within Families",
+    description:
+      "How democratic values and decision-making can be fostered from the household level.",
+    soundcloudUrl: "https://soundcloud.com/dset-tldp/democracy-within-families",
+    date: "2024",
+  },
+  {
+    id: 6,
+    title: "Skewed Development",
+    description:
+      "Analyzing developmental models that leave communities behind and exploring correctives.",
+    soundcloudUrl: "https://soundcloud.com/dset-tldp/skewed-development",
+    date: "2024",
+  },
+  {
+    id: 7,
+    title: "Exploring Privilege, Discrimination & Stereotypes",
+    description:
+      "An intersectional conversation on systemic biases and challenging our own preconceptions.",
+    soundcloudUrl:
+      "https://soundcloud.com/dset-tldp/exploring-privilege-discrimination-stereotypes",
+    date: "2024",
+  },
+  {
+    id: 8,
+    title: "Who Am I - Exploring Identity & Gender",
+    description:
+      "Discussions around the self, identity formation, and breaking down gender norms.",
+    soundcloudUrl:
+      "https://soundcloud.com/dset-tldp/who-am-i-exploring-identity-gender",
+    date: "2024",
+  },
+  {
+    id: 9,
+    title: "Responsible Building",
+    description:
+      "A look into sustainable, community-first approaches to architecture and urban planning.",
+    soundcloudUrl: "https://soundcloud.com/dset-tldp/responsible-building",
+    date: "2024",
+  },
+  {
+    id: 10,
+    title: "Imagining A New Future",
+    description:
+      "Synthesizing our conversations to envision a practical, harmonious future.",
+    soundcloudUrl: "https://soundcloud.com/dset-tldp/imagining-a-new-future",
+    date: "2024",
+  },
 ];
 
 function buildEmbedUrl(url) {
@@ -21,13 +98,16 @@ function buildEmbedUrl(url) {
   )}&color=%230ea5e9&auto_play=false&hide_related=false&show_comments=true&show_user=true&show_reposts=false&show_teaser=true&visual=false`;
 }
 
-export const metadata = {
-  title: "Podcast | FRL",
-  description:
-    "Listen to conversations from the Forum For Responsible Living community.",
-};
-
 export default function PodcastPage() {
+  const [currentPage, setCurrentPage] = useState(1);
+  const itemsPerPage = 5;
+  const totalPages = Math.ceil(episodes.length / itemsPerPage);
+
+  const paginatedEpisodes = episodes.slice(
+    (currentPage - 1) * itemsPerPage,
+    currentPage * itemsPerPage,
+  );
+
   return (
     <div className="w-full min-h-screen bg-background text-foreground flex flex-col">
       {/* Hero */}
@@ -59,7 +139,7 @@ export default function PodcastPage() {
 
       {/* Episodes */}
       <section className="w-full max-w-4xl mx-auto px-6 lg:px-12 py-16 flex flex-col gap-10">
-        {episodes.map((episode, index) => (
+        {paginatedEpisodes.map((episode, index) => (
           <GlassCard
             key={episode.id}
             className="flex flex-col gap-5 animate-in fade-in slide-in-from-bottom-8 duration-700 border border-border/40"
@@ -114,6 +194,39 @@ export default function PodcastPage() {
             </div>
           </GlassCard>
         ))}
+
+        {/* Pagination Controls */}
+        {totalPages > 1 && (
+          <div className="flex items-center justify-between mt-10 p-6 border border-border/40 rounded-2xl bg-card/20 backdrop-blur-sm">
+            <Button
+              variant="outline"
+              disabled={currentPage === 1}
+              onClick={() => {
+                setCurrentPage((p) => Math.max(1, p - 1));
+                window.scrollTo({ top: 400, behavior: "smooth" });
+              }}
+              className="flex items-center gap-2"
+            >
+              <ChevronLeft className="w-4 h-4" /> Previous
+            </Button>
+
+            <div className="text-sm font-medium text-muted-foreground">
+              Page {currentPage} of {totalPages}
+            </div>
+
+            <Button
+              variant="outline"
+              disabled={currentPage === totalPages}
+              onClick={() => {
+                setCurrentPage((p) => Math.min(totalPages, p + 1));
+                window.scrollTo({ top: 400, behavior: "smooth" });
+              }}
+              className="flex items-center gap-2"
+            >
+              Next <ChevronRight className="w-4 h-4" />
+            </Button>
+          </div>
+        )}
       </section>
 
       {/* Footer CTA */}
