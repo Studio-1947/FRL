@@ -26,6 +26,7 @@ import { NoticesModule } from './notices/notices.module';
 import { BlogsModule } from './blogs/blogs.module';
 import { PublicationsModule } from './publications/publications.module';
 import { FilmsModule } from './films/films.module';
+import { UploadModule } from './upload/upload.module';
 
 @Module({
   imports: [
@@ -65,6 +66,7 @@ import { FilmsModule } from './films/films.module';
     PublicationsModule,
 
     FilmsModule,
+    UploadModule,
   ],
   providers: [
     // Global Exception Filter

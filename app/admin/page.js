@@ -17,6 +17,8 @@ import {
   Loader2,
   ChevronRight,
   PlusCircle,
+  Camera,
+  Upload,
 } from "lucide-react";
 import { toast } from "sonner";
 
@@ -65,6 +67,7 @@ function AdminPanel() {
   const [showForm, setShowForm] = useState(false);
   const [formData, setFormData] = useState({});
   const [submitting, setSubmitting] = useState(false);
+  const [uploading, setUploading] = useState(false);
 
   useEffect(() => {
     loadItems();
@@ -94,6 +97,38 @@ function AdminPanel() {
     }
   };
 
+  const handleFileUpload = async (file) => {
+    if (!file) return;
+
+    if (file.size > 2 * 1024 * 1024) {
+      toast.error("File size exceeds 2MB limit");
+      return;
+    }
+
+    setUploading(true);
+    try {
+      const uploadData = new FormData();
+      uploadData.append("file", file);
+
+      const response = await fetchApi("/v1/upload", {
+        method: "POST",
+        body: uploadData,
+      });
+
+      if (response.ok) {
+        const result = await response.json();
+        setFormData((prev) => ({ ...prev, imageUrl: result.url }));
+        toast.success("Image uploaded successfully");
+      } else {
+        throw new Error("Upload failed");
+      }
+    } catch (err) {
+      toast.error("Failed to upload image");
+    } finally {
+      setUploading(false);
+    }
+  };
+
   const handleDelete = async (id) => {
     if (!confirm("Are you sure you want to delete this item?")) return;
     try {
@@ -109,15 +144,18 @@ function AdminPanel() {
     e.preventDefault();
     setSubmitting(true);
     try {
-      const resp = await fetchApi(`/v1/${activeTab}`, {
+      const response = await fetchApi(`/v1/${activeTab}`, {
         method: "POST",
         body: JSON.stringify(formData),
       });
-      if (resp && resp.id) {
+
+      if (response.ok) {
         toast.success(`${activeTab.slice(0, -1)} created!`);
         setShowForm(false);
         setFormData({});
         loadItems();
+      } else {
+        throw new Error("Creation failed");
       }
     } catch (err) {
       toast.error("Failed to create item. Check all fields.");
@@ -174,15 +212,50 @@ function AdminPanel() {
               />
             </div>
             <div className="mt-6">
-              <label className={commonLabelStyle}>Image URL</label>
-              <input
-                className={commonInputStyle}
-                placeholder="https://..."
-                value={formData.imageUrl || ""}
-                onChange={(e) =>
-                  setFormData({ ...formData, imageUrl: e.target.value })
-                }
-              />
+              <label className={commonLabelStyle}>Event Image</label>
+              <div className="flex items-center gap-4">
+                <div className="relative w-32 h-20 bg-muted rounded-xl overflow-hidden border border-border/40 shrink-0">
+                  {formData.imageUrl ? (
+                    <img
+                      src={formData.imageUrl}
+                      alt="Preview"
+                      className="w-full h-full object-cover"
+                    />
+                  ) : (
+                    <div className="w-full h-full flex items-center justify-center text-muted-foreground">
+                      <Camera size={20} />
+                    </div>
+                  )}
+                  {uploading && (
+                    <div className="absolute inset-0 bg-background/60 flex items-center justify-center">
+                      <Loader2 className="w-6 h-6 animate-spin text-primary" />
+                    </div>
+                  )}
+                </div>
+                <div className="flex-1">
+                  <Button
+                    type="button"
+                    variant="outline"
+                    size="sm"
+                    className="gap-2"
+                    onClick={() => {
+                      const input = document.createElement("input");
+                      input.type = "file";
+                      input.accept = "image/*";
+                      input.onchange = (e) =>
+                        handleFileUpload(e.target.files[0]);
+                      input.click();
+                    }}
+                    disabled={uploading}
+                  >
+                    <Upload size={14} />{" "}
+                    {formData.imageUrl ? "Change Image" : "Upload Image"}
+                  </Button>
+                  <p className="text-[10px] text-muted-foreground mt-2 uppercase tracking-widest font-bold">
+                    Max 2MB. Optimized for 16:9 aspect ratio.
+                  </p>
+                </div>
+              </div>
             </div>
             <div className="mt-6">
               <label className={commonLabelStyle}>Description</label>
@@ -270,14 +343,50 @@ function AdminPanel() {
               </div>
             </div>
             <div className="mt-6">
-              <label className={commonLabelStyle}>Cover Image URL</label>
-              <input
-                className={commonInputStyle}
-                value={formData.imageUrl || ""}
-                onChange={(e) =>
-                  setFormData({ ...formData, imageUrl: e.target.value })
-                }
-              />
+              <label className={commonLabelStyle}>Cover Image</label>
+              <div className="flex items-center gap-4">
+                <div className="relative w-32 h-20 bg-muted rounded-xl overflow-hidden border border-border/40 shrink-0">
+                  {formData.imageUrl ? (
+                    <img
+                      src={formData.imageUrl}
+                      alt="Preview"
+                      className="w-full h-full object-cover"
+                    />
+                  ) : (
+                    <div className="w-full h-full flex items-center justify-center text-muted-foreground">
+                      <Camera size={20} />
+                    </div>
+                  )}
+                  {uploading && (
+                    <div className="absolute inset-0 bg-background/60 flex items-center justify-center">
+                      <Loader2 className="w-6 h-6 animate-spin text-primary" />
+                    </div>
+                  )}
+                </div>
+                <div className="flex-1">
+                  <Button
+                    type="button"
+                    variant="outline"
+                    size="sm"
+                    className="gap-2"
+                    onClick={() => {
+                      const input = document.createElement("input");
+                      input.type = "file";
+                      input.accept = "image/*";
+                      input.onchange = (e) =>
+                        handleFileUpload(e.target.files[0]);
+                      input.click();
+                    }}
+                    disabled={uploading}
+                  >
+                    <Upload size={14} />{" "}
+                    {formData.imageUrl ? "Change Image" : "Upload Image"}
+                  </Button>
+                  <p className="text-[10px] text-muted-foreground mt-2 uppercase tracking-widest font-bold">
+                    Max 2MB. Optimized for 21:9 aspect ratio.
+                  </p>
+                </div>
+              </div>
             </div>
             <div className="mt-6">
               <label className={commonLabelStyle}>
@@ -355,16 +464,65 @@ function AdminPanel() {
                 />
               </div>
               <div>
-                <label className={commonLabelStyle}>PDF/Direct Link</label>
-                <input
-                  required
-                  className={commonInputStyle}
-                  placeholder="https://..."
-                  value={formData.pdfUrl || ""}
-                  onChange={(e) =>
-                    setFormData({ ...formData, pdfUrl: e.target.value })
-                  }
-                />
+                <label className={commonLabelStyle}>
+                  Publication File (PDF)
+                </label>
+                <div className="flex items-center gap-4">
+                  <div className="flex-1">
+                    <input
+                      className={commonInputStyle}
+                      placeholder="https://... or upload below"
+                      value={formData.pdfUrl || ""}
+                      onChange={(e) =>
+                        setFormData({ ...formData, pdfUrl: e.target.value })
+                      }
+                    />
+                  </div>
+                  <Button
+                    type="button"
+                    variant="outline"
+                    className="gap-2 shrink-0"
+                    onClick={() => {
+                      const input = document.createElement("input");
+                      input.type = "file";
+                      input.accept = ".pdf";
+                      input.onchange = async (e) => {
+                        const file = e.target.files[0];
+                        if (!file) return;
+                        if (file.size > 5 * 1024 * 1024) {
+                          toast.error("PDF exceeds 5MB limit");
+                          return;
+                        }
+                        setUploading(true);
+                        try {
+                          const uploadData = new FormData();
+                          uploadData.append("file", file);
+                          const res = await fetchApi("/v1/upload", {
+                            method: "POST",
+                            body: uploadData,
+                          });
+                          if (res.ok) {
+                            const result = await res.json();
+                            setFormData((prev) => ({
+                              ...prev,
+                              pdfUrl: result.url,
+                            }));
+                            toast.success("PDF uploaded!");
+                          }
+                        } catch (err) {
+                          toast.error("Failed to upload PDF");
+                        } finally {
+                          setUploading(false);
+                        }
+                      };
+                      input.click();
+                    }}
+                    disabled={uploading}
+                  >
+                    <Upload size={14} />{" "}
+                    {formData.pdfUrl ? "Replace PDF" : "Upload PDF"}
+                  </Button>
+                </div>
               </div>
             </div>
             <div className="mt-6">

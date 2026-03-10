@@ -51,30 +51,38 @@ export default function ProfilePage() {
       return;
     }
 
-    const reader = new FileReader();
-    reader.onloadend = async () => {
-      const base64String = reader.result;
-      await uploadProfilePicture(base64String);
-    };
-    reader.readAsDataURL(file);
+    await uploadProfilePicture(file);
   };
 
-  const uploadProfilePicture = async (base64String) => {
+  const uploadProfilePicture = async (file) => {
     setUploading(true);
     try {
-      const response = await fetchApi("/v1/users/profile", {
-        method: "PATCH",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({ avatarUrl: base64String }),
+      const uploadData = new FormData();
+      uploadData.append("file", file);
+
+      const response = await fetchApi("/v1/upload", {
+        method: "POST",
+        body: uploadData,
       });
 
       if (!response.ok) {
-        throw new Error("Failed to update profile picture");
+        throw new Error("Failed to upload image");
       }
 
-      const updatedUser = await response.json();
+      const uploadResult = await response.json();
+      const imageUrl = uploadResult.url;
+
+      // Now update the user profile with the new URL
+      const updateResponse = await fetchApi("/v1/users/profile", {
+        method: "PATCH",
+        body: JSON.stringify({ avatarUrl: imageUrl }),
+      });
+
+      if (!updateResponse.ok) {
+        throw new Error("Failed to update profile with new image");
+      }
+
+      const updatedUser = await updateResponse.json();
       setProfile(updatedUser);
       refreshUser();
       toast.success("Profile picture updated!");

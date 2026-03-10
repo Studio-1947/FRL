@@ -225,13 +225,37 @@ export default function SettingsPage() {
                     onChange={async (e) => {
                       const file = e.target.files?.[0];
                       if (!file) return;
-                      const reader = new FileReader();
-                      reader.onloadend = () =>
-                        setFormData((prev) => ({
-                          ...prev,
-                          avatarUrl: reader.result,
-                        }));
-                      reader.readAsDataURL(file);
+
+                      if (file.size > 2 * 1024 * 1024) {
+                        toast.error("File size exceeds 2MB limit");
+                        return;
+                      }
+
+                      setUploading(true);
+                      try {
+                        const uploadData = new FormData();
+                        uploadData.append("file", file);
+
+                        const response = await fetchApi("/v1/upload", {
+                          method: "POST",
+                          body: uploadData,
+                        });
+
+                        if (response.ok) {
+                          const result = await response.json();
+                          setFormData((prev) => ({
+                            ...prev,
+                            avatarUrl: result.url,
+                          }));
+                          toast.success("Identity image uploaded!");
+                        } else {
+                          throw new Error("Upload failed");
+                        }
+                      } catch (err) {
+                        toast.error("Failed to upload image");
+                      } finally {
+                        setUploading(false);
+                      }
                     }}
                   />
                 </div>
