@@ -1,26 +1,93 @@
-import React from "react";
-import { Film } from "lucide-react";
+"use client";
 
-export const metadata = {
-  title: "Films | FRL",
-  description:
-    "Visual narratives documenting social and ecological transformation.",
-};
+import React, { useEffect, useState } from "react";
+import { Film, PlayCircle, Loader2 } from "lucide-react";
+import { fetchApi } from "../../../lib/api";
+import { GlassCard } from "../../components/ui/GlassCard";
 
 export default function FilmsPage() {
+  const [films, setFilms] = useState([]);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    const loadFilms = async () => {
+      try {
+        const data = await fetchApi("/v1/films");
+        if (Array.isArray(data)) setFilms(data);
+      } catch (err) {
+        console.error("Failed to load films", err);
+      } finally {
+        setLoading(false);
+      }
+    };
+    loadFilms();
+  }, []);
+
+  if (loading) {
+    return (
+      <div className="min-h-screen flex items-center justify-center">
+        <Loader2 className="w-10 h-10 text-primary animate-spin" />
+      </div>
+    );
+  }
+
   return (
-    <div className="w-full min-h-screen bg-background text-foreground flex flex-col items-center justify-center -mt-20">
-      <div className="flex flex-col items-center gap-6 animate-in fade-in zoom-in-95 duration-700">
-        <div className="w-20 h-20 bg-primary/10 rounded-full flex items-center justify-center mb-4 border border-primary/20">
-          <Film className="w-10 h-10 text-primary" />
+    <div className="w-full min-h-screen bg-background text-foreground py-24 px-6 lg:px-12">
+      <div className="max-w-7xl mx-auto flex flex-col gap-12">
+        {/* Header */}
+        <div className="flex flex-col gap-4 animate-in fade-in slide-in-from-bottom-4 duration-700">
+          <div className="flex items-center gap-3 text-primary mb-2">
+            <Film className="w-8 h-8" />
+            <span className="text-xl font-bold uppercase tracking-widest">
+              Media
+            </span>
+          </div>
+          <h1 className="text-5xl md:text-7xl font-semibold tracking-tight uppercase">
+            Film & Documentaries
+          </h1>
+          <p className="text-muted-foreground text-xl font-light max-w-2xl">
+            Visual storytelling capturing the essence of ecological restoration
+            and social impact.
+          </p>
         </div>
-        <h1 className="text-4xl md:text-5xl font-semibold tracking-tight uppercase text-center">
-          Films
-        </h1>
-        <p className="text-muted-foreground text-lg md:text-xl font-light text-center max-w-md">
-          Our film collection is currently being curated. Come back soon to
-          watch.
-        </p>
+
+        {films.length === 0 ? (
+          <div className="flex flex-col items-center gap-6 py-20">
+            <p className="text-muted-foreground text-lg italic text-center">
+              Our film collection is currently being curated. <br /> New visual
+              stories coming soon.
+            </p>
+          </div>
+        ) : (
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-10">
+            {films.map((film) => (
+              <GlassCard
+                key={film.id}
+                className="group flex flex-col h-full !p-0 overflow-hidden"
+              >
+                <div className="relative aspect-video w-full bg-black">
+                  <iframe
+                    src={film.embedUrl}
+                    className="absolute inset-0 w-full h-full border-0"
+                    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                    allowFullScreen
+                  />
+                </div>
+                <div className="p-8 flex flex-col gap-4">
+                  <h3 className="text-3xl font-bold uppercase tracking-tight group-hover:text-primary transition-colors">
+                    {film.title}
+                  </h3>
+                  <p className="text-muted-foreground font-light leading-relaxed">
+                    {film.description}
+                  </p>
+                  <div className="mt-4 flex items-center gap-2 text-xs font-bold uppercase tracking-widest text-primary">
+                    <PlayCircle size={16} /> Now Playing
+                  </div>
+                </div>
+              </GlassCard>
+            ))}
+          </div>
+        )}
       </div>
     </div>
   );

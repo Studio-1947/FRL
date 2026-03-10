@@ -22,6 +22,11 @@ import { AppController } from './app.controller';
 import { PostsModule } from './posts/posts.module';
 import { CommentsModule } from './comments/comments.module';
 import { FollowsModule } from './follows/follows.module';
+import { EventsModule } from './events/events.module';
+import { NoticesModule } from './notices/notices.module';
+import { BlogsModule } from './blogs/blogs.module';
+import { PublicationsModule } from './publications/publications.module';
+import { FilmsModule } from './films/films.module';
 
 @Module({
   imports: [
@@ -60,6 +65,16 @@ import { FollowsModule } from './follows/follows.module';
       // Actually dist/app.module.js -> dir is dist. So '..' -> root. Therefore: join(__dirname, '..', 'uploads')
       serveRoot: '/uploads',
     }),
+
+    EventsModule,
+
+    NoticesModule,
+
+    BlogsModule,
+
+    PublicationsModule,
+
+    FilmsModule,
 
     // Feature Modules
     // AuthModule,

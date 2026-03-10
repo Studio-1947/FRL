@@ -28,6 +28,6 @@ export class JwtStrategy extends PassportStrategy(Strategy) {
       throw new UnauthorizedException();
     }
     // passport-jwt will automatically append exactly this return value to req.user
-    return { sub: payload.sub, email: payload.email };
+    return { sub: payload.sub, email: payload.email, role: payload.role };
   }
 }

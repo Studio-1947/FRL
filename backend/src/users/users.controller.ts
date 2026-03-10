@@ -3,6 +3,8 @@ import { ApiTags, ApiOperation, ApiResponse, ApiBearerAuth } from '@nestjs/swagg
 import { Request } from 'express';
 import { UsersService } from './users.service';
 import { JwtAuthGuard } from '../auth/jwt-auth.guard';
+import { RolesGuard } from '../auth/guards/roles.guard';
+import { Roles } from '../auth/decorators/roles.decorator';
 
 @ApiTags('Users')
 @ApiBearerAuth()
@@ -10,6 +12,8 @@ import { JwtAuthGuard } from '../auth/jwt-auth.guard';
 export class UsersController {
   constructor(private readonly usersService: UsersService) {}
 
+  @UseGuards(JwtAuthGuard, RolesGuard)
+  @Roles('SuperAdmin')
   @Get()
   @ApiOperation({ summary: 'Get all users' })
   @ApiResponse({ status: 200, description: 'Return all users' })
@@ -55,5 +59,14 @@ export class UsersController {
   @ApiResponse({ status: 201, description: 'The user has been successfully created.' })
   async createUser(@Body() body: { email: string; name?: string }) {
     return this.usersService.create(body);
+  }
+
+  @UseGuards(JwtAuthGuard, RolesGuard)
+  @Roles('SuperAdmin')
+  @Patch(':id/role')
+  @ApiOperation({ summary: 'Update user role (SuperAdmin only)' })
+  @ApiResponse({ status: 200, description: 'The user role has been successfully updated.' })
+  async updateUserRole(@Param('id') id: string, @Body() body: { role: string }) {
+    return this.usersService.updateRole(parseInt(id), body.role);
   }
 }

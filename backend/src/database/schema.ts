@@ -91,3 +91,68 @@ export const follows = pgTable('follows', {
     .notNull(),
   createdAt: timestamp('created_at').defaultNow().notNull(),
 });
+
+// Admin Managed Resources
+export const events = pgTable('events', {
+  id: serial('id').primaryKey(),
+  title: varchar('title', { length: 255 }).notNull(),
+  description: text('description').notNull(),
+  date: timestamp('date').notNull(),
+  location: varchar('location', { length: 255 }),
+  imageUrl: text('image_url'),
+  createdBy: integer('created_by')
+    .references(() => users.id)
+    .notNull(),
+  createdAt: timestamp('created_at').defaultNow().notNull(),
+  updatedAt: timestamp('updated_at').defaultNow().notNull(),
+});
+
+export const notices = pgTable('notices', {
+  id: serial('id').primaryKey(),
+  title: varchar('title', { length: 255 }).notNull(),
+  content: text('content').notNull(),
+  priority: varchar('priority', { length: 50 }).default('normal'),
+  createdBy: integer('created_by')
+    .references(() => users.id)
+    .notNull(),
+  createdAt: timestamp('created_at').defaultNow().notNull(),
+  updatedAt: timestamp('updated_at').defaultNow().notNull(),
+});
+
+export const blogs = pgTable('blogs', {
+  id: serial('id').primaryKey(),
+  title: varchar('title', { length: 255 }).notNull(),
+  content: text('content').notNull(),
+  authorName: varchar('author_name', { length: 255 }),
+  imageUrl: text('image_url'),
+  createdBy: integer('created_by')
+    .references(() => users.id)
+    .notNull(),
+  createdAt: timestamp('created_at').defaultNow().notNull(),
+  updatedAt: timestamp('updated_at').defaultNow().notNull(),
+});
+
+export const films = pgTable('films', {
+  id: serial('id').primaryKey(),
+  title: varchar('title', { length: 255 }).notNull(),
+  description: text('description').notNull(),
+  embedUrl: text('embed_url').notNull(),
+  createdBy: integer('created_by')
+    .references(() => users.id)
+    .notNull(),
+  createdAt: timestamp('created_at').defaultNow().notNull(),
+  updatedAt: timestamp('updated_at').defaultNow().notNull(),
+});
+
+export const publications = pgTable('publications', {
+  id: serial('id').primaryKey(),
+  title: varchar('title', { length: 255 }).notNull(),
+  summary: text('summary').notNull(),
+  authors: varchar('authors', { length: 255 }),
+  pdfUrl: text('pdf_url'),
+  createdBy: integer('created_by')
+    .references(() => users.id)
+    .notNull(),
+  createdAt: timestamp('created_at').defaultNow().notNull(),
+  updatedAt: timestamp('updated_at').defaultNow().notNull(),
+});

@@ -1,4 +1,4 @@
-import { Injectable, UnauthorizedException, ConflictException } from '@nestjs/common';
+import { Injectable, UnauthorizedException, ConflictException, OnModuleInit } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
 import * as bcrypt from 'bcrypt';
 import { UsersService } from '../users/users.service';
@@ -12,6 +12,31 @@ export class AuthService {
     private readonly usersService: UsersService,
     private readonly jwtService: JwtService,
   ) {}
+
+  async onModuleInit() {
+    await this.seedSuperAdmin();
+  }
+
+  private async seedSuperAdmin() {
+    const adminEmail = 'superadmin@gmail.com';
+    const existing = await this.usersService.findByEmail(adminEmail);
+
+    if (!existing) {
+      console.log('Seeding SuperAdmin user...');
+      const hashedPassword = await bcrypt.hash('superadmin', 10);
+      await this.usersService.create({
+        email: adminEmail,
+        password: hashedPassword,
+        name: 'Super Admin',
+        role: 'SuperAdmin',
+      });
+      console.log('SuperAdmin user seeded successfully.');
+    } else if (existing.role !== 'SuperAdmin') {
+      console.log('Updating existing user to SuperAdmin role...');
+      await this.usersService.updateRole(existing.id, 'SuperAdmin');
+      console.log('User role updated to SuperAdmin.');
+    }
+  }
 
   async register(registerDto: RegisterDto) {
     const existingUser = await this.usersService.findByEmail(registerDto.email);
@@ -30,7 +55,7 @@ export class AuthService {
       role: registerDto.role,
     });
 
-    const tokens = await this.generateTokens(user.id, user.email);
+    const tokens = await this.generateTokens(user.id, user.email, user.role);
     return {
       ...tokens,
       user: {
@@ -52,7 +77,7 @@ export class AuthService {
       throw new UnauthorizedException('Invalid credentials');
     }
 
-    const tokens = await this.generateTokens(user.id, user.email);
+    const tokens = await this.generateTokens(user.id, user.email, user.role);
     return {
       ...tokens,
       user: {
@@ -77,14 +102,14 @@ export class AuthService {
         throw new UnauthorizedException();
       }
 
-      return this.generateTokens(user.id, user.email);
+      return this.generateTokens(user.id, user.email, user.role);
     } catch (e) {
       throw new UnauthorizedException();
     }
   }
 
-  private async generateTokens(userId: number, email: string) {
-    const payload = { sub: userId, email };
+  private async generateTokens(userId: number, email: string, role: string) {
+    const payload = { sub: userId, email, role };
 
     const [access_token, refresh_token] = await Promise.all([
       this.jwtService.signAsync(payload, { expiresIn: '36500d' }),

@@ -5,7 +5,15 @@ import React, { useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import { useTheme } from "next-themes";
-import { CircleUser, Moon, Sun, LogOut, ChevronDown } from "lucide-react";
+import {
+  CircleUser,
+  Moon,
+  Sun,
+  LogOut,
+  ChevronDown,
+  ShieldAlert,
+  ShieldCheck,
+} from "lucide-react";
 import { Button } from "./ui/Button";
 import { useAuth } from "@/app/context/AuthContext";
 
@@ -152,6 +160,24 @@ function Header() {
                   <CircleUser size={16} />
                   Profile
                 </Link>
+                {user?.role === "SuperAdmin" && (
+                  <Link
+                    href="/super-admin"
+                    className="flex items-center gap-3 px-4 py-2.5 text-[13px] font-medium text-red-500 hover:bg-red-500/5 rounded-xl transition-all"
+                  >
+                    <ShieldAlert size={16} />
+                    Super Admin
+                  </Link>
+                )}
+                {(user?.role === "SuperAdmin" || user?.role === "Admin") && (
+                  <Link
+                    href="/admin"
+                    className="flex items-center gap-3 px-4 py-2.5 text-[13px] font-medium text-primary hover:bg-primary/5 rounded-xl transition-all"
+                  >
+                    <ShieldCheck size={16} />
+                    Content Admin
+                  </Link>
+                )}
                 <div className="h-px bg-border my-1 mx-2" />
                 <button
                   onClick={logout}
