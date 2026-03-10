@@ -49,12 +49,12 @@ function SuperAdminPage() {
   const handleRoleChange = async (userId, newRole) => {
     setUpdatingId(userId);
     try {
-      const resp = await fetchApi(`/v1/users/${userId}/role`, {
+      const response = await fetchApi(`/v1/users/${userId}/role`, {
         method: "PATCH",
         body: JSON.stringify({ role: newRole }),
       });
 
-      if (resp && resp.id) {
+      if (response.ok) {
         toast.success(`User role updated to ${newRole}`);
         setUsers((prev) =>
           prev.map((u) => (u.id === userId ? { ...u, role: newRole } : u)),
