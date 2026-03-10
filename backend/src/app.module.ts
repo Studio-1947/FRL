@@ -1,7 +1,6 @@
 import { Module } from '@nestjs/common';
 import { ConfigModule } from '@nestjs/config';
-import { APP_FILTER, APP_INTERCEPTOR, APP_GUARD } from '@nestjs/core';
-// import { ThrottlerModule, ThrottlerGuard } from '@nestjs/throttler';
+import { APP_FILTER, APP_INTERCEPTOR } from '@nestjs/core';
 import { HttpExceptionFilter } from './common/filters/http-exception.filter';
 import { TransformInterceptor } from './common/interceptors/transform.interceptor';
 
@@ -36,18 +35,6 @@ import { FilmsModule } from './films/films.module';
       load: [configuration],
       validationSchema,
     }),
-
-    /*
-    // Rate Limiting
-    ThrottlerModule.forRoot({
-      throttlers: [
-        {
-          ttl: 60000,
-          limit: 10,
-        },
-      ],
-    }),
-    */
 
     // Database
     DatabaseModule,
@@ -90,13 +77,6 @@ import { FilmsModule } from './films/films.module';
       provide: APP_INTERCEPTOR,
       useClass: TransformInterceptor,
     },
-    /*
-    // Global Throttler Guard
-    {
-      provide: APP_GUARD,
-      useClass: ThrottlerGuard,
-    },
-    */
   ],
   controllers: [AppController],
 })
