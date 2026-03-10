@@ -1,4 +1,15 @@
-import { Controller, Get, Post, Body, Patch, UseGuards, Req, Param, Query } from '@nestjs/common';
+import {
+  Controller,
+  Get,
+  Post,
+  Body,
+  Patch,
+  Delete,
+  UseGuards,
+  Req,
+  Param,
+  Query,
+} from '@nestjs/common';
 import { ApiTags, ApiOperation, ApiResponse, ApiBearerAuth } from '@nestjs/swagger';
 import { Request } from 'express';
 import { UsersService } from './users.service';
@@ -52,6 +63,17 @@ export class UsersController {
     // Disallow updating password or ID through this open object payload
     const { password, id, createdAt, updatedAt, ...safeData } = body;
     return this.usersService.updateProfile(req.user.sub, safeData);
+  }
+
+  @UseGuards(JwtAuthGuard)
+  @Delete('profile/avatar')
+  @ApiOperation({ summary: 'Delete logged in user profile picture' })
+  @ApiResponse({
+    status: 200,
+    description: 'The user profile picture has been successfully deleted.',
+  })
+  async deleteAvatar(@Req() req: Request & { user: any }) {
+    return this.usersService.deleteAvatar(req.user.sub);
   }
 
   @Post()

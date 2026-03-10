@@ -121,6 +121,19 @@ export class UsersService {
     return updatedUser;
   }
 
+  async deleteAvatar(id: number) {
+    const [updatedUser] = await this.db
+      .update(schema.users)
+      .set({
+        avatarUrl: null,
+        updatedAt: new Date(),
+      })
+      .where(eq(schema.users.id, id))
+      .returning();
+
+    return updatedUser;
+  }
+
   async updateRefreshToken(id: number, refreshToken: string | null) {
     await this.db
       .update(schema.users)

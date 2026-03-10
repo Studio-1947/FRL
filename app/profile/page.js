@@ -5,7 +5,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { fetchApi } from "../../lib/api";
 import { useAuth } from "../../app/context/AuthContext";
-import { MapPin, Star, Settings, Loader2, Camera } from "lucide-react";
+import { MapPin, Star, Settings, Loader2, Camera, Trash2 } from "lucide-react";
 import SecuritySection from "../components/settings/SecuritySection";
 import { GlassCard } from "../components/ui/GlassCard";
 import { Button } from "../components/ui/Button";
@@ -85,6 +85,31 @@ export default function ProfilePage() {
     }
   };
 
+  const removeProfilePicture = async () => {
+    if (!confirm("Are you sure you want to remove your profile picture?"))
+      return;
+
+    setUploading(true);
+    try {
+      const response = await fetchApi("/v1/users/profile/avatar", {
+        method: "DELETE",
+      });
+
+      if (!response.ok) {
+        throw new Error("Failed to remove profile picture");
+      }
+
+      const updatedUser = await response.json();
+      setProfile(updatedUser);
+      refreshUser();
+      toast.success("Profile picture removed!");
+    } catch (err) {
+      toast.error(`Error: ${err.message}`);
+    } finally {
+      setUploading(false);
+    }
+  };
+
   if (loading) {
     return (
       <div className="min-h-screen flex flex-col items-center justify-center bg-background text-foreground gap-6">
@@ -152,6 +177,18 @@ export default function ProfilePage() {
                 fill
                 className="object-cover grayscale hover:grayscale-0 transition-all duration-700"
               />
+              {profile.avatarUrl && !uploading && (
+                <button
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    removeProfilePicture();
+                  }}
+                  className="absolute top-4 right-4 p-3 bg-red-500/80 hover:bg-red-500 text-white rounded-2xl opacity-0 group-hover:opacity-100 transition-all backdrop-blur-md shadow-lg z-10"
+                  title="Remove Photo"
+                >
+                  <Trash2 size={20} />
+                </button>
+              )}
               <div className="absolute inset-0 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity bg-background/40 backdrop-blur-sm text-foreground">
                 <div className="flex flex-col items-center">
                   <Camera size={40} />

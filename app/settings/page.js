@@ -11,6 +11,7 @@ import {
   User,
   Globe,
   Heart,
+  Trash2,
 } from "lucide-react";
 import Image from "next/image";
 import { useAuth } from "../context/AuthContext";
@@ -83,6 +84,31 @@ export default function SettingsPage() {
       toast.error("Failed to update profile.");
     } finally {
       setSaving(false);
+    }
+  };
+
+  const removeProfilePicture = async () => {
+    if (!confirm("Are you sure you want to remove your profile picture?"))
+      return;
+
+    setUploading(true);
+    try {
+      const response = await fetchApi("/v1/users/profile/avatar", {
+        method: "DELETE",
+      });
+
+      if (response.ok) {
+        toast.success("Profile picture removed!");
+        setFormData((prev) => ({
+          ...prev,
+          avatarUrl: "",
+        }));
+        refreshUser();
+      } else throw new Error("Failed to remove profile picture");
+    } catch (error) {
+      toast.error("Failed to remove profile picture.");
+    } finally {
+      setUploading(false);
     }
   };
 
@@ -179,6 +205,18 @@ export default function SettingsPage() {
                   >
                     <Upload size={16} className="mr-2" /> Change
                   </Button>
+                  {formData.avatarUrl && (
+                    <Button
+                      type="button"
+                      variant="outline"
+                      size="sm"
+                      className="text-red-500 border-red-500/20 hover:bg-red-500/10"
+                      onClick={removeProfilePicture}
+                      disabled={uploading}
+                    >
+                      <Trash2 size={16} className="mr-2" /> Remove
+                    </Button>
+                  )}
                   <input
                     type="file"
                     ref={fileInputRef}
