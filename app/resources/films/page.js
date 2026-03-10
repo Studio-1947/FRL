@@ -15,10 +15,13 @@ export default function FilmsPage() {
     const loadFilms = async () => {
       setLoading(true);
       try {
-        const result = await fetchApi(`/v1/films?page=${page}&limit=4`);
-        if (result && result.data) {
-          setFilms(result.data);
-          setTotalPages(result.meta.totalPages);
+        const response = await fetchApi(`/v1/films?page=${page}&limit=4`);
+        if (response.ok) {
+          const result = await response.json();
+          if (result && result.data) {
+            setFilms(result.data);
+            setTotalPages(result.meta.totalPages);
+          }
         }
       } catch (err) {
         console.error("Failed to load films", err);

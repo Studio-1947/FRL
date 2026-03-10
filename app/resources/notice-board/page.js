@@ -15,10 +15,13 @@ export default function NoticeBoardPage() {
     const loadNotices = async () => {
       setLoading(true);
       try {
-        const result = await fetchApi(`/v1/notices?page=${page}&limit=5`);
-        if (result && result.data) {
-          setNotices(result.data);
-          setTotalPages(result.meta.totalPages);
+        const response = await fetchApi(`/v1/notices?page=${page}&limit=5`);
+        if (response.ok) {
+          const result = await response.json();
+          if (result && result.data) {
+            setNotices(result.data);
+            setTotalPages(result.meta.totalPages);
+          }
         }
       } catch (err) {
         console.error("Failed to load notices", err);

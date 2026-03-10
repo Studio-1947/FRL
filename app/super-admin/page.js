@@ -26,9 +26,16 @@ function SuperAdminPage() {
 
   const loadUsers = async () => {
     try {
-      const resp = await fetchApi("/v1/users");
-      if (Array.isArray(resp)) {
-        setUsers(resp);
+      const response = await fetchApi("/v1/users");
+      if (response.ok) {
+        const result = await response.json();
+        if (Array.isArray(result)) {
+          setUsers(result);
+        } else if (result && result.data) {
+          setUsers(result.data);
+        } else {
+          setUsers([]);
+        }
       } else {
         toast.error("Failed to load users");
       }

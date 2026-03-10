@@ -16,10 +16,15 @@ export default function PublicationsPage() {
     const loadPublications = async () => {
       setLoading(true);
       try {
-        const result = await fetchApi(`/v1/publications?page=${page}&limit=6`);
-        if (result && result.data) {
-          setPublications(result.data);
-          setTotalPages(result.meta.totalPages);
+        const response = await fetchApi(
+          `/v1/publications?page=${page}&limit=6`,
+        );
+        if (response.ok) {
+          const result = await response.json();
+          if (result && result.data) {
+            setPublications(result.data);
+            setTotalPages(result.meta.totalPages);
+          }
         }
       } catch (err) {
         console.error("Failed to load publications", err);

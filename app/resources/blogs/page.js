@@ -1,7 +1,8 @@
 "use client";
 
 import React, { useEffect, useState } from "react";
-import { Newspaper, User, Clock, Loader2 } from "lucide-react";
+import Link from "next/link";
+import { Newspaper, User, Clock, Loader2, ArrowRight } from "lucide-react";
 import { fetchApi } from "../../../lib/api";
 import { GlassCard } from "../../components/ui/GlassCard";
 
@@ -15,10 +16,13 @@ export default function BlogsPage() {
     const loadBlogs = async () => {
       setLoading(true);
       try {
-        const result = await fetchApi(`/v1/blogs?page=${page}&limit=6`);
-        if (result && result.data) {
-          setBlogs(result.data);
-          setTotalPages(result.meta.totalPages);
+        const response = await fetchApi(`/v1/blogs?page=${page}&limit=6`);
+        if (response.ok) {
+          const result = await response.json();
+          if (result && result.data) {
+            setBlogs(result.data);
+            setTotalPages(result.meta.totalPages);
+          }
         }
       } catch (err) {
         console.error("Failed to load blogs", err);
@@ -103,9 +107,13 @@ export default function BlogsPage() {
                     {blog.content}
                   </p>
                   <div className="mt-auto pt-6 border-t border-border/40">
-                    <button className="text-xs font-bold uppercase tracking-widest hover:text-primary transition-colors flex items-center gap-2">
-                      Read More <span className="text-lg">ΓåÆ</span>
-                    </button>
+                    <Link
+                      href={`/resources/blogs/${blog.id}`}
+                      className="text-xs font-bold uppercase tracking-widest hover:text-primary transition-colors flex items-center gap-2 group/link"
+                    >
+                      Read More{" "}
+                      <ArrowRight className="w-4 h-4 group-hover/link:translate-x-1 transition-transform" />
+                    </Link>
                   </div>
                 </div>
               </GlassCard>

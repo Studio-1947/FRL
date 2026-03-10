@@ -73,9 +73,17 @@ function AdminPanel() {
   const loadItems = async () => {
     setLoading(true);
     try {
-      const resp = await fetchApi(`/v1/${activeTab}`);
-      if (Array.isArray(resp)) {
-        setItems(resp);
+      const response = await fetchApi(`/v1/${activeTab}?limit=100`); // Admin view gets more items
+      if (response.ok) {
+        const result = await response.json();
+        // Check if result is paginated { data, meta } or raw array
+        if (result && result.data) {
+          setItems(result.data);
+        } else if (Array.isArray(result)) {
+          setItems(result);
+        } else {
+          setItems([]);
+        }
       } else {
         setItems([]);
       }
@@ -488,7 +496,12 @@ function AdminPanel() {
             </div>
           ) : items.length === 0 ? (
             <GlassCard className="flex flex-col items-center justify-center p-20 gap-4 text-muted-foreground border-dashed">
-              <activeTab.icon className="w-12 h-12 opacity-20" />
+              {React.createElement(
+                TABS.find((t) => t.id === activeTab)?.icon || Loader2,
+                {
+                  className: "w-12 h-12 opacity-20",
+                },
+              )}
               <p>No {activeTab} found. Start by creating one!</p>
             </GlassCard>
           ) : (

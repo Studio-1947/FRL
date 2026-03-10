@@ -1,7 +1,8 @@
 "use client";
 
 import React, { useEffect, useState } from "react";
-import { Calendar, MapPin, Clock, Loader2 } from "lucide-react";
+import Link from "next/link";
+import { Calendar, MapPin, Clock, Loader2, ArrowRight } from "lucide-react";
 import { fetchApi } from "../../../lib/api";
 import { GlassCard } from "../../components/ui/GlassCard";
 
@@ -15,10 +16,13 @@ export default function EventsPage() {
     const loadEvents = async () => {
       setLoading(true);
       try {
-        const result = await fetchApi(`/v1/events?page=${page}&limit=6`);
-        if (result && result.data) {
-          setEvents(result.data);
-          setTotalPages(result.meta.totalPages);
+        const response = await fetchApi(`/v1/events?page=${page}&limit=6`);
+        if (response.ok) {
+          const result = await response.json();
+          if (result && result.data) {
+            setEvents(result.data);
+            setTotalPages(result.meta.totalPages);
+          }
         }
       } catch (err) {
         console.error("Failed to load events", err);
@@ -105,9 +109,13 @@ export default function EventsPage() {
                     {event.description}
                   </p>
                   <div className="mt-auto pt-6 border-t border-border/40">
-                    <button className="text-xs font-bold uppercase tracking-widest hover:text-primary transition-colors flex items-center gap-2">
-                      View Details <span className="text-lg">ΓåÆ</span>
-                    </button>
+                    <Link
+                      href={`/resources/events/${event.id}`}
+                      className="text-xs font-bold uppercase tracking-widest hover:text-primary transition-colors flex items-center gap-2 group/link"
+                    >
+                      View Details{" "}
+                      <ArrowRight className="w-4 h-4 group-hover/link:translate-x-1 transition-transform" />
+                    </Link>
                   </div>
                 </div>
               </GlassCard>
