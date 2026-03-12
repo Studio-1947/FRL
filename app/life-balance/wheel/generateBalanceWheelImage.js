@@ -24,9 +24,7 @@ export const generateBalanceWheelImage = async (wheelElement, date) => {
   ]);
 
   if (!wheelElement) {
-    console.error("Wheel element reference is missing");
-    alert("Unable to download: Wheel element not found. Please try again.");
-    return;
+    throw new Error("Wheel element reference is missing");
   }
 
   try {
@@ -212,10 +210,7 @@ export const generateBalanceWheelImage = async (wheelElement, date) => {
       link.click();
       document.body.removeChild(link);
     } catch (fallbackErr) {
-      console.error("Fallback download also failed:", fallbackErr);
-      alert(
-        "Download failed due to browser restrictions. Please try taking a screenshot instead.",
-      );
+      throw fallbackErr;
     }
   } finally {
     // Cleanup the temporary card

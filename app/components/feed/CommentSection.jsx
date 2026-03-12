@@ -5,12 +5,17 @@ import { Loader2, Send, MessageCircle } from "lucide-react";
 import { fetchApi } from "@/lib/api";
 import CommentItem from "./CommentItem";
 import { toast } from "sonner";
+import Modal from "../ui/Modal";
 
 export default function CommentSection({ postId, currentUserId }) {
   const [comments, setComments] = useState([]);
   const [loading, setLoading] = useState(true);
   const [newComment, setNewComment] = useState("");
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [deleteModalState, setDeleteModalState] = useState({
+    isOpen: false,
+    commentId: null,
+  });
 
   const fetchComments = async () => {
     try {
@@ -60,8 +65,6 @@ export default function CommentSection({ postId, currentUserId }) {
   };
 
   const handleDelete = async (commentId) => {
-    if (!window.confirm("Delete this comment?")) return;
-
     try {
       const response = await fetchApi(
         `/v1/posts/${postId}/comments/${commentId}`,
@@ -82,6 +85,15 @@ export default function CommentSection({ postId, currentUserId }) {
 
   return (
     <div className="pt-6 mt-4 border-t border-border animate-in fade-in duration-500">
+      <Modal
+        isOpen={deleteModalState.isOpen}
+        onClose={() => setDeleteModalState({ isOpen: false, commentId: null })}
+        onConfirm={() => handleDelete(deleteModalState.commentId)}
+        title="Delete Comment"
+        message="Are you sure you want to delete this comment? This action cannot be undone."
+        confirmText="Delete"
+        type="warning"
+      />
       <h4 className="text-sm font-black text-foreground mb-6 flex items-center gap-2">
         <MessageCircle className="w-4 h-4 text-[#1C5B6F]" />
         Discussion
@@ -129,7 +141,9 @@ export default function CommentSection({ postId, currentUserId }) {
               comment={comment}
               postId={postId}
               onCommentAdded={fetchComments}
-              onDelete={handleDelete}
+              onDelete={(commentId) =>
+                setDeleteModalState({ isOpen: true, commentId })
+              }
               currentUserId={currentUserId}
             />
           ))}

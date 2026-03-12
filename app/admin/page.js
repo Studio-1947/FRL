@@ -22,6 +22,7 @@ import {
 } from "lucide-react";
 import Image from "next/image";
 import { toast } from "sonner";
+import Modal from "../components/ui/Modal";
 
 const TABS = [
   {
@@ -69,6 +70,10 @@ function AdminPanel() {
   const [formData, setFormData] = useState({});
   const [submitting, setSubmitting] = useState(false);
   const [uploading, setUploading] = useState(false);
+  const [deleteModalState, setDeleteModalState] = useState({
+    isOpen: false,
+    itemId: null,
+  });
 
   const loadItems = useCallback(async () => {
     setLoading(true);
@@ -131,13 +136,14 @@ function AdminPanel() {
   };
 
   const handleDelete = async (id) => {
-    if (!confirm("Are you sure you want to delete this item?")) return;
     try {
       await fetchApi(`/v1/${activeTab}/${id}`, { method: "DELETE" });
       toast.success("Item deleted successfully");
       loadItems();
     } catch (err) {
       toast.error("Failed to delete item");
+    } finally {
+      setDeleteModalState({ isOpen: false, itemId: null });
     }
   };
 
@@ -562,6 +568,15 @@ function AdminPanel() {
 
   return (
     <div className="min-h-screen bg-background text-foreground py-20 px-6 lg:px-12">
+      <Modal
+        isOpen={deleteModalState.isOpen}
+        onClose={() => setDeleteModalState({ isOpen: false, itemId: null })}
+        onConfirm={() => handleDelete(deleteModalState.itemId)}
+        title="Delete Item"
+        message="Are you sure you want to delete this item? This action cannot be undone."
+        confirmText="Delete"
+        type="warning"
+      />
       <div className="max-w-6xl mx-auto flex flex-col gap-10">
         {/* Header */}
         <div className="flex flex-col md:flex-row justify-between items-start md:items-end gap-6 border-b border-border/40 pb-8">
@@ -712,7 +727,9 @@ function AdminPanel() {
                         variant="ghost"
                         size="sm"
                         className="text-red-500 hover:bg-red-500/10"
-                        onClick={() => handleDelete(item.id)}
+                        onClick={() =>
+                          setDeleteModalState({ isOpen: true, itemId: item.id })
+                        }
                       >
                         <Trash2 size={16} />
                       </Button>

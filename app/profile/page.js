@@ -19,6 +19,8 @@ import { GlassCard } from "../components/ui/GlassCard";
 import { Button } from "../components/ui/Button";
 import { toast } from "sonner";
 
+import Modal from "../components/ui/Modal";
+
 export default function ProfilePage() {
   const [profile, setProfile] = useState(null);
   const [registrations, setRegistrations] = useState([]);
@@ -26,6 +28,7 @@ export default function ProfilePage() {
   const [loadingRegistrations, setLoadingRegistrations] = useState(true);
   const [uploading, setUploading] = useState(false);
   const [error, setError] = useState(null);
+  const [showRemoveAvatarModal, setShowRemoveAvatarModal] = useState(false);
   const fileInputRef = React.useRef(null);
   const { refreshUser } = useAuth();
 
@@ -120,9 +123,6 @@ export default function ProfilePage() {
   };
 
   const removeProfilePicture = async () => {
-    if (!confirm("Are you sure you want to remove your profile picture?"))
-      return;
-
     setUploading(true);
     try {
       const response = await fetchApi("/v1/users/profile/avatar", {
@@ -141,6 +141,7 @@ export default function ProfilePage() {
       toast.error(`Error: ${err.message}`);
     } finally {
       setUploading(false);
+      setShowRemoveAvatarModal(false);
     }
   };
 
@@ -186,6 +187,15 @@ export default function ProfilePage() {
 
   return (
     <div className="min-h-screen bg-background py-20 px-6 md:px-12">
+      <Modal
+        isOpen={showRemoveAvatarModal}
+        onClose={() => setShowRemoveAvatarModal(false)}
+        onConfirm={removeProfilePicture}
+        title="Remove Profile Picture"
+        message="Are you sure you want to remove your profile picture? This action cannot be undone."
+        confirmText="Remove"
+        type="warning"
+      />
       <div className="max-w-5xl mx-auto">
         <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center mb-10 gap-6">
           <h1 className="text-4xl md:text-5xl font-extrabold tracking-tight text-foreground">
@@ -215,7 +225,7 @@ export default function ProfilePage() {
                 <button
                   onClick={(e) => {
                     e.stopPropagation();
-                    removeProfilePicture();
+                    setShowRemoveAvatarModal(true);
                   }}
                   className="absolute top-4 right-4 p-3 bg-red-500/80 hover:bg-red-500 text-white rounded-2xl opacity-0 group-hover:opacity-100 transition-all backdrop-blur-md shadow-lg z-10"
                   title="Remove Photo"

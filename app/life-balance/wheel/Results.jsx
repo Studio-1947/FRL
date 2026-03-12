@@ -22,9 +22,19 @@ const toFormData = (answers = []) => {
   };
 };
 
+import { toast } from "sonner";
+
+import Modal from "@/app/components/ui/Modal";
+
 const Results = ({ answers, formValues }) => {
   const graphRef = useRef(null);
   const [downloading, setDownloading] = useState(false);
+  const [modalState, setModalState] = useState({
+    isOpen: false,
+    title: "",
+    message: "",
+    type: "info",
+  });
 
   const formData = useMemo(() => toFormData(answers), [answers]);
 
@@ -39,6 +49,15 @@ const Results = ({ answers, formValues }) => {
       setDownloading(true);
       const mod = await import("./generateBalanceWheelImage");
       await mod.generateBalanceWheelImage(graphRef.current, displayDate);
+    } catch (err) {
+      console.error("Download failed:", err);
+      setModalState({
+        isOpen: true,
+        title: "Download Error",
+        message:
+          "We encountered an issue while generating your wheel image. Please try again or take a screenshot.",
+        type: "error",
+      });
     } finally {
       setDownloading(false);
     }
@@ -55,14 +74,30 @@ const Results = ({ answers, formValues }) => {
         await navigator.share(shareData);
       } else if (navigator.clipboard && shareData.url) {
         await navigator.clipboard.writeText(shareData.url);
-        // Using alert for simplicity, but could use toast
-        alert("Link copied to clipboard");
+        toast.success("Link copied to clipboard");
       }
-    } catch (e) {}
+    } catch (e) {
+      setModalState({
+        isOpen: true,
+        title: "Sharing Failed",
+        message:
+          "We couldn't share the link automatically. You can copy the URL from your browser address bar.",
+        type: "info",
+      });
+    }
   };
 
   return (
     <div className="w-full h-full flex flex-col lg:flex-row-reverse items-center justify-center gap-12 lg:gap-20 max-w-7xl mx-auto px-4">
+      <Modal
+        isOpen={modalState.isOpen}
+        onClose={() => setModalState({ ...modalState, isOpen: false })}
+        title={modalState.title}
+        message={modalState.message}
+        type={modalState.type}
+        showCancel={false}
+        confirmText="Understood"
+      />
       {/* Wheel section */}
       <div className="flex justify-center items-center lg:w-1/2 relative">
         <div className="absolute inset-0 bg-primary/5 rounded-full blur-[100px] animate-pulse" />

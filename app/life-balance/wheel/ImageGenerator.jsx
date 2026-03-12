@@ -1,6 +1,8 @@
 import html2canvas from "html2canvas";
 import { toJpeg } from "html-to-image";
 
+import { toast } from "sonner";
+
 /**
  * Generates and downloads a shareable image of the user's balance wheel
  *
@@ -10,7 +12,9 @@ import { toJpeg } from "html-to-image";
 export const generateBalanceWheelImage = async (wheelElement, date) => {
   if (!wheelElement) {
     console.error("Wheel element reference is missing");
-    alert("Unable to download: Wheel element not found. Please try again.");
+    toast.error(
+      "Unable to download: Wheel element not found. Please try again.",
+    );
     return;
   }
 
@@ -180,7 +184,7 @@ export const generateBalanceWheelImage = async (wheelElement, date) => {
       }
     } catch (fallbackErr) {
       console.error("Fallback download also failed:", fallbackErr);
-      alert(
+      toast.error(
         "Download failed. Please try again or contact support if the issue persists.",
       );
     }

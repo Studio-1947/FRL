@@ -2,6 +2,7 @@
 import React, { useEffect, useState } from "react";
 import { fetchApi } from "../../lib/api";
 import { toast } from "sonner";
+import Modal from "../components/ui/Modal";
 import { Button } from "../components/ui/Button";
 import {
   Loader2,
@@ -41,6 +42,7 @@ export default function SettingsPage() {
   const [uploading, setUploading] = useState(false);
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
+  const [showRemoveAvatarModal, setShowRemoveAvatarModal] = useState(false);
   const { refreshUser } = useAuth();
 
   useEffect(() => {
@@ -88,9 +90,6 @@ export default function SettingsPage() {
   };
 
   const removeProfilePicture = async () => {
-    if (!confirm("Are you sure you want to remove your profile picture?"))
-      return;
-
     setUploading(true);
     try {
       const response = await fetchApi("/v1/users/profile/avatar", {
@@ -109,6 +108,7 @@ export default function SettingsPage() {
       toast.error("Failed to remove profile picture.");
     } finally {
       setUploading(false);
+      setShowRemoveAvatarModal(false);
     }
   };
 
@@ -133,6 +133,15 @@ export default function SettingsPage() {
 
   return (
     <div className="min-h-screen bg-background py-20 px-6 md:px-12 flex flex-col items-center">
+      <Modal
+        isOpen={showRemoveAvatarModal}
+        onClose={() => setShowRemoveAvatarModal(false)}
+        onConfirm={removeProfilePicture}
+        title="Remove Profile Picture"
+        message="Are you sure you want to remove your profile picture? This action cannot be undone."
+        confirmText="Remove"
+        type="warning"
+      />
       <div className="w-full max-w-5xl flex flex-col gap-16">
         {/* Header */}
         <header className="flex flex-col gap-4 text-left">
@@ -211,7 +220,7 @@ export default function SettingsPage() {
                       variant="outline"
                       size="sm"
                       className="text-red-500 border-red-500/20 hover:bg-red-500/10"
-                      onClick={removeProfilePicture}
+                      onClick={() => setShowRemoveAvatarModal(true)}
                       disabled={uploading}
                     >
                       <Trash2 size={16} className="mr-2" /> Remove
