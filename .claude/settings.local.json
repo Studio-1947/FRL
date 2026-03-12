@@ -1,7 +1,8 @@
 {
   "permissions": {
     "allow": [
-      "Skill(gsd:new-project)"
+      "Skill(gsd:new-project)",
+      "Bash(find public/ -type f | sort && echo \"---\" && find app/ -name \"*.png\" -o -name \"*.svg\" -o -name \"*.ico\" -o -name \"*.jpg\" 2>/dev/null | sort)"
     ]
   }
 }
