@@ -14,24 +14,30 @@ export function AuthProvider({ children }) {
   const router = useRouter();
 
   const checkAuth = () => {
-    if (typeof document !== "undefined") {
-      const tokenExists = document.cookie.includes("access_token");
-      setIsAuthenticated(tokenExists);
+    // With HttpOnly cookies, we can't reliably check document.cookie.
+    // Instead, we'll rely on the initial fetchUserProfile call to set state.
+    // However, if we need a synchronous check before the fetch, we could use
+    // a non-HttpOnly "session_exists" cookie set by the backend.
+    // For now, we'll just check if we have user data.
+    if (user) {
+      setIsAuthenticated(true);
     }
   };
 
   useEffect(() => {
-    checkAuth();
+    // We'll perform an initial auth check by trying to fetch the profile.
+    // This replaces the document.cookie check.
+    fetchUserProfile();
     setIsLoading(false);
   }, []);
 
   useEffect(() => {
-    if (isAuthenticated) {
-      fetchUserProfile();
+    if (user) {
+      setIsAuthenticated(true);
     } else {
-      setUser(null);
+      setIsAuthenticated(false);
     }
-  }, [isAuthenticated]);
+  }, [user]);
 
   const fetchUserProfile = async () => {
     try {
@@ -40,31 +46,36 @@ export function AuthProvider({ children }) {
       if (response.ok) {
         const userData = await response.json();
         setUser(userData);
+      } else {
+        setUser(null);
       }
     } catch (error) {
       console.error("Failed to fetch user profile:", error);
+      setUser(null);
     }
   };
 
-  const login = (token) => {
-    document.cookie = `access_token=${token}; path=/; max-age=3153600000; SameSite=Lax`;
-    setIsAuthenticated(true);
+  const login = (userData) => {
+    // Token is now set in HttpOnly cookie by backend.
+    // We just need to update the local state with user info if provided,
+    // or trigger a profile fetch.
+    if (userData) {
+      setUser(userData);
+    } else {
+      fetchUserProfile();
+    }
   };
 
   const logout = async () => {
     setIsLoggingOut(true);
     try {
-      // Import fetchApi dynamically or move it to a hook to avoid circular refs if needed,
-      // but here we can just use the global fetch or import it if safe.
-      // Since fetchApi is in lib/api.js, let's import it.
       const { fetchApi } = await import("@/lib/api");
       await fetchApi("/v1/auth/logout", { method: "POST" });
     } catch (error) {
       console.error("Backend logout failed:", error);
     } finally {
-      document.cookie =
-        "access_token=; path=/; expires=Thu, 01 Jan 1970 00:00:00 GMT";
-      setIsAuthenticated(false);
+      // Backend clears the HttpOnly cookies.
+      setUser(null);
       setIsLoggingOut(false);
       toast.info("Logged out successfully");
       router.push("/login");

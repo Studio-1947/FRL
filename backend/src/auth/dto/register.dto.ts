@@ -31,9 +31,4 @@ export class RegisterDto {
   @IsString()
   @IsOptional()
   expertise?: string;
-
-  @ApiProperty({ example: 'Volunteer', required: false })
-  @IsString()
-  @IsOptional()
-  role?: string;
 }

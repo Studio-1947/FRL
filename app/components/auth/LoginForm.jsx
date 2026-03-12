@@ -42,7 +42,7 @@ export default function LoginForm() {
       }
 
       const data = await response.json();
-      login(data.access_token);
+      login(data.user);
       toast.success("Welcome back to FRL!");
       router.push("/profile");
     } catch (err) {

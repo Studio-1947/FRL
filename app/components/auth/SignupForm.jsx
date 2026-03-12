@@ -21,7 +21,6 @@ export default function SignupForm() {
     confirmPassword: "",
     bio: "",
     expertise: "",
-    role: "Individual",
     agreeTerms: false,
     agreeMarketing: false,
   });
@@ -33,10 +32,6 @@ export default function SignupForm() {
       ...prev,
       [name]: type === "checkbox" ? checked : value,
     }));
-  };
-
-  const handleRoleChange = (role) => {
-    setFormData((prev) => ({ ...prev, role }));
   };
 
   const handleSubmit = async (e) => {
@@ -59,7 +54,6 @@ export default function SignupForm() {
           phone: formData.phone,
           bio: formData.bio,
           expertise: formData.expertise,
-          role: formData.role,
         }),
       });
 
@@ -70,7 +64,7 @@ export default function SignupForm() {
       }
 
       const data = await response.json();
-      login(data.access_token);
+      login(data.user);
       toast.success("Registration successful!");
       router.push("/profile");
     } catch (err) {
@@ -194,57 +188,26 @@ export default function SignupForm() {
           />
         </div>
 
-        {/* Expertise & Role */}
-        <div className="grid grid-cols-1 sm:grid-cols-2 gap-10">
-          <div className="flex-1">
-            <label className={labelClasses}>Expertise</label>
-            <div className="relative group">
-              <select
-                name="expertise"
-                value={formData.expertise}
-                onChange={handleChange}
-                className={`${inputClasses} appearance-none pr-10`}
-                required
-              >
-                <option value="" disabled>
-                  Select...
-                </option>
-                <option value="healthcare">Healthcare</option>
-                <option value="environment">Environment</option>
-                <option value="education">Education</option>
-                <option value="technology">Technology</option>
-              </select>
-              <ChevronDown className="absolute right-4 top-1/2 -translate-y-1/2 text-muted-foreground group-hover:text-primary transition-colors pointer-events-none w-5 h-5" />
-            </div>
-          </div>
-          <div className="flex-1">
-            <label className={labelClasses}>Type</label>
-            <div className="flex flex-col gap-4 mt-2">
-              {["Individual", "Organization"].map((role) => (
-                <label
-                  key={role}
-                  className="flex items-center gap-4 cursor-pointer group"
-                >
-                  <div
-                    onClick={() => handleRoleChange(role)}
-                    className={`w-6 h-6 rounded-full border-2 flex items-center justify-center transition-all ${
-                      formData.role === role
-                        ? "border-primary scale-110 shadow-[0_0_10px_rgba(var(--primary),0.3)]"
-                        : "border-border group-hover:border-primary/50"
-                    }`}
-                  >
-                    {formData.role === role && (
-                      <div className="w-3 h-3 bg-primary rounded-full" />
-                    )}
-                  </div>
-                  <span
-                    className={`text-sm font-bold uppercase tracking-widest ${formData.role === role ? "text-primary" : "text-muted-foreground"}`}
-                  >
-                    {role}
-                  </span>
-                </label>
-              ))}
-            </div>
+        {/* Expertise */}
+        <div className="flex-1">
+          <label className={labelClasses}>Expertise</label>
+          <div className="relative group">
+            <select
+              name="expertise"
+              value={formData.expertise}
+              onChange={handleChange}
+              className={`${inputClasses} appearance-none pr-10 w-full`}
+              required
+            >
+              <option value="" disabled>
+                Select...
+              </option>
+              <option value="healthcare">Healthcare</option>
+              <option value="environment">Environment</option>
+              <option value="education">Education</option>
+              <option value="technology">Technology</option>
+            </select>
+            <ChevronDown className="absolute right-4 top-1/2 -translate-y-1/2 text-muted-foreground group-hover:text-primary transition-colors pointer-events-none w-5 h-5" />
           </div>
         </div>
 

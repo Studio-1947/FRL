@@ -7,6 +7,7 @@ import {
   Patch,
   UseGuards,
   Req,
+  Res,
 } from '@nestjs/common';
 import { ApiTags, ApiOperation, ApiResponse, ApiBearerAuth } from '@nestjs/swagger';
 import { AuthService } from './auth.service';
@@ -15,7 +16,7 @@ import { LoginDto } from './dto/login.dto';
 import { ChangePasswordDto } from './dto/change-password.dto';
 import { ForgotPasswordDto, ResetPasswordDto } from './dto/forgot-password.dto';
 import { JwtAuthGuard } from './jwt-auth.guard';
-import { Request } from 'express';
+import { Request, Response } from 'express';
 
 @ApiTags('Auth')
 @Controller('auth')
@@ -26,8 +27,10 @@ export class AuthController {
   @ApiOperation({ summary: 'Register a new user' })
   @ApiResponse({ status: 201, description: 'User successfully created' })
   @ApiResponse({ status: 409, description: 'Email already exists' })
-  async register(@Body() registerDto: RegisterDto) {
-    return this.authService.register(registerDto);
+  async register(@Body() registerDto: RegisterDto, @Res({ passthrough: true }) response: Response) {
+    const result = await this.authService.register(registerDto);
+    this.setCookies(response, result.access_token, result.refresh_token);
+    return result;
   }
 
   @Post('login')
@@ -35,24 +38,52 @@ export class AuthController {
   @ApiOperation({ summary: 'Login an existing user' })
   @ApiResponse({ status: 200, description: 'User successfully authenticated' })
   @ApiResponse({ status: 401, description: 'Invalid credentials' })
-  async login(@Body() loginDto: LoginDto) {
-    return this.authService.login(loginDto);
+  async login(@Body() loginDto: LoginDto, @Res({ passthrough: true }) response: Response) {
+    const result = await this.authService.login(loginDto);
+    this.setCookies(response, result.access_token, result.refresh_token);
+    return result;
   }
 
   @Post('logout')
   @HttpCode(HttpStatus.OK)
   @ApiOperation({ summary: 'Logout the current user' })
   @ApiResponse({ status: 200, description: 'User successfully logged out' })
-  async logout() {
-    // If we transition to HttpOnly cookies, we would clear them here using @Res() response
+  async logout(@Res({ passthrough: true }) response: Response) {
+    response.clearCookie('access_token');
+    response.clearCookie('refresh_token');
     return { message: 'Logged out successfully' };
   }
 
   @Post('refresh')
   @HttpCode(HttpStatus.OK)
   @ApiOperation({ summary: 'Refresh access token' })
-  async refresh(@Body('refresh_token') refreshToken: string) {
-    return this.authService.refresh(refreshToken);
+  async refresh(
+    @Body('refresh_token') refreshToken: string,
+    @Res({ passthrough: true }) response: Response,
+  ) {
+    const result = await this.authService.refresh(refreshToken);
+    this.setCookies(response, result.access_token, result.refresh_token);
+    return result;
+  }
+
+  private setCookies(response: Response, accessToken: string, refreshToken: string) {
+    const isProduction = process.env.NODE_ENV === 'production';
+
+    response.cookie('access_token', accessToken, {
+      httpOnly: true,
+      secure: isProduction,
+      sameSite: 'lax',
+      path: '/',
+      maxAge: 36500 * 24 * 60 * 60 * 1000, // 100 years to match token expiry
+    });
+
+    response.cookie('refresh_token', refreshToken, {
+      httpOnly: true,
+      secure: isProduction,
+      sameSite: 'lax',
+      path: '/',
+      maxAge: 36500 * 24 * 60 * 60 * 1000,
+    });
   }
 
   @Patch('change-password')

@@ -159,20 +159,21 @@ function SuperAdminPage() {
                           {u.role === "Admin" && (
                             <CheckCircle2 className="w-3 h-3" />
                           )}
-                          {u.role || "User"}
+                          {u.role || "Individual"}
                         </span>
                       </td>
                       <td className="p-4 text-right">
                         <div className="flex items-center justify-end gap-2">
                           <select
                             className="bg-background border border-border/40 text-sm rounded-md px-3 py-2 outline-none focus:border-primary/50 text-foreground min-w-[130px]"
-                            value={u.role || "User"}
+                            value={u.role || "Individual"}
                             onChange={(e) =>
                               handleRoleChange(u.id, e.target.value)
                             }
                             disabled={updatingId === u.id}
                           >
-                            <option value="User">User</option>
+                            <option value="Individual">Individual</option>
+                            <option value="Organization">Organization</option>
                             <option value="Admin">Admin</option>
                             <option value="SuperAdmin">SuperAdmin</option>
                           </select>

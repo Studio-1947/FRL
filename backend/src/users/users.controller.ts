@@ -60,8 +60,8 @@ export class UsersController {
   @ApiOperation({ summary: 'Update logged in user profile' })
   @ApiResponse({ status: 200, description: 'The user profile has been successfully updated.' })
   async updateProfile(@Req() req: Request & { user: any }, @Body() body: any) {
-    // Disallow updating password or ID through this open object payload
-    const { password, id, createdAt, updatedAt, ...safeData } = body;
+    // Disallow updating password, role or ID through this open object payload
+    const { password, role, id, createdAt, updatedAt, ...safeData } = body;
     return this.usersService.updateProfile(req.user.sub, safeData);
   }
 

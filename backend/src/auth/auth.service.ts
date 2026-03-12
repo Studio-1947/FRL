@@ -52,7 +52,6 @@ export class AuthService {
       phone: registerDto.phone,
       bio: registerDto.bio,
       expertise: registerDto.expertise,
-      role: registerDto.role,
     });
 
     const tokens = await this.generateTokens(user.id, user.email, user.role);
